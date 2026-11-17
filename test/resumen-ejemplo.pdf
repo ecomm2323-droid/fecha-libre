@@ -1,0 +1,49 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+5 0 obj
+<< /Length 720 >>
+stream
+BT
+/F1 10 Tf
+40 800 Td
+14 TL
+(BANCO EJEMPLO S.A. - RESUMEN DE CUENTA TARJETA VISA) '
+(TITULAR: CLIENTE DE PRUEBA) '
+(CIERRE ACTUAL 28/11/2026   VENCIMIENTO 10/12/2026) '
+(SALDO ACTUAL $ 452.380,55) '
+(PAGO MINIMO $ 185.200,00) '
+(T.N.A. 98,50 %   T.E.M. 8,21 %) '
+(FECHA       DETALLE                                   PESOS) '
+(12.08.26  MERCADOLIBRE*CELULAR      C.04/12        45.000,00) '
+(03.10.26  FRAVEGA HELADERA          C.02/18        38.250,50) '
+(15.09.26  DESPEGAR PASAJES   CUOTA 03 DE 06        52.100,00) '
+(20.11.26  SUPERMERCADO DIA                         15.300,00) '
+(22.11.26  NETFLIX                                   8.999,00) '
+(05.11.26  ZAPATILLAS DEPORTE        C.01/03        21.000,00) '
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000309 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1080
+%%EOF

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fecha Libre · Salí de tus deudas más rápido</title>
+<meta name="description" content="Subí el resumen de tu tarjeta o cargá tus cuotas y descubrí el mes exacto en que salís de deudas, con un plan para adelantarlo.">
+<style>
+:root{--bg:#F4F6F2;--ink:#13201B;--muted:#55635C;--line:#E1E6E0;--brand:#0E3B2E;--brand2:#167A55;--accent:#F2B33D;--soft:#E7F2EC;--red:#C4453A;--card:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+img{max-width:100%}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+.bar{background:var(--accent);color:var(--ink);text-align:center;font-weight:700;font-size:15px;padding:9px 12px}
+section{padding:36px 0}
+h1{font-size:31px;line-height:1.15;margin:0 0 14px;letter-spacing:-.3px}
+h2{font-size:26px;line-height:1.2;margin:0 0 16px;letter-spacing:-.2px}
+h3{font-size:19px;margin:0 0 6px}
+p{margin:0 0 14px}
+.kicker{display:inline-block;background:var(--soft);color:var(--brand);font-weight:700;font-size:14px;padding:4px 10px;border-radius:99px;margin-bottom:12px}
+.hero{background:linear-gradient(170deg,#fff 0%,var(--bg) 100%);padding-top:26px}
+.hero h1 em{font-style:normal;color:var(--brand2)}
+.sub{font-size:19px;color:#2E3B35}
+.ticks{list-style:none;padding:0;margin:0 0 18px;display:flex;flex-wrap:wrap;gap:8px 16px;font-size:15px;font-weight:600;color:var(--brand)}
+.btn{display:block;text-align:center;background:var(--brand2);color:#fff;font-weight:800;font-size:19px;padding:17px 18px;border-radius:14px;text-decoration:none;box-shadow:0 6px 18px rgba(22,122,85,.25)}
+.btn.gold{background:var(--accent);color:var(--ink);box-shadow:0 6px 18px rgba(242,179,61,.35)}
+.btn small{display:block;font-weight:600;font-size:13px;opacity:.85}
+.center{text-align:center}
+/* teléfono con pantallas de la app */
+.phone{width:262px;margin:0 auto;background:#0b1512;border-radius:34px;padding:10px;box-shadow:0 18px 40px rgba(14,59,46,.25)}
+.screen{background:var(--bg);border-radius:26px;overflow:hidden;font-size:12px;line-height:1.35;height:470px}
+.s-top{background:var(--brand);color:#fff;padding:12px 14px 10px;font-size:14px}.s-top b{color:var(--accent)}
+.s-body{padding:10px}
+.s-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
+.s-hero{background:linear-gradient(160deg,var(--brand),#145a43);color:#fff;border:0}
+.s-lab{font-size:9px;letter-spacing:.8px;text-transform:uppercase;opacity:.8}
+.s-big{font-size:22px;font-weight:800;line-height:1.1;margin:3px 0}
+.s-row{display:flex;justify-content:space-between;gap:6px;padding:6px 0;border-top:1px solid var(--line)}
+.s-row:first-child{border-top:0}
+.s-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.s-stat{background:var(--soft);border-radius:8px;padding:7px}.s-stat b{display:block;font-size:13px}
+.s-stat.red{background:#fbe6e4}
+.s-muted{color:var(--muted);font-size:10.5px}
+.s-bars{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:end;height:58px;margin-top:6px}
+.s-bars i{display:block;background:var(--brand2);border-radius:3px 3px 0 0}
+.s-chk{display:flex;gap:7px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
+.s-chk:first-child{border-top:0}
+.s-chk i{flex:none;width:13px;height:13px;border:2px solid var(--brand2);border-radius:4px;margin-top:1px}
+.s-chk i.on{background:var(--brand2)}
+.s-chk span{flex:1}
+.carousel{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 16px 18px;margin:0 -16px;-webkit-overflow-scrolling:touch}
+.slide{scroll-snap-align:center;flex:0 0 auto;text-align:center}
+.slide p{font-size:15px;font-weight:700;margin:12px 0 0;color:var(--brand)}
+.hint{font-size:14px;color:var(--muted);text-align:center}
+/* dolores */
+.pains{list-style:none;padding:0;margin:0}
+.pains li{background:#fff;border:1px solid var(--line);border-left:5px solid var(--red);border-radius:12px;padding:14px 14px;margin-bottom:10px;font-weight:600}
+/* mecanismo */
+.mech{background:var(--brand);color:#fff}
+.mech h2 em{font-style:normal;color:var(--accent)}
+.flow{display:grid;gap:10px;margin:18px 0}
+.flow div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 14px}
+.flow b{color:var(--accent)}
+.arrow{text-align:center;font-size:22px;line-height:1;opacity:.8;background:none!important;border:0!important;padding:0!important}
+/* beneficios */
+.benefits{display:grid;gap:12px}
+.benefit{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;gap:12px}
+.benefit .ic{font-size:26px;line-height:1}
+/* incluye */
+details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:0 16px}
+summary{cursor:pointer;font-weight:700;padding:15px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--brand2);font-size:22px;line-height:1}
+details[open] summary:after{content:"–"}
+details p{font-size:16px;color:#2E3B35}
+/* bonos */
+.bonus{background:#fff;border:2px dashed var(--accent);border-radius:16px;padding:16px;margin-bottom:14px;display:flex;gap:14px;align-items:center}
+.bonus .mock{flex:none;width:86px;height:112px;border-radius:8px;background:linear-gradient(160deg,var(--brand),#145a43);color:#fff;font-size:11px;font-weight:800;padding:10px 8px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:4px 6px 0 var(--accent)}
+.bonus .mock span{font-size:22px}
+.val{color:var(--muted);text-decoration:line-through;font-size:15px}
+/* oferta */
+.offer{background:#fff;border:3px solid var(--brand2);border-radius:20px;padding:22px 18px;box-shadow:0 14px 36px rgba(14,59,46,.12)}
+.offer ul{list-style:none;padding:0;margin:0 0 14px}
+.offer li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:16px}
+.offer li span:last-child{white-space:nowrap;color:var(--muted)}
+.price{text-align:center;margin:14px 0}
+.price .old{font-size:20px;color:var(--muted);text-decoration:line-through}
+.price .now{font-size:52px;font-weight:900;color:var(--brand2);line-height:1}
+.price .note{font-size:15px;font-weight:700;color:var(--brand)}
+.save{background:var(--soft);color:var(--brand);font-weight:800;text-align:center;border-radius:10px;padding:8px;margin-bottom:14px}
+.secure{font-size:13px;color:var(--muted);text-align:center;margin-top:10px}
+.guarantee{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.seal{flex:none;width:84px;height:84px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:14px;line-height:1.1;border:4px double var(--ink)}
+footer{font-size:13px;color:var(--muted);text-align:center;padding:26px 16px 40px}
+</style>
+</head>
+<body>
+
+<div class="bar">🔥 Precio de lanzamiento: $16.990 · ahorrás $20.000</div>
+
+<!-- 1. PROMESA: salir de deudas rápido -->
+<section class="hero">
+  <div class="wrap">
+    <span class="kicker">App para salir de deudas y cuotas</span>
+    <h1>Salí de tus deudas <em>más rápido</em>: sabé el mes exacto en que te las sacás de encima</h1>
+    <p class="sub">Subí el resumen de tu tarjeta en PDF (o cargá tus cuotas a mano) y en menos de 5 minutos tenés tu <b>fecha libre</b> y un plan mes a mes para <b>adelantarla</b>: cuánto sumar, a qué deuda y cuándo se libera cada cuota.</p>
+    <ul class="ticks"><li>✔ Sin darle el home banking</li><li>✔ Desde el celu</li><li>✔ Pago único</li></ul>
+    <a class="btn" href="#por-dentro">Quiero ver cómo funciona ↓</a>
+  </div>
+</section>
+
+<!-- 3. POR DENTRO (datos de ejemplo en pesos, alineados al demo de app-ar) -->
+<section id="por-dentro" style="padding-top:10px">
+  <div class="wrap">
+    <h2 class="center">Así se ve por dentro</h2>
+    <div class="carousel" aria-label="Pantallas de la app">
+      <div class="slide">
+        <div class="phone"><div class="screen">
+          <div class="s-top">Fecha<b>Libre</b></div>
+          <div class="s-body">
+            <div class="s-card s-hero"><div class="s-lab">Fecha libre estimada</div><div class="s-big">Noviembre de 2027</div><div>En 13 meses con $800.000 por mes</div></div>
+            <div class="s-card"><b>🚀 Salí más rápido</b>
+              <div class="s-row"><span>+ $80.000/mes</span><b>2 meses antes</b></div>
+              <div class="s-row"><span>+ $200.000/mes</span><b>3 meses antes</b></div>
+              <p class="s-muted" style="margin:6px 0 0">La app calcula tu número exacto.</p></div>
+            <div class="s-card"><b>Tu situación hoy</b>
+              <div class="s-stats" style="margin-top:6px"><div class="s-stat"><b>$6.535.000</b>Te falta pagar</div><div class="s-stat"><b>32</b>Cuotas pendientes</div></div></div>
+          </div></div></div>
+        <p>1 · Tu fecha libre y cómo adelantarla</p>
+      </div>
+      <div class="slide">
+        <div class="phone"><div class="screen">
+          <div class="s-top">Fecha<b>Libre</b></div>
+          <div class="s-body">
+            <div class="s-card s-hero"><div class="s-lab">Conteo de cuotas</div><div class="s-big">32 cuotas</div><div>pendientes por $2.735.000</div></div>
+            <div class="s-card"><b>Cuotas por mes</b>
+              <div class="s-row"><span>Celular<br><span class="s-muted">7 cuotas</span></span><b>$65.000</b></div>
+              <div class="s-row"><span>Heladera<br><span class="s-muted">10 cuotas</span></span><b>$48.000</b></div>
+              <div class="s-row"><span>Préstamo<br><span class="s-muted">10 cuotas</span></span><b>$150.000</b></div></div>
+            <div class="s-card"><b>Próximos 12 meses</b>
+              <div class="s-bars"><i style="height:100%"></i><i style="height:100%"></i><i style="height:90%"></i><i style="height:69%"></i><i style="height:69%"></i><i style="height:69%"></i><i style="height:69%"></i><i style="height:57%"></i><i style="height:57%"></i><i style="height:57%"></i><i style="height:16%"></i><i style="height:16%"></i></div></div>
+          </div></div></div>
+        <p>2 · Todas tus cuotas, contadas</p>
+      </div>
+      <div class="slide">
+        <div class="phone"><div class="screen">
+          <div class="s-top">Fecha<b>Libre</b></div>
+          <div class="s-body">
+            <div class="s-card s-hero"><div class="s-lab">Paso a paso · este mes</div><div class="s-big">$800.000</div><div>el extra va a tu Visa (la de más interés)</div></div>
+            <div class="s-card">
+              <div class="s-chk"><i class="on"></i><span>Cuota Celular</span><b>$65.000</b></div>
+              <div class="s-chk"><i class="on"></i><span>Cuota Heladera</span><b>$48.000</b></div>
+              <div class="s-chk"><i></i><span>Préstamo personal</span><b>$150.000</b></div>
+              <div class="s-chk"><i></i><span>🎯 Visa<br><span class="s-muted">Mínimo + todo el extra</span></span><b>el resto</b></div></div>
+            <div class="s-card"><b>Próximos hitos</b>
+              <p class="s-muted" style="margin:5px 0 0">Termina una cuota → esa plata pasa a la próxima deuda<br>Cae la Visa 🎉<br>¡Libre de deudas! 🏁</p></div>
+          </div></div></div>
+        <p>3 · Qué pagar este mes</p>
+      </div>
+    </div>
+    <p class="hint">Deslizá → · Pantallas con datos de ejemplo</p>
+  </div>
+</section>
+
+<!-- 4. DOLORES -->
+<section>
+  <div class="wrap">
+    <h2>¿Te suena alguna de estas?</h2>
+    <ul class="pains">
+      <li>Pagás la tarjeta todos los meses y el saldo casi no baja.</li>
+      <li>Pagás el mínimo para llegar a fin de mes y sentís que nunca se termina.</li>
+      <li>Entre «3 y 6 cuotas sin interés», Mercado Libre y el préstamo, ya no sabés cuánto debés en total.</li>
+      <li>Llega el resumen y el monto te sorprende: «¿de dónde salió todo esto?».</li>
+      <li>Cobrás el aguinaldo o una plata extra y no sabés a qué deuda mandarla para salir antes.</li>
+    </ul>
+    <p>No es falta de voluntad. Es que nadie te mostró <b>el número completo</b> ni <b>el orden</b> para pagarlo rápido.</p>
+  </div>
+</section>
+
+<!-- MECANISMO -->
+<section class="mech">
+  <div class="wrap">
+    <h2>La forma más rápida de salir: el <em>Efecto Cuota Liberada</em></h2>
+    <p>Cuando termina una cuota, esa plata suele desaparecer en gastos del mes. Fecha Libre la manda <b>directo a tu próxima deuda</b>. Pagás lo mismo cada mes, pero las deudas caen una detrás de otra, cada vez más rápido.</p>
+    <div class="flow">
+      <div>📱 Terminás la cuota del <b>celular</b></div>
+      <div class="arrow">↓</div>
+      <div>💸 Se liberan <b>$65.000 por mes</b></div>
+      <div class="arrow">↓</div>
+      <div>🎯 Van automáticamente a la deuda con <b>más interés</b> (o a la más chica, vos elegís)</div>
+    </div>
+    <p>Y sumás el <b>acelerador</b>: ponés un extra por mes (aguinaldo, horas extra, una venta) y la app te muestra cuántos meses antes salís.</p>
+  </div>
+</section>
+
+<!-- 5. BENEFICIOS -->
+<section>
+  <div class="wrap">
+    <h2>Lo que cambia desde el primer día</h2>
+    <div class="benefits">
+      <div class="benefit"><div class="ic">🚀</div><div><h3>Salís más rápido</h3><p>Ves cuántos meses adelantás con cada extra que sumás. Decidís con números, no a ojo.</p></div></div>
+      <div class="benefit"><div class="ic">👀</div><div><h3>Sabés cuánto debés de verdad</h3><p>Cuotas, saldos de tarjeta y préstamos en una sola pantalla. Sin sorpresas.</p></div></div>
+      <div class="benefit"><div class="ic">📅</div><div><h3>Tenés una fecha</h3><p>Un mes concreto en el que terminás. Ya no es «algún día».</p></div></div>
+      <div class="benefit"><div class="ic">✅</div><div><h3>Cada mes sabés qué pagar</h3><p>Cuánto va a cada deuda y a cuál le ponés el extra. Marcás y listo.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. QUÉ INCLUYE -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Qué incluye Fecha Libre</h2>
+    <details open><summary>📄 Lector de resúmenes en PDF</summary>
+      <p>Subís el PDF que descargás del home banking y la app encuentra tus compras en cuotas («C.04/12», «cuota 3 de 6»), el saldo, el pago mínimo y la tasa. Lo revisás, corregís si hace falta y se guarda. El PDF se lee en tu celular: no se sube a ningún servidor.</p></details>
+    <details><summary>🚀 Acelerador de deuda</summary>
+      <p>Probá cuánto adelantás tu fecha libre sumando un extra por mes. Ves el mes exacto en que salís y cuántos meses ganás.</p></details>
+    <details><summary>🧮 Conteo de cuotas por tarjeta</summary>
+      <p>Cuántas cuotas te quedan, cuánto tenés comprometido en cada uno de los próximos 12 meses y en qué mes se libera cada una.</p></details>
+    <details><summary>🏁 Calculadora de fecha libre</summary>
+      <p>Tu fecha libre con dos estrategias: avalancha (pagás menos intereses) o bola de nieve (cerrás deudas chicas primero). Y la comparación con pagar solo el mínimo.</p></details>
+    <details><summary>✅ Paso a paso de cada mes</summary>
+      <p>La lista de pagos del mes con su monto, para tildar. Cuando pagás, registrás el mes y el plan se actualiza solo.</p></details>
+    <details><summary>🔒 Privacidad total</summary>
+      <p>No te pedimos el home banking ni tus claves. Tus datos quedan en tu dispositivo y podés descargar una copia cuando quieras.</p></details>
+    <a class="btn gold" href="#oferta" style="margin-top:16px">Quiero salir más rápido</a>
+  </div>
+</section>
+
+<!-- 7. BONOS -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Y además, dentro de la app</h2>
+    <div class="bonus"><div class="mock"><span>📞</span>3 GUIONES PARA EL BANCO</div>
+      <div><h3>Bono 1 · Guiones para hablar con el banco</h3><p style="font-size:16px;margin:0">Qué decir para pedir la TNA y el CFT, refinanciar o regularizar un atraso, palabra por palabra.</p><span class="val">Valor $16.990</span></div></div>
+    <div class="bonus"><div class="mock"><span>🛑</span>PLAN DE 7 DÍAS</div>
+      <div><h3>Bono 2 · Plan de 7 días para frenar la deuda nueva</h3><p style="font-size:16px;margin:0">Una acción por día para cortar las cuotas que se suman sin darte cuenta.</p><span class="val">Valor $12.990</span></div></div>
+    <div class="bonus"><div class="mock"><span>📅</span>CALENDARIO CON AVISOS</div>
+      <div><h3>Bono 3 · Calendario con avisos en tu celular</h3><p style="font-size:16px;margin:0">Tus vencimientos y la fecha libre en un calendario dentro de la app, con avisos en tu celular: bajás un archivo y tu calendario te avisa un día antes.</p><span class="val">Valor $9.990</span></div></div>
+  </div>
+</section>
+
+<!-- 8. RESEÑAS: van acá. Solo capturas REALES de compradores. No inventar. -->
+
+<!-- 9. OFERTA (pesos: rango de oferta.md 16.990–19.990; confirmar antes de publicar) -->
+<section id="oferta" style="padding-top:0">
+  <div class="wrap">
+    <div class="offer">
+      <h2 class="center" style="margin-bottom:10px">Todo lo que recibís hoy</h2>
+      <ul>
+        <li><span>📱 App Fecha Libre · acceso de por vida</span><span>$36.990</span></li>
+        <li><span>📞 Bono 1 · Guiones para el banco</span><span>$16.990</span></li>
+        <li><span>🛑 Bono 2 · Plan de 7 días</span><span>$12.990</span></li>
+        <li><span>📅 Bono 3 · Calendario con avisos</span><span>$9.990</span></li>
+      </ul>
+      <div class="price">
+        <div class="old">Total $76.960</div>
+        <div class="now">$16.990</div>
+        <div class="note">Pago único · sin suscripción</div>
+      </div>
+      <div class="save">Ahorrás $20.000 sobre el precio normal de la app</div>
+      <a class="btn cta-buy" href="#">Quiero salir de deudas por $16.990<small>Acceso inmediato por email</small></a>
+      <p class="secure">🔒 Pago seguro · Recibís el acceso apenas se confirma el pago</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10. GARANTÍA -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="guarantee"><div class="seal">7 DÍAS<br>GARANTÍA</div>
+      <div><h3>Probala sin riesgo</h3><p style="font-size:16px;margin:0">Si en 7 días sentís que no te sirve, escribinos y te devolvemos el 100% de tu plata.</p></div></div>
+  </div>
+</section>
+
+<!-- 11. FAQ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Tengo que darle mi home banking o mis claves?</summary><p>No. Subís el PDF del resumen o cargás los datos a mano. Nunca te pedimos usuario ni contraseña del banco.</p></details>
+    <details><summary>¿Funciona con el resumen de mi banco?</summary><p>Lee los PDF con texto que descargás del home banking y reconoce los formatos de cuotas más comunes. Si tu resumen es una foto o usa otro formato, cargás cada cuota a mano en segundos.</p></details>
+    <details><summary>¿Cuánto voy a adelantar?</summary><p>Depende de tus deudas y de cuánto puedas sumar por mes. La app te lo calcula con tus números: no prometemos un plazo fijo.</p></details>
+    <details><summary>¿Es una suscripción?</summary><p>No. Pagás una vez y la usás todas las veces que quieras.</p></details>
+    <details><summary>¿Está en pesos?</summary><p>Sí. Viene en pesos argentinos y podés cambiar la moneda desde Ajustes.</p></details>
+    <details><summary>¿Tengo que descargar algo?</summary><p>No. Se abre desde el navegador del celular o la compu. Podés agregarla a la pantalla de inicio como una app.</p></details>
+    <details><summary>¿Dónde quedan mis datos?</summary><p>En tu dispositivo. Desde Ajustes podés descargar una copia y restaurarla en otro celular.</p></details>
+    <details><summary>¿Es asesoramiento financiero?</summary><p>No. Es una herramienta para ordenarte: calcula con los datos que cargás. Las cifras son estimaciones.</p></details>
+    <details><summary>¿Cómo recibo el acceso?</summary><p>Apenas se confirma el pago te llega un email con el enlace para entrar.</p></details>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section style="padding-top:0">
+  <div class="wrap center">
+    <h2>Tu fecha libre ya existe. Y se puede adelantar.</h2>
+    <a class="btn cta-buy" href="#">Quiero salir de deudas por $16.990<small>Pago único · garantía de 7 días</small></a>
+  </div>
+</section>
+
+<footer>Fecha Libre es una herramienta de organización personal. No es asesoramiento financiero ni ofrece créditos. Las fechas y montos son estimaciones calculadas con los datos que ingresa cada usuario.</footer>
+
+<script>
+// Pegar acá el link del checkout de Impultienda: se aplica a todos los botones de compra (no al primero).
+var CHECKOUT_URL = "";
+if (CHECKOUT_URL) document.querySelectorAll(".cta-buy").forEach(function(a){ a.href = CHECKOUT_URL; });
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Fecha Libre · autocontrol</title>
+<style>body{font:15px system-ui;margin:16px;background:#fff;color:#111}.ok{color:#1E8A5A}.bad{color:#C4453A;font-weight:700}iframe{display:none}</style></head>
+<body><h1>Autocontrol Fecha Libre</h1><ul id="out"></ul>
+<iframe id="app" src="../app/index.html"></iframe>
+<script>
+// Servir la carpeta fecha-libre por http (no file://). Usa el lector de PDF real con test/resumen-ejemplo.pdf.
+const out = document.getElementById("out");
+const check = (name, cond, extra) => { const li = document.createElement("li"); li.className = cond ? "ok" : "bad"; li.textContent = (cond ? "✔ " : "✘ ") + name + (extra ? " → " + extra : ""); out.appendChild(li); };
+document.getElementById("app").onload = async function(){
+  const w = this.contentWindow;
+  w.localStorage.removeItem("fechalibre.v1");
+  // 1) Lector de PDF
+  const buf = await (await fetch("resumen-ejemplo.pdf")).arrayBuffer();
+  const lines = await w.pdfLines(new Uint8Array(buf));
+  const r = w.parseStatement(lines);
+  check("detecta 4 compras en cuotas", r.cuotas.length === 4, JSON.stringify(r.cuotas.map(c => c.desc + " " + c.cur + "/" + c.tot + " " + c.amount)));
+  const cel = r.cuotas.find(c => /CELULAR/.test(c.desc));
+  check("celular C.04/12 = 45000, faltan 9", cel && cel.amount === 45000 && cel.left === 9);
+  const hel = r.cuotas.find(c => /HELADERA/.test(c.desc));
+  check("heladera decimales 38250.5, faltan 17", hel && hel.amount === 38250.5 && hel.left === 17);
+  check("«CUOTA 03 DE 06» detectada, faltan 4", r.cuotas.some(c => /PASAJES/.test(c.desc) && c.left === 4));
+  check("saldo 452380.55", r.saldo === 452380.55, r.saldo);
+  check("pago mínimo 185200", r.minimo === 185200, r.minimo);
+  check("TNA 98.5", r.tna === 98.5, r.tna);
+  check("tarjeta Visa", r.card === "Visa", r.card);
+  check("no toma compras sin cuota (supermercado, netflix)", !r.cuotas.some(c => /SUPER|NETFLIX/.test(c.desc)));
+  // 2) Formatos de otros países, línea suelta
+  const mx = w.parseStatement(["COPPEL MUEBLES 3 DE 12 MSI 1,250.00", "SALDO AL CORTE 18,450.30"]);
+  check("México «3 DE 12 MSI» 1250, faltan 10", mx.cuotas.length === 1 && mx.cuotas[0].amount === 1250 && mx.cuotas[0].left === 10);
+  check("saldo al corte 18450.3", mx.saldo === 18450.3, mx.saldo);
+  check("fecha 10.12.26 no es monto", w.parseStatement(["VENCIMIENTO 10.12.26 C.05/04"]).cuotas.length === 0);
+  // 3) Motor del plan con el ejemplo
+  w.demo();
+  const sim = w.simulate("avalancha");
+  check("plan ejemplo termina", sim.done, sim.months + " meses");
+  check("termina cuando se paga la última cuota (16 meses)", sim.months === 16, sim.months);
+  const min = w.simulate("avalancha", true);
+  check("solo mínimos tarda más o nunca", !min.done || min.months > sim.months, min.done ? min.months : "nunca");
+  check("avalancha no paga más intereses que bola", sim.interest <= w.simulate("bola").interest + 0.01);
+  const P = w.plan();
+  check("presupuesto ejemplo alcanza", P.status === "ok");
+  const totalMes = Object.values(sim.first.pay).reduce((a, b) => a + b, 0);
+  check("pago del mes = presupuesto (600)", Math.abs(totalMes - 600) < 0.01, totalMes.toFixed(2));
+  w.localStorage.removeItem("fechalibre.v1");
+};
+</script></body></html>
