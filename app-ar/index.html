@@ -24,9 +24,12 @@ h1,h2,h3,.big,.brand{font-family:var(--fh)}
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:var(--brand);letter-spacing:-.2px}
 .logo{width:30px;height:30px;flex:none}
-.iconbtn{background:transparent;border:0;color:var(--brand);font-size:22px;padding:4px 8px;cursor:pointer}
+.iconbtn{background:transparent;border:0;color:var(--brand);font-size:22px;min-width:44px;min-height:44px;cursor:pointer}
 main{max-width:560px;margin:0 auto;padding:16px 16px 96px}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+main:focus{outline:none}
+h1{margin:0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.tabs{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .tabs button{background:none;border:0;padding:9px 4px 11px;font-size:12px;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
 .tabs button svg{width:23px;height:23px}
 .tabs button[aria-current="page"]{color:var(--brand);font-weight:700}
@@ -53,7 +56,7 @@ p{margin:0 0 10px}
 .btn.warn{background:var(--accent);color:var(--ink)}
 .btn.danger{background:#fff;color:var(--danger);border:1px solid #efd3c9}
 .btn+.btn{margin-top:10px}
-.btn.sm{display:inline-block;width:auto;padding:8px 12px;font-size:14px}
+.btn.sm{display:inline-block;width:auto;padding:12px 14px;min-height:44px;font-size:14px}
 label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
 input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:16px}
 input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
@@ -79,7 +82,7 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);out
 .alert.red{background:var(--warn)}
 .cal{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:120px;margin:8px 0 4px}
 .cal div{background:var(--brand);border-radius:5px 5px 0 0;min-height:2px}
-.cal-l{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;font-size:10px;color:var(--muted);text-align:center}
+.cal-l{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;font-size:11px;color:var(--muted);text-align:center}
 .check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
 .check:first-of-type{border-top:0}
 .check>input[type=checkbox]{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--brand)}
@@ -131,7 +134,7 @@ td input{padding:6px;font-size:14px}
   <div class="brand"><svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><rect x="2" y="5" width="36" height="33" rx="9" fill="#245B48"/><rect x="11" y="1" width="4.5" height="9" rx="2.25" fill="#E9A27E"/><rect x="24.5" y="1" width="4.5" height="9" rx="2.25" fill="#E9A27E"/><rect x="8" y="16" width="24" height="17" rx="5" fill="#F7F5EF"/><path d="M14.5 25.2l4 4 7.5-8.2" fill="none" stroke="#245B48" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Fecha Libre</div>
   <button class="iconbtn" data-action="settings" aria-label="Ajustes">⚙︎</button>
 </header>
-<main id="view" aria-live="polite"></main>
+<main id="view" tabindex="-1"></main>
 <nav class="tabs" aria-label="Secciones">
   <button data-tab="inicio"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 10v9h12v-9"/></svg>Inicio</button>
   <button data-tab="deudas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12.5" rx="3"/><path d="M3 10.5h18M7 15h3"/></svg>Deudas</button>
@@ -243,7 +246,7 @@ function render(){
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"));
   view.innerHTML = ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan})[tab]();
 }
-function fechaTxt(sim){ return sim.done ? monthLabel(sim.months - 1, true) : "Más de 50 años"; }
+function fechaTxt(sim){ return sim.done ? monthLabel(sim.months - 1, true) : "Más de 50 años (no se termina)"; }
 
 
 /* ---------- Acelerador: cuánto adelantás sumando un extra por mes ---------- */
@@ -299,14 +302,17 @@ function descargarIcs(){
   }
   if (!ev.length) return;
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob(["BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Fecha Libre//ES\r\nCALSCALE:GREGORIAN\r\n" + ev.join("\r\n") + "\r\nEND:VCALENDAR\r\n"], {type:"text/calendar"}));
+  // RFC 5545: líneas de máx. 75 octetos; se pliegan con CRLF + espacio (corte por caracteres, sin partir UTF-8)
+  const fold = l => { const enc = new TextEncoder(); let out = "", cur = "", n = 0; for (const ch of l) { const b = enc.encode(ch).length; if (n + b > (out ? 74 : 75)) { out += (out ? "\r\n " : "") + cur; cur = ""; n = 0; } cur += ch; n += b; } return out + (out ? "\r\n " : "") + cur; };
+  const body = ("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Fecha Libre//ES\r\nCALSCALE:GREGORIAN\r\n" + ev.join("\r\n") + "\r\nEND:VCALENDAR\r\n").split("\r\n").map(fold).join("\r\n");
+  a.href = URL.createObjectURL(new Blob([body], {type:"text/calendar"}));
   a.download = "fecha-libre-calendario.ics";
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 function vCalendario(){
   if (!activeDeudas().length && !activeCuotas().length)
-    return `<div class="card empty"><div class="big">Calendario</div><p>Cargá tus deudas y cuotas para ver acá tus vencimientos y las fechas en que te sacás cada una de encima.</p><button class="btn" data-tab-go="cuotas">Cargá tus deudas y cuotas para ver acá tus vencimientos y las fechas en que te sacás cada una de encima.BTN</button></div>`;
+    return `<div class="card empty"><div class="big">Calendario</div><p>Cargá tus deudas y cuotas para ver acá tus vencimientos y las fechas en que te sacás cada una de encima.</p><button class="btn" data-tab-go="cuotas">Cargar mis cuotas</button></div>`;
   const P = plan(), sim = P.status === "ok" ? P.sim : null;
   const max = sim ? sim.months - 1 : 24;
   calM = Math.max(0, Math.min(calM, max));
@@ -373,7 +379,7 @@ function vInicio(){
   } else {
     const sim = P.sim;
     hero = `<div class="card hero"><div class="label">Fecha libre estimada</div>
-      <div class="big">${esc(fechaTxt(sim))}</div>
+      <h1 class="big">${esc(fechaTxt(sim))}</h1>
       <div class="sub">${sim.done ? `En ${sim.months} ${sim.months === 1 ? "mes" : "meses"}` : "Con este presupuesto no se termina"} · intereses estimados ${fmt(sim.interest)}</div></div>`;
     if (activeDeudas().length) {
       const mins = simulate(S.strategy, true);
@@ -384,7 +390,9 @@ function vInicio(){
           <div class="stat" style="background:var(--warn)"><b>${mins.done ? esc(monthLabel(mins.months - 1, true)) : "Con el mínimo no se termina"}</b><span>Solo el mínimo</span></div>
         </div>
         <p class="muted" style="margin-top:10px">${mins.done
-          ? `Con el plan salís <b>${mins.months - sim.months} meses antes</b> y te ahorrás cerca de <b>${fmt(Math.max(0, ahorro))}</b> en intereses.`
+          ? (mins.months - sim.months > 0
+            ? `Con el plan salís <b>${mins.months - sim.months} ${mins.months - sim.months === 1 ? "mes" : "meses"} antes</b> y te ahorrás cerca de <b>${fmt(Math.max(0, ahorro))}</b> en intereses.`
+            : `Con tu presupuesto actual salís en el mismo mes que pagando el mínimo. Sumá un extra para adelantar.`)
           : `Pagando solo el mínimo, los intereses le ganan al pago: la deuda no baja. Con el plan sí se termina.`}</p></div>`;
     }
   }
@@ -545,7 +553,15 @@ function vExtras(){
 
 /* ---------- Formularios ---------- */
 const dlg = document.getElementById("dlg"), dlgBody = document.getElementById("dlgBody");
-function openDlg(html){ dlgBody.innerHTML = html; if (!dlg.open) dlg.showModal(); const f = dlgBody.querySelector("input"); if (f) f.focus(); }
+function openDlg(html){ dlgBody.innerHTML = html; if (!dlg.open) dlg.showModal(); const f = dlgBody.querySelector("input,button"); if (f) f.focus(); }
+// Confirmaciones dentro del <dialog> (en vez de confirm()). «back» reabre la pantalla anterior si cancelan.
+let onConfirm = null, backFn = null, passCb = null, pdfCancelled = false;
+function confirmDlg(title, text, okLabel, ok, back){
+  onConfirm = ok; backFn = back || null;
+  openDlg(`<h2>${title}</h2><p class="muted">${text}</p><div style="margin-top:14px"><button class="btn ghost" type="button" data-action="confirm-no">Cancelar</button><button class="btn danger" type="button" data-action="confirm-ok">${okLabel}</button></div>`);
+}
+// Cerrar el diálogo con la contraseña pendiente cancela la lectura del PDF.
+dlg.addEventListener("close", () => { document.getElementById("view").focus({preventScroll:true}); if (passCb) { pdfCancelled = true; passCb.task.destroy(); passCb = null; } });
 function formDeuda(d){
   d = d || {name:"", balance:"", rate:"", min:""};
   openDlg(`<form id="fDeuda" data-id="${esc(d.id || "")}"><h2>${d.id ? "Editar" : "Nueva"} deuda con interés</h2>
@@ -601,9 +617,11 @@ async function pdfLines(data){
   const lib = await loadPdfJs();
   const task = lib.getDocument({data, isEvalSupported:false});
   task.onPassword = (update, reason) => {
-    const pw = prompt(reason === 2 ? "Contraseña incorrecta. Probá de nuevo:" : "El PDF tiene contraseña (muchos bancos usan tu DNI). Escribila para abrirlo:");
-    if (pw === null) { task.destroy(); return; }
-    update(pw);
+    passCb = {update, task};
+    openDlg(`<form id="fPass"><h2>${reason === 2 ? "Contraseña incorrecta" : "Tu PDF tiene contraseña"}</h2>
+      <p class="muted">Muchos bancos usan tu DNI. La contraseña se usa solo acá, en tu dispositivo.</p>
+      <label for="pw">Contraseña</label><input id="pw" name="pw" type="password" autocomplete="off" required>
+      <div style="margin-top:14px"><button class="btn" type="submit">Abrir</button><button class="btn ghost" type="button" data-action="close">Cancelar</button></div></form>`);
   };
   const doc = await task.promise, lines = [];
   for (let p = 1; p <= doc.numPages; p++) {
@@ -632,21 +650,55 @@ function parseAmount(s){
 const CUOTA_RE = [
   /\b(?:CUOTAS?|CUOT|CTA|C)\s*\.?\s*(\d{1,2})\s*(?:\/|DE)\s*(\d{1,2})\b/i,
   /\b(\d{1,2})\s*DE\s*(\d{1,2})\s*(?:MSI|MESES)\b/i,
-  /\bMSI\s*(\d{1,2})\s*(?:\/|DE)\s*(\d{1,2})\b/i
+  /\bMSI\s*(\d{1,2})\s*(?:\/|DE)\s*(\d{1,2})\b/i,
+  /FINANC(?:\.|IACI[ÓO]N)?\s*(?:DE\s*)?CONSUMO\s*(\d{1,2})\s*-\s*(\d{1,2})/i
 ];
+const MES = {ENE:0, FEB:1, MAR:2, ABR:3, MAY:4, JUN:5, JUL:6, AGO:7, SEP:8, SET:8, OCT:9, NOV:10, DIC:11};
+const DATE_RE = /(?<![\d.\/-])(\d{1,2})[-\/. ]([A-Za-zÁ-ú]{3}|\d{1,2})[-\/. ](\d{4}|\d{2})(?![\d])/g;
+// «29-Oct-26», «11/11/2026» → Date (o null).
+function parseDate(s){
+  const m = new RegExp(DATE_RE.source).exec(s); if (!m) return null;
+  const mo = /\d/.test(m[2]) ? +m[2] - 1 : MES[m[2].toUpperCase()];
+  if (mo === undefined || mo < 0 || mo > 11) return null;
+  const d = new Date(+m[3] < 100 ? 2000 + +m[3] : +m[3], mo, +m[1]);
+  return d.getMonth() === mo ? d : null;
+}
+const datesIn = s => (s.match(DATE_RE) || []).map(parseDate).filter(Boolean);
+// Sin tildes ni espacios: tolera glifos partidos («M Í NIMO») al buscar encabezados.
+const nf = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/\s+/g, "");
+const BANK_RE = /BBVA|GALICIA|SANTANDER|MACRO|NACI[ÓO]N|PROVINCIA|ICBC|HSBC|CIUDAD|SUPERVIELLE|BRUBANK|NARANJA X|UAL[ÁA]|MERCADO PAGO|PATAGONIA|CREDICOOP|COMAFI|HIPOTECARIO/i;
+const cap = s => s.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
 const SI_RE = /SIN\s*INTER|S\/\s*INT|\bMSI\b|MESES\s*SIN|0\s*%\s*INT|PLAN\s*Z|AHORA\s*(?:3|6|12|18|24)\b/;
 function parseStatement(lines){
-  const out = {cuotas:[], saldo:0, minimo:0, tna:0, card:""};
-  const all = lines.join("\n");
-  const brand = all.match(/AMERICAN EXPRESS|AMEX|MASTERCARD|MASTER CARD|VISA|CABAL|NARANJA|DINERS/i);
-  out.card = brand ? brand[0].replace(/master card/i, "Mastercard").replace(/^\w/, c => c.toUpperCase()).replace(/\B\w+/g, w => w.toLowerCase()) : "Mi tarjeta";
+  const out = {cuotas:[], saldo:0, saldoUsd:0, minimo:0, tna:0, card:"", cierre:null, venc:null, proxCierre:null, proxVenc:null, totalConsumos:0};
+  const all = lines.join(" ").replace(/\s+/g, " ");
+  const brand = all.match(/\b(?:AMERICAN EXPRESS|AMEX|MASTERCARD|MASTER CARD|VISA|CABAL|NARANJA|DINERS)\b/i), bank = (() => { const c = {}; for (const m of all.matchAll(new RegExp(BANK_RE.source, "gi"))) { const k = m[0].toUpperCase(); c[k] = (c[k] || 0) + 1; } const k = Object.keys(c).sort((x, y) => c[y] - c[x])[0]; return k ? [k] : null; })();
+  const b = brand ? brand[0].replace(/master card/i, "Mastercard") : "";
+  out.card = ((bank ? (bank[0].length <= 4 ? bank[0].toUpperCase() : cap(bank[0])) + " " : "") + (b ? cap(b) : "")).trim() || "Mi tarjeta";
+  // Encabezado del resumen: la línea siguiente trae cierre, vencimiento, saldos en $ y U$S, y pago mínimo.
+  lines.forEach((line, i) => {
+    const h = nf(line), nx = lines[i + 1] || "", d = datesIn(nx), a = nx.match(AMT) || [];
+    if (!out.venc && /^CIERREACTUAL.*VENCIMIENTOACTUAL/.test(h) && d.length >= 2) {
+      out.cierre = d[0]; out.venc = d[1];
+      const v = a.map(parseAmount);
+      if (v.length >= 3) [out.saldo, out.saldoUsd, out.minimo] = v; else if (v.length === 2) [out.saldo, out.minimo] = v;
+    }
+    if (!out.proxCierre && /CIERREANTERIOR.*PROXIMOCIERRE/.test(h) && d.length >= 4) { out.proxCierre = d[2]; out.proxVenc = d[3]; }
+    if (!out.tna && /^TNA\$TNAU\$S/.test(h)) { const t = nx.match(/(\d{1,3}(?:[.,]\d{1,3})?)\s*%/); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
+    if (!out.totalConsumos && /^TOTALCONSUMOS/.test(h)) { const own = line.match(AMT); if (own) out.totalConsumos = parseAmount(own[0]); }
+  });
+  // «...será de TNA 66,67%, TEM 5,48%...» es la tasa de financiación real (no la de un plan ni la «TNA fija»).
+  if (!out.tna) { const t = all.match(/TNA\s*(\d{1,3}(?:[.,]\d{1,3})?)\s*%\s*,?\s*TEM/i); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
+  if (!out.minimo) { const t = all.match(/PAGO\s*M\s*[IÍ]\s*NIMO\s*(?:DE|ES|:)?\s*\$?\s*(\d[\d.,]*\d)/i); if (t) out.minimo = parseAmount(t[1]); }
   const seen = new Set();
   lines.forEach(line => {
     const up = line.toUpperCase();
     const amts = line.match(AMT) || [];
-    if (!out.saldo && /SALDO ACTUAL|TOTAL A PAGAR|SALDO TOTAL|PAGO TOTAL|SALDO AL CORTE|SALDO DEUDOR/.test(up) && amts.length) out.saldo = parseAmount(amts[amts.length - 1]);
-    if (!out.minimo && /PAGO M[IÍ]NIMO|M[IÍ]NIMO A PAGAR/.test(up) && amts.length) out.minimo = parseAmount(amts[amts.length - 1]);
-    if (!out.tna) { const t = up.match(/(?:T\.?N\.?A\.?|TASA NOMINAL ANUAL|TASA ANUAL)[^\d]{0,30}(\d{1,3}(?:[.,]\d{1,3})?)\s*%?/); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
+    // Si hay columnas en $ y U$S, la primera cifra es la de pesos.
+    if (!out.saldo && /SALDO ACTUAL|TOTAL A PAGAR|SALDO TOTAL|PAGO TOTAL|SALDO AL CORTE|SALDO DEUDOR/.test(up) && amts.length) out.saldo = parseAmount(amts[0]);
+    if (!out.minimo && /PAGO\s*M\s*[IÍ]\s*NIMO|M\s*[IÍ]\s*NIMO\s*A\s*PAGAR/.test(up) && amts.length) out.minimo = parseAmount(amts[0]);
+    if (!out.tna) { const t = up.match(/(?<![(\w])(?:T\.?N\.?A\.?|TASA NOMINAL ANUAL|TASA ANUAL)(?!\s*FIJA)[^\d]{0,30}(\d{1,3}(?:[.,]\d{1,3})?)\s*%?/); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
+    if (/\bUSD\b|U\$S/.test(up)) return;
     for (const re of CUOTA_RE) {
       const m = line.match(re);
       if (!m) continue;
@@ -655,7 +707,7 @@ function parseStatement(lines){
       const after = line.slice(m.index + m[0].length).match(AMT) || [];
       const amount = Math.abs(parseAmount(after.length ? after[after.length - 1] : (amts[amts.length - 1] || "0")));
       if (!amount) continue;
-      const desc = line.slice(0, m.index).replace(/^\s*\d{1,2}[-\/.]\d{1,2}(?:[-\/.]\d{2,4})?\s*/, "").replace(/^[\d\s*]+/, "").replace(AMT, "").replace(/[*_]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) || "Compra en cuotas";
+      const desc = line.slice(0, m.index).replace(/^\s*\d{1,2}[-\/.](?:\d{1,2}|[A-Za-zÁ-ú]{3})(?:[-\/.]\d{2,4})?\s*/, "").replace(/^[\d\s*]+/, "").replace(AMT, "").replace(/[*_]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) || (/FINANC/i.test(m[0]) ? "Financiación consumo" : "Compra en cuotas");
       const key = desc + "|" + cur + "/" + tot + "|" + amount;
       if (seen.has(key)) break;
       seen.add(key);
@@ -667,13 +719,23 @@ function parseStatement(lines){
 }
 async function handlePdf(file){
   if (!file) return;
+  const err = (t, p) => openDlg(`<h2>${t}</h2><p class="muted">${p}</p><button class="btn" data-action="add-cuota">Cargalo a mano</button><button class="btn ghost" data-action="close">Cerrar</button>`);
+  if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) return err("Ese archivo no es un PDF", "Elegí el resumen en PDF que te manda tu banco.");
+  if (file.size > 20e6) return err("El PDF es muy pesado", "Pasa los 20 MB. Descargá el resumen directo desde el home banking.");
   openDlg(`<h2>Leyendo tu resumen…</h2><p class="muted">Se procesa en tu celular. Nada se sube.</p>`);
+  pdfCancelled = false;
   try {
     const lines = await pdfLines(new Uint8Array(await file.arrayBuffer()));
-    reviewImport(parseStatement(lines), lines.length);
+    if (!lines.length) return err("Parece una foto o un escaneo", "El PDF no tiene texto que podamos leer. Cargá las cuotas a mano.");
+    const r = parseStatement(lines);
+    if (!r.cuotas.length && !r.saldo) return err("No parece un resumen de tarjeta", "No encontramos cuotas ni saldo. Probá con el PDF del resumen o cargalo a mano.");
+    reviewImport(r, lines.length);
   } catch(e) {
-    openDlg(`<h2>No pudimos leer el PDF</h2><p class="muted">${esc(e && e.message || "Error desconocido")}. Si es una foto o un escaneo, cargá las cuotas a mano.</p>
-      <button class="btn" data-action="add-cuota">Cargalo a mano</button><button class="btn ghost" data-action="close">Cerrar</button>`);
+    if (pdfCancelled) return;
+    const n = e && e.name, m = e && e.message || "";
+    if (n === "InvalidPDFException") err("Ese archivo no es un PDF válido", "Está dañado o no es un resumen. Descargalo de nuevo desde tu banco.");
+    else if (/lector de PDF/.test(m)) err("No pudimos cargar el lector", esc(m));
+    else err("No pudimos abrir el archivo", "Probá de nuevo o cargá las cuotas a mano.");
   }
 }
 let pending = null;
@@ -681,17 +743,33 @@ function reviewImport(r, nLines){
   pending = r;
   const sumCuotas = r.cuotas.reduce((a, c) => a + c.amount, 0);
   const resto = Math.max(0, r2(r.saldo - sumCuotas));
+  const fd = d => d.toLocaleDateString("es-AR", {day:"2-digit", month:"2-digit", year:"2-digit"}).replace(/\//g, "-");
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  const leido = [r.saldo && `saldo ${fmt(r.saldo)}`, r.minimo && `mínimo ${fmt(r.minimo)}`, r.tna && `TNA ${r.tna}%`, r.cierre && `cierre ${fd(r.cierre)}`, r.venc && `vence ${fd(r.venc)}`].filter(Boolean).join(" · ");
+  const faltan = [!r.saldo && "saldo", !r.minimo && "pago mínimo", !r.tna && "tasa (TNA)", !r.venc && "vencimiento"].filter(Boolean);
+  const avisos = [];
+  if (r.venc && r.venc < hoy) avisos.push(`Este resumen venció el ${fd(r.venc)}. Si ya lo pagaste, bajá 1 en «Faltan» de cada compra o cargá el resumen siguiente.`);
+  if (r.saldoUsd) avisos.push(`Tu resumen tiene U$S ${r.saldoUsd.toLocaleString("es-AR", {minimumFractionDigits:2})} en dólares: no los incluimos acá.`);
+  if (r.totalConsumos && r.cuotas.length) {
+    const dif = r2(r.totalConsumos - sumCuotas);
+    if (Math.abs(dif) < 0.5) avisos.push(`✓ Las cuotas suman ${fmt(sumCuotas)}, igual al total de consumos del resumen.`);
+    else if (dif > 0) avisos.push(`Los consumos del resumen suman ${fmt(r.totalConsumos)} y las cuotas leídas ${fmt(sumCuotas)}. Los ${fmt(dif)} de diferencia pueden ser compras en un pago o una cuota que no pudimos leer.`);
+    else avisos.push(`Las cuotas leídas (${fmt(sumCuotas)}) superan los consumos del resumen (${fmt(r.totalConsumos)}). Revisá los montos.`);
+  }
+  if (faltan.length) avisos.push(`No pudimos leer: ${faltan.join(", ")}. Completalo en Deudas o a mano.`);
   openDlg(`<form id="fImport"><h2>${r.cuotas.length ? `Encontramos ${r.cuotas.length} ${r.cuotas.length === 1 ? "compra" : "compras"} en cuotas` : "No encontramos cuotas"}</h2>
     <p class="muted">${r.cuotas.length ? "Revisá y corregí antes de guardar. Destildá lo que no sea tuyo." : `Leímos ${nLines} líneas pero ninguna tenía el formato «cuota 3/12». Podés cargarlas a mano.`}</p>
+    ${leido ? `<p class="muted">Esto leímos de tu resumen: ${leido}. ¿Coincide?</p>` : ""}
+    ${avisos.map(a => `<div class="alert" style="margin-top:8px">${a}</div>`).join("")}
     <div class="row"><div><label for="icard">Tarjeta</label><input id="icard" name="card" value="${esc(r.card)}" maxlength="30"></div>
-    <div style="flex:.6"><label for="icur">Moneda</label><select id="icur" name="currency">${Object.keys(LOCALES).map(c => `<option ${c === S.currency ? "selected" : ""}>${c}</option>`).join("")}</select></div></div>
+    <div style="flex:.6"><label for="icur">Moneda</label><select id="icur" name="currency">${Object.keys(LOCALES).map(c => `<option ${c === (S.currency || "ARS") ? "selected" : ""}>${c}</option>`).join("")}</select></div></div>
     ${r.cuotas.map((c, i) => `<div class="check" style="margin-top:8px"><input type="checkbox" name="on${i}" checked aria-label="Incluir ${esc(c.desc)}">
       <div style="flex:1"><input name="d${i}" value="${esc(c.desc)}" maxlength="40" aria-label="Descripción">
       <div class="row" style="margin-top:6px"><div><span class="muted">Cuota</span><input name="a${i}" type="number" step="any" min="0" value="${c.amount}" aria-label="Monto de la cuota"></div>
       <div><span class="muted">Faltan (era ${c.cur}/${c.tot})</span><input name="l${i}" type="number" min="1" max="120" value="${c.left}" aria-label="Cuotas que faltan"></div></div>
       <label class="check" style="border:0;padding:6px 0 0"><input type="checkbox" name="s${i}" ${c.si ? "checked" : ""}><span>Sin interés${c.si ? " <span class=\"muted\">(lo detectamos en tu resumen)</span>" : ""}</span></label></div></div>`).join("")}
-    ${r.saldo ? `<div class="alert" style="margin-top:12px"><label class="check" style="border:0;padding:0"><input type="checkbox" name="addSaldo">
-      <span>Si no vas a pagar el total, agregá el resto del saldo como deuda: <b>${fmt(resto)}</b>${r.tna ? ` · TNA ${r.tna}%` : ""} · mínimo ${fmt(minResto(r, sumCuotas, resto))}</span></label>
+    ${r.saldo ? `<div class="alert" style="margin-top:12px"><label class="check" style="border:0;padding:0"><input type="checkbox" name="addSaldo" ${resto > 0 ? "checked" : ""}>
+      <span>Agregar el resto del saldo como deuda (comisiones, impuestos e intereses): <b>${fmt(resto)}</b>${r.tna ? ` · TNA ${r.tna}%` : ""} · mínimo ${fmt(minResto(r, sumCuotas, resto))}</span></label>
       <p class="muted" style="margin:6px 0 0">Saldo del resumen ${fmt(r.saldo)} menos las cuotas de este mes ${fmt(sumCuotas)}. Podés corregirlo después en Deudas.</p></div>` : ""}
     <div style="margin-top:14px">${r.cuotas.length || r.saldo ? `<button class="btn" type="submit">Guardar en mi plan</button>` : ""}
     <button class="btn alt" type="button" data-action="add-cuota">Cargalo a mano</button>
@@ -708,11 +786,11 @@ function saveImport(form){
     const amount = num(fd.get("a" + i)), left = Math.round(num(fd.get("l" + i)));
     if (!amount || !left) return;
     sumCuotas += amount;
-    S.cuotas.push({id:uid(), desc:(fd.get("d" + i) || "").trim() || c.desc, card, amount, left, total:c.tot, si:!!fd.get("s" + i)});
+    S.cuotas.push({id:uid(), desc:(fd.get("d" + i) || "").trim() || c.desc, card, amount, left, total:c.tot, si:!!fd.get("s" + i), due:r.venc ? r.venc.getDate() : 0});
   });
   if (fd.get("addSaldo")) {
     const bal = Math.max(0, r2(r.saldo - sumCuotas));
-    if (bal > 0) S.deudas.push({id:uid(), name:"Saldo " + card, balance:bal, rate:r.tna || 0, min:minResto(r, sumCuotas, bal)});
+    if (bal > 0) S.deudas.push({id:uid(), name:"Saldo " + card, balance:bal, rate:r.tna || 0, min:minResto(r, sumCuotas, bal), due:r.venc ? r.venc.getDate() : 0});
   }
   pending = null; save(); dlg.close(); tab = "cuotas"; render();
 }
@@ -729,12 +807,13 @@ function demo(){
 function markMonth(){
   const P = plan();
   if (P.status !== "ok" || !P.sim.first) return;
-  if (!confirm(`¿Pagaste lo de ${monthLabel(0, true)}? Vamos a descontar una cuota a cada compra y actualizar tus saldos.`)) return;
-  const f = P.sim.first, mes = monthKey();
-  S.deudas.forEach(d => { if (d.id in f.balances) d.balance = f.balances[d.id]; });
-  S.cuotas.forEach(c => { if (c.left > 0) c.left--; });
-  S.history.push({d:new Date().toISOString().slice(0, 10), mes, paid:r2(Object.values(f.pay).reduce((a, b) => a + b, 0))});
-  save(); render(); window.scrollTo(0, 0);
+  confirmDlg("¿Marcar el mes como pagado?", `¿Pagaste lo de ${monthLabel(0, true)}? Vamos a descontar una cuota a cada compra y actualizar tus saldos. No se puede deshacer: si te equivocás, corregí los valores a mano en Deudas.`, "Sí, lo pagué", () => {
+    const f = P.sim.first, mes = monthKey();
+    S.deudas.forEach(d => { if (d.id in f.balances) d.balance = f.balances[d.id]; });
+    S.cuotas.forEach(c => { if (c.left > 0) c.left--; });
+    S.history.push({d:new Date().toISOString().slice(0, 10), mes, paid:r2(Object.values(f.pay).reduce((a, b) => a + b, 0))});
+    save(); render(); window.scrollTo(0, 0);
+  });
 }
 function exportData(){
   const a = document.createElement("a");
@@ -748,7 +827,9 @@ document.addEventListener("click", e => {
   if (t.dataset.tab || t.dataset.tabGo) { tab = t.dataset.tab || t.dataset.tabGo; if (dlg.open) dlg.close(); render(); window.scrollTo(0, 0); return; }
   const id = t.dataset.id;
   switch (t.dataset.action) {
-    case "demo-clear": if (confirm("¿Borrar el ejemplo y empezar con tus datos?")) { S = Object.assign(blank(), {currency:S.currency}); save(); render(); } break;
+    case "confirm-ok": { const fn = onConfirm; onConfirm = backFn = null; dlg.close(); if (fn) fn(); break; }
+    case "confirm-no": { const b = backFn; onConfirm = backFn = null; if (b) b(); else dlg.close(); break; }
+    case "demo-clear": confirmDlg("¿Borrar el ejemplo?", "Se borran los datos de ejemplo y empezás con los tuyos.", "Borrar ejemplo", () => { S = Object.assign(blank(), {currency:S.currency}); save(); render(); }); break;
     case "cal-ics": descargarIcs(); break;
     case "cal-prev": calM--; render(); break;
     case "cal-next": calM++; render(); break;
@@ -758,15 +839,15 @@ document.addEventListener("click", e => {
     case "add-cuota": formCuota(); break;
     case "edit-deuda": formDeuda(S.deudas.find(d => d.id === id)); break;
     case "edit-cuota": formCuota(S.cuotas.find(c => c.id === id)); break;
-    case "del-deuda": if (confirm("¿Eliminar esta deuda?")) { S.deudas = S.deudas.filter(d => d.id !== id); save(); dlg.close(); render(); } break;
-    case "del-cuota": if (confirm("¿Eliminar esta compra en cuotas?")) { S.cuotas = S.cuotas.filter(c => c.id !== id); save(); dlg.close(); render(); } break;
+    case "del-deuda": confirmDlg("¿Eliminar esta deuda?", "Se saca de tu plan.", "Eliminar", () => { S.deudas = S.deudas.filter(d => d.id !== id); save(); render(); }, () => formDeuda(S.deudas.find(d => d.id === id))); break;
+    case "del-cuota": confirmDlg("¿Eliminar esta compra?", "Se saca de tu plan.", "Eliminar", () => { S.cuotas = S.cuotas.filter(c => c.id !== id); save(); render(); }, () => formCuota(S.cuotas.find(c => c.id === id))); break;
     case "strategy": S.strategy = t.dataset.v; save(); render(); break;
     case "demo": demo(); break;
     case "mark-month": markMonth(); break;
     case "settings": settings(); break;
     case "export": exportData(); break;
     case "import": document.getElementById("jsonInput").click(); break;
-    case "wipe": if (confirm("Esto borra todas tus deudas, cuotas y avances de este dispositivo. No se puede deshacer. ¿Seguro?")) { const c = S.currency; S = blank(); S.currency = c; save(); dlg.close(); tab = "inicio"; render(); } break;
+    case "wipe": confirmDlg("¿Borrar todos tus datos?", "Se borran todas tus deudas, cuotas y avances de este dispositivo. No se puede deshacer.", "Borrar todo", () => { const c = S.currency; S = blank(); S.currency = c; save(); tab = "inicio"; render(); }, settings); break;
     case "close": dlg.close(); break;
   }
 });
@@ -781,9 +862,8 @@ document.addEventListener("change", e => {
     t.files[0].text().then(txt => {
       const d = JSON.parse(txt);
       if (!Array.isArray(d.deudas) || !Array.isArray(d.cuotas)) throw new Error("formato");
-      if (!confirm("Esto reemplaza los datos actuales por los de la copia. ¿Seguir?")) return;
-      S = sane(Object.assign(blank(), d)); save(); dlg.close(); tab = "inicio"; render();
-    }).catch(() => alert("Ese archivo no es una copia de Fecha Libre.")).finally(() => { t.value = ""; });
+      confirmDlg("¿Restaurar la copia?", "Esto reemplaza los datos actuales por los de la copia.", "Restaurar", () => { S = sane(Object.assign(blank(), d)); save(); tab = "inicio"; render(); }, settings);
+    }).catch(() => openDlg(`<h2>Archivo no válido</h2><p class="muted">Ese archivo no es una copia de Fecha Libre.</p><button class="btn" type="button" data-action="close">Entendido</button>`)).finally(() => { t.value = ""; });
   }
 });
 document.addEventListener("submit", e => {
@@ -797,7 +877,8 @@ document.addEventListener("submit", e => {
     const c = {desc:(fd.get("desc") || "").trim() || "Compra", card:(fd.get("card") || "").trim(), amount:num(fd.get("amount")), left:Math.round(num(fd.get("left"))), total:Math.round(num(fd.get("total"))) || "", si:!!fd.get("si"), due:Math.min(31, Math.round(num(fd.get("due"))))};
     if (!c.amount || !c.left) return;
     if (id) Object.assign(S.cuotas.find(x => x.id === id), c); else S.cuotas.push(Object.assign({id:uid()}, c));
-  } else if (f.id === "fImport") { saveImport(f); return; }
+  } else if (f.id === "fPass") { const p = passCb; passCb = null; if (p) { openDlg("<p>Leyendo tu resumen…</p>"); p.update(fd.get("pw")); } return; }
+  else if (f.id === "fImport") { saveImport(f); return; }
   else return;
   save(); dlg.close(); render();
 });
