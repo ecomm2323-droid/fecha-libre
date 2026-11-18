@@ -30,6 +30,9 @@ document.getElementById("app").onload = async function(){
   check("México «3 DE 12 MSI» 1250, faltan 10", mx.cuotas.length === 1 && mx.cuotas[0].amount === 1250 && mx.cuotas[0].left === 10);
   check("saldo al corte 18450.3", mx.saldo === 18450.3, mx.saldo);
   check("fecha 10.12.26 no es monto", w.parseStatement(["VENCIMIENTO 10.12.26 C.05/04"]).cuotas.length === 0);
+  // 2b) Montos como se escriben en Argentina
+  [["200.000", 200000], ["1.500.000", 1500000], ["1.500.000,50", 1500000.5], ["$ 124.596", 124596], ["66,67", 66.67], ["95.5", 95.5], ["120", 120], ["1,250.00", 1250], ["abc", 0], ["", 0]]
+    .forEach(([s, v]) => check(`monto «${s}» = ${v}`, w.num(s) === v, w.num(s)));
   // 3) Motor del plan con el ejemplo
   w.demo();
   const sim = w.simulate("avalancha");
@@ -41,7 +44,7 @@ document.getElementById("app").onload = async function(){
   const P = w.plan();
   check("presupuesto ejemplo alcanza", P.status === "ok");
   const totalMes = Object.values(sim.first.pay).reduce((a, b) => a + b, 0);
-  check("pago del mes = presupuesto (600)", Math.abs(totalMes - 600) < 0.01, totalMes.toFixed(2));
+  check("pago del mes = presupuesto del ejemplo (800.000)", Math.abs(totalMes - 800000) < 0.01, totalMes.toFixed(2));
   w.localStorage.removeItem("fechalibre.ar.v1");
 };
 </script></body></html>

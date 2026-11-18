@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="vendor/fonts.css">
 <style>
 :root{
-  --bg:#F7F5EF; --card:#FFFFFF; --ink:#27352F; --muted:#5E6B64; --line:#E7E3D8;
+  --bg:#F7F5EF; --card:#FFFFFF; --ink:#27352F; --muted:#56635C; --line:#E7E3D8;
   --brand:#245B48; --brand2:#245B48; --accent:#E9A27E; --danger:#B4533B; --ok:#245B48;
   --soft:#DCEDE2; --warn:#FBEADF; --warnink:#7A4327;
   --fh:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -20,6 +20,9 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--fb);font-variant-numeric:tabular-nums}
 button,input,select{font:inherit}
+::selection{background:#CDE5D6;color:var(--ink)}
+input{caret-color:var(--brand)}
+input::placeholder{color:#66726B;opacity:1}
 h1,h2,h3,.big,.brand{font-family:var(--fh)}
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:var(--brand);letter-spacing:-.2px}
@@ -92,25 +95,49 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);out
 .timeline li:before{content:"";position:absolute;left:5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
 .timeline li:after{content:"";position:absolute;left:9px;top:18px;bottom:0;width:1px;background:var(--line)}
 .timeline li:last-child:after{display:none}
-details{border-top:1px solid var(--line);padding:10px 0}
+details{border-top:1px solid var(--line)}
 details:first-of-type{border-top:0}
-summary{cursor:pointer;font-weight:600}
-details p{margin-top:8px;font-size:15px}
+summary{cursor:pointer;font-weight:600;padding:11px 0}
+details p{margin:0 0 12px;font-size:15px}
+.q{border:0}
+.q>summary{display:inline-flex;align-items:center;min-height:44px;padding:0;font-size:14px;color:var(--brand);text-decoration:underline dotted;text-underline-offset:3px;list-style:none}
+.q>summary::-webkit-details-marker{display:none}
+.q p,.q .box{margin:0 0 10px;font-size:15px;background:var(--soft);border-radius:12px;padding:10px 12px;color:var(--ink)}
+.link{background:none;border:0;padding:0 4px;min-height:44px;color:var(--brand);font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:15px}
+.echo{margin:6px 0 0;font-size:14px;color:var(--brand);font-weight:600}
+.echo:empty,.err:empty{display:none}
+.err{color:var(--danger);font-size:14px;font-weight:600;margin:10px 0 0}
+.note-ok{background:var(--soft);color:var(--brand);border-radius:14px;padding:12px;font-size:14px;margin-bottom:12px}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;color:var(--ink);font-size:15px}
+.opt b{display:block;font-size:16px;margin-bottom:2px}
+.opt span{color:var(--muted);font-size:14px}
+.opt:hover{border-color:var(--brand)}
+.ttl{font-family:var(--fh);font-size:22px;font-weight:700;margin:0 0 12px;letter-spacing:-.3px}
+.glos dt{font-weight:700;margin-top:14px}
+.glos dt:first-child{margin-top:0}
+.glos dd{margin:2px 0 0;font-size:15px}
+.toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:6;width:max-content;max-width:min(528px,calc(100% - 24px));display:flex;align-items:center;gap:12px;background:var(--ink);color:#fff;border-radius:14px;padding:10px 10px 10px 16px;font-size:15px;box-shadow:0 8px 24px rgba(39,53,47,.28);animation:rise .32s cubic-bezier(.16,1,.3,1)}
+.toast:empty{display:none}
+.toast button{flex:none;background:none;border:0;color:var(--accent);font-weight:700;min-height:44px;padding:0 8px;cursor:pointer}
+@keyframes rise{from{opacity:0;transform:translate(-50%,10px)}}
 dialog{border:0;border-radius:20px;padding:0;width:min(520px,calc(100% - 24px));max-height:calc(100% - 24px);background:var(--bg);color:var(--ink)}
 dialog::backdrop{background:rgba(39,53,47,.55)}
 .dlg{padding:18px}
 .dlg h2{margin-bottom:4px}
+.dlg h2:focus{outline:none}
+.dlg h3{margin:16px 0 8px;font-size:14px;color:var(--muted);font-weight:600}
 table{width:100%;border-collapse:collapse;font-size:14px}
 td,th{padding:6px 4px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
 td input{padding:6px;font-size:14px}
 .empty{text-align:center;padding:26px 16px}
 .empty .big{font-size:26px;font-weight:700;margin-bottom:6px;color:var(--brand)}
 .foot{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 .cm-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.cm-h h2{margin:0}.cm-h h2::first-letter{text-transform:uppercase}
-.cm-h button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--brand);font-size:20px;cursor:pointer}
+.cm-h h1{margin:0;font-size:18px;font-weight:700;letter-spacing:-.2px}.cm-h h1::first-letter{text-transform:uppercase}
+.cm-h button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--brand);cursor:pointer;display:grid;place-items:center}
+.cm-h svg{width:20px;height:20px}
 .cm-h button:disabled{opacity:.35;cursor:default}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .cg .w{font-size:11px;color:var(--muted);text-align:center;padding:2px 0}
@@ -120,6 +147,7 @@ td input{padding:6px;font-size:14px}
 .cg .d.imp{background:var(--accent);color:var(--ink);font-weight:700}
 .cg .d.imp:after{background:var(--ink)}
 .cg .d.today{outline:2px solid var(--brand);outline-offset:-2px}
+.cg .d.past{color:var(--muted);opacity:.55}
 .lg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .imp-l{list-style:none;margin:0;padding:0}
@@ -132,7 +160,7 @@ td input{padding:6px;font-size:14px}
 <body>
 <header class="top">
   <div class="brand"><svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><rect x="2" y="5" width="36" height="33" rx="9" fill="#245B48"/><rect x="11" y="1" width="4.5" height="9" rx="2.25" fill="#E9A27E"/><rect x="24.5" y="1" width="4.5" height="9" rx="2.25" fill="#E9A27E"/><rect x="8" y="16" width="24" height="17" rx="5" fill="#F7F5EF"/><path d="M14.5 25.2l4 4 7.5-8.2" fill="none" stroke="#245B48" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Fecha Libre</div>
-  <button class="iconbtn" data-action="settings" aria-label="Ajustes">⚙︎</button>
+  <button class="iconbtn" data-action="settings" aria-label="Ajustes y ayuda"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h3M12 17h8"/><circle cx="15.5" cy="7" r="2.3"/><circle cx="9.5" cy="17" r="2.3"/></svg></button>
 </header>
 <main id="view" tabindex="-1"></main>
 <nav class="tabs" aria-label="Secciones">
@@ -143,8 +171,9 @@ td input{padding:6px;font-size:14px}
   <button data-tab="plan"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Plan</button>
 </nav>
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
-<input type="file" id="pdfInput" accept="application/pdf" class="sr" aria-label="Subir resumen en PDF">
-<input type="file" id="jsonInput" accept="application/json,.json" class="sr" aria-label="Restaurar copia">
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<input type="file" id="pdfInput" accept="application/pdf" class="sr" tabindex="-1" aria-hidden="true">
+<input type="file" id="jsonInput" accept="application/json,.json" class="sr" tabindex="-1" aria-hidden="true">
 
 <script>
 "use strict";
@@ -163,7 +192,7 @@ function sane(s){
   s.currency = /^[A-Z]{3}$/.test(s.currency) ? s.currency : "ARS";
   s.strategy = s.strategy === "bola" ? "bola" : "avalancha";
   s.budget = n(s.budget); s.income = n(s.income); s.gastos = n(s.gastos);
-  s.deudas = (Array.isArray(s.deudas) ? s.deudas : []).filter(obj).map(x => ({id:id(x.id), name:str(x.name, 80), balance:n(x.balance), rate:n(x.rate), min:n(x.min), due:n(x.due)}));
+  s.deudas = (Array.isArray(s.deudas) ? s.deudas : []).filter(obj).map(x => ({id:id(x.id), name:str(x.name, 80), balance:n(x.balance), rate:n(x.rate), min:n(x.min), due:n(x.due), rateUnknown:!!x.rateUnknown, minEst:!!x.minEst}));
   s.cuotas = (Array.isArray(s.cuotas) ? s.cuotas : []).filter(obj).map(x => ({id:id(x.id), desc:str(x.desc, 80), card:str(x.card, 60), amount:n(x.amount), left:n(x.left), total:x.total === "" ? "" : n(x.total), si:!!x.si, due:n(x.due)}));
   s.history = (Array.isArray(s.history) ? s.history : []).filter(obj).map(h => ({d:str(h.d, 10), mes:str(h.mes, 7), paid:n(h.paid)}));
   const ck = {}; if (obj(s.checks)) for (const k in s.checks) ck[k] = !!s.checks[k]; s.checks = ck;
@@ -174,9 +203,47 @@ function sane(s){
 function load(){ try { return sane(Object.assign(blank(), JSON.parse(localStorage.getItem(KEY)) || {})); } catch(e){ return blank(); } }
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
 const uid = () => Math.random().toString(36).slice(2, 9);
-const num = v => { const n = parseFloat(String(v ?? "").replace(",", ".")); return isFinite(n) && n > 0 ? n : 0; };
+// Montos como los escribe la gente en Argentina: «200.000», «1.500.000,50», «$ 66,67». Punto = miles; coma = decimales.
+// Un solo punto con 2 decimales («95.5», «66.67») se toma como decimal.
+function num(v){
+  let s = String(v ?? "").replace(/[^\d.,]/g, "");
+  if (!s) return 0;
+  const dots = (s.match(/\./g) || []).length, commas = (s.match(/,/g) || []).length;
+  if (dots && commas) s = s.lastIndexOf(",") > s.lastIndexOf(".") ? s.replace(/\./g, "").replace(",", ".") : s.replace(/,/g, "");
+  else if (commas) s = commas > 1 ? s.replace(/,/g, "") : s.replace(",", ".");
+  else if (dots > 1 || /\.\d{3}$/.test(s)) s = s.replace(/\./g, "");
+  const n = parseFloat(s);
+  return isFinite(n) && n > 0 ? n : 0;
+}
+// Valor para mostrar dentro de un campo, en formato local («51.999,93»).
+const fmtIn = n => n ? (+n).toLocaleString("es-AR", {maximumFractionDigits:2}) : "";
+const fmtPct = n => (+n || 0).toLocaleString("es-AR", {maximumFractionDigits:2}) + " %";
+const fmtMes = key => key ? new Intl.DateTimeFormat("es-AR", {month:"long", year:"numeric"}).format(new Date(+key.slice(0, 4), +key.slice(5, 7) - 1, 1)) : "";
 const r2 = n => Math.round(n * 100) / 100;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- Glosario: palabras del resumen y del banco, en criollo ---------- */
+const GLOS = {
+  tna:["Interés anual (TNA)", "Lo que el banco te cobra por año por la plata que le debés. En el resumen figura como «TNA». Cuanto más alto, más rápido crece la deuda."],
+  cft:["CFT (Costo Financiero Total)", "Lo que te cuesta de verdad la deuda: intereses + impuestos + comisiones. Siempre es más alto que la TNA. Usalo para comparar ofertas."],
+  tem:["TEM", "El interés de un solo mes. Aparece en el resumen al lado de la TNA."],
+  saldo:["Saldo", "Todo lo que debés hoy en esa tarjeta o cuenta."],
+  minimo:["Pago mínimo", "Lo menos que podés pagar para no atrasarte. Lo que no pagás sigue sumando intereses."],
+  venc:["Vencimiento", "El último día para pagar sin recargo."],
+  cierre:["Cierre", "El día en que el banco corta y arma tu resumen. Lo que compres después entra en el resumen siguiente."],
+  descubierto:["Descubierto", "Cuando gastás más plata de la que tenés en la cuenta. El banco te la presta, con intereses altos."],
+  crece:["Deuda que crece", "Una deuda que suma intereses cada mes si no la pagás completa: lo que quedó sin pagar de la tarjeta, o el descubierto."],
+  cuota:["Cuota fija", "Un pago igual que se repite hasta que termina, como una compra en 12 cuotas o un préstamo. No crece."],
+  sinint:["Cuotas sin interés", "Pagás lo mismo que de contado, dividido en meses."],
+  refi:["Refinanciar", "Pedirle al banco que pase lo que debés a cuotas fijas, ojalá con menos interés. Pedí siempre el CFT y el costo total por escrito."],
+  orden:["Orden de pago", "Primero la más cara: lo que te sobra va a la deuda con el interés más alto, y pagás menos intereses en total. Primero la más chica: va a la deuda más chica, y te sacás deudas de encima antes."],
+  fecha:["Fecha libre", "El mes en que, si seguís el plan, terminás de pagar todo."],
+  intereses:["Intereses estimados", "Lo que calculamos que vas a pagar de intereses en total hasta tu fecha libre."],
+  liberada:["Cuota liberada", "Cuando terminás de pagar una cuota, esa plata queda libre. Fecha Libre la manda a tu próxima deuda para que termines antes."]
+};
+// «¿Qué es esto?» desplegable, al lado de la palabra.
+const help = (k, label) => `<details class="q"><summary>${label}</summary><p>${GLOS[k][1]}</p></details>`;
+const glosList = keys => `<dl class="glos">${keys.map(k => `<dt>${GLOS[k][0]}</dt><dd>${GLOS[k][1]}</dd>`).join("")}</dl>`;
 
 const LOCALES = {USD:"es-US",ARS:"es-AR",MXN:"es-MX",CLP:"es-CL",COP:"es-CO",PEN:"es-PE",UYU:"es-UY",EUR:"es-ES",GTQ:"es-GT",DOP:"es-DO",BOB:"es-BO",PYG:"es-PY",CRC:"es-CR"};
 function fmt(n){
@@ -248,9 +315,26 @@ const view = document.getElementById("view");
 function render(){
   try { localStorage.setItem(KEY + ".ui", JSON.stringify({tab, calM})); } catch(e){}
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"));
-  view.innerHTML = ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan})[tab]();
+  // Redibujar no debe sacarte del campo donde estabas escribiendo (en el celular cerraría el teclado).
+  const ae = document.activeElement, aid = ae && ae.id && view.contains(ae) ? ae.id : "";
+  view.innerHTML = demoBanner() + ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan})[tab]();
+  if (aid) { const el = document.getElementById(aid); if (el) el.focus({preventScroll:true}); }
 }
-function fechaTxt(sim){ return sim.done ? monthLabel(sim.months - 1, true) : "Más de 50 años (no se termina)"; }
+const demoBanner = () => S.demo ? `<div class="alert between"><span><b>Estás viendo un ejemplo.</b> Nada de esto es tuyo.</span><button class="btn sm" data-action="demo-clear" style="flex:none">Empezar con lo mío</button></div>` : "";
+function fechaTxt(sim){ return sim.done ? monthLabel(sim.months - 1, true) : "Sin fecha por ahora"; }
+
+/* ---------- Avisos cortos abajo de la pantalla («Listo, guardado» + Deshacer) ---------- */
+let toastT = 0;
+function toast(msg, act, label){
+  const el = document.getElementById("toast");
+  el.innerHTML = `<span>${msg}</span>${act ? `<button type="button" data-action="${act}">${label}</button>` : ""}`;
+  clearTimeout(toastT); toastT = setTimeout(() => { el.innerHTML = ""; }, act ? 9000 : 4500);
+}
+function focusBudget(){
+  tab = "inicio"; if (dlg.open) dlg.close(); render();
+  const b = document.getElementById("budget");
+  if (b) { b.scrollIntoView({block:"center"}); b.focus({preventScroll:true}); }
+}
 
 
 /* ---------- Acelerador: cuánto adelantás sumando un extra por mes ---------- */
@@ -261,13 +345,13 @@ function acelerador(sim){
     const extra = Math.ceil(base * p / 1000) * 1000;
     S.budget = base + extra; const s = simulate(S.strategy, false); S.budget = base;
     return {extra, s};
-  }).filter(r => r.s.done && r.s.months < sim.months);
+  }).filter((r, i, all) => r.s.done && r.s.months < sim.months && !all.slice(0, i).some(p => p.s.months === r.s.months));
   S.budget = base;
   if (!rows.length) return "";
   return `<div class="card"><h2>Salí más rápido</h2>
     <p class="muted">Si sumás un extra por mes (aguinaldo, horas extra, una venta, una suscripción menos), adelantás tu fecha libre:</p>
-    <table>${rows.map(r => `<tr><td><b>+ ${fmt(r.extra)}/mes</b></td><td>salís en <b>${esc(fechaTxt(r.s))}</b></td><td><span class="pill">${sim.months - r.s.months} ${sim.months - r.s.months === 1 ? "mes" : "meses"} antes</span></td></tr>`).join("")}</table>
-    <p class="muted" style="margin-top:8px">El extra va todo a la deuda objetivo. Probá cambiar tu presupuesto arriba para ver tu número.</p></div>`;
+    <table>${rows.map(r => `<tr><td style="white-space:nowrap"><b>+${fmt(r.extra)}</b> por mes</td><td>terminás en <b>${esc(fechaTxt(r.s))}</b></td><td><span class="pill">${sim.months - r.s.months} ${sim.months - r.s.months === 1 ? "mes" : "meses"} antes</span></td></tr>`).join("")}</table>
+    <p class="muted" style="margin-top:8px">Todo el extra va a tu deuda prioridad.${rows.length < 3 ? " Sumar más no te adelanta mucho más porque tus cuotas fijas terminan en esa fecha igual." : ""}</p></div>`;
 }
 
 
@@ -296,7 +380,7 @@ function descargarIcs(){
   for (let m = 0; m < n; m++) {
     const key = ym(off() + m), items = calItems(m, sim);
     items.filter(i => i.day).forEach(i => add(key, i.day,
-      `${i.imp === "cuota" ? "Última cuota: " : i.imp === "deuda" ? "Deuda saldada: " : i.min ? "Pago mínimo: " : "Vence: "}${i.t} (${fmt(i.amt)})`,
+      `${i.imp === "cuota" ? "Última cuota de " : i.imp === "deuda" ? "Terminás de pagar " : i.min ? "Pagá el mínimo de " : "Pagá la cuota de "}${i.t} (${fmt(i.amt)})`,
       "Fecha Libre. Las fechas del plan son estimaciones."));
     if (sim && sim.done && m === sim.months - 1) {
       const ds = items.filter(i => i.imp && i.day).map(i => i.day);
@@ -315,7 +399,7 @@ function descargarIcs(){
 
 function vCalendario(){
   if (!activeDeudas().length && !activeCuotas().length)
-    return `<div class="card empty"><div class="big">Calendario</div><p>Cargá tus deudas y cuotas para ver acá tus vencimientos y las fechas en que te sacás cada una de encima.</p><button class="btn" data-tab-go="cuotas">Cargar mis cuotas</button></div>`;
+    return `<div class="card empty"><h1 class="big">Calendario</h1><p>Cargá tus deudas y cuotas para ver acá cuándo vence cada una y en qué mes te la sacás de encima.</p><button class="btn" data-action="pdf">Subí el resumen de tu tarjeta (PDF)</button><button class="btn alt" data-action="manual">Cargar a mano</button></div>`;
   const P = plan(), sim = P.status === "ok" ? P.sim : null;
   const max = sim ? sim.months - 1 : 24;
   calM = Math.max(0, Math.min(calM, max));
@@ -328,143 +412,176 @@ function vCalendario(){
   const finalDay = final ? Math.max(0, ...items.filter(i => i.imp && i.day).map(i => i.day)) || dim : 0;
   if (final) imp.add(finalDay);
   const now = new Date(), today = now.getFullYear() === y && now.getMonth() === mo ? now.getDate() : 0;
-  let cells = ["L","M","M","J","V","S","D"].map(w => `<div class="w" aria-hidden="true">${w}</div>`).join("") + `<div class="d o"></div>`.repeat(lead);
+  // La grilla es solo visual: la lista «Qué vence este mes» dice lo mismo para lectores de pantalla.
+  let cells = ["L","M","M","J","V","S","D"].map(w => `<div class="w">${w}</div>`).join("") + `<div class="d o"></div>`.repeat(lead);
   for (let d = 1; d <= dim; d++) {
-    const cls = ["d", pay.has(d) ? "has" : "", imp.has(d) ? "imp" : "", d === today ? "today" : ""].filter(Boolean).join(" ");
-    const lab = items.filter(i => i.day === d).map(i => i.t).join(", ");
-    cells += `<div class="${cls}"${lab ? ` role="img" tabindex="0" aria-label="Día ${d}: ${esc(lab)}"` : ""}>${d}</div>`;
+    const cls = ["d", pay.has(d) ? "has" : "", imp.has(d) ? "imp" : "", d === today ? "today" : "", today && d < today ? "past" : ""].filter(Boolean).join(" ");
+    cells += `<div class="${cls}">${d}</div>`;
   }
   const notes = items.filter(i => i.imp).map(i => {
-    const when = i.day ? `El ${i.day}: ` : "";
+    const when = i.day ? `El ${i.day} ` : "Este mes ";
     return i.imp === "cuota"
-      ? `<li><b>¡Una cuota menos!</b> ${when}Terminás ${esc(i.t)}. Se liberan ${fmt(i.amt)} por mes.</li>`
-      : `<li><b>¡Deuda saldada!</b> ${when}${esc(i.t)} queda saldada.</li>`;
+      ? `<li><b>¡Una cuota menos!</b> ${when}pagás la última de ${esc(i.t)}. Desde el mes que viene te quedan libres ${fmt(i.amt)} por mes.</li>`
+      : `<li><b>¡Una deuda menos!</b> ${when}terminás de pagar ${esc(i.t)}.</li>`;
   });
-  if (final) notes.push(`<li><b>Tu Fecha Libre</b> es este mes: ${esc(fechaTxt(sim))}.</li>`);
+  if (final) notes.push(`<li><b>Tu fecha libre</b> es este mes: ${esc(fechaTxt(sim))}.</li>`);
   const dated = items.filter(i => i.day).sort((a, b) => a.day - b.day), undated = items.filter(i => !i.day);
-  const row = i => `<div class="item"><div><div class="t">${i.day ? "Día " + i.day + " · " : ""}${esc(i.t)}</div></div><div class="r">${i.min ? "mín. " : ""}${fmt(i.amt)}</div></div>`;
+  const row = i => `<div class="item"><div><div class="t">${i.day ? "Día " + i.day + " · " : ""}${esc(i.t)}${today && i.day && i.day < today ? ' <span class="pill">ya pasó</span>' : ""}</div></div><div class="r">${i.min ? "mínimo " : ""}${fmt(i.amt)}</div></div>`;
   const keys = sim ? sim.events.slice(0, 8) : [];
-  return `<div class="card"><div class="cm-h"><button data-action="cal-prev" aria-label="Mes anterior" ${calM <= 0 ? "disabled" : ""}>‹</button>
-    <h2>${esc(monthLabel(calM, true))}</h2>
-    <button data-action="cal-next" aria-label="Mes siguiente" ${calM >= max ? "disabled" : ""}>›</button></div>
-    <div class="cg">${cells}</div>
-    <div class="lg"><span><i style="background:var(--brand)"></i>Vencimiento</span><span><i style="background:var(--accent)"></i>Fecha importante</span><span><i style="outline:2px solid var(--brand);outline-offset:-2px"></i>Hoy</span></div></div>
-  ${notes.length ? `<div class="card"><h2>Fechas importantes de este mes</h2><ul class="imp-l">${notes.join("")}</ul></div>` : ""}
+  const chev = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+  return `<div class="card"><div class="cm-h"><button data-action="cal-prev" aria-label="Mes anterior" ${calM <= 0 ? "disabled" : ""}>${chev("M15 5l-7 7 7 7")}</button>
+    <h1>${esc(monthLabel(calM, true))}</h1>
+    <button data-action="cal-next" aria-label="Mes siguiente" ${calM >= max ? "disabled" : ""}>${chev("M9 5l7 7-7 7")}</button></div>
+    <div class="cg" aria-hidden="true">${cells}</div>
+    <div class="lg" aria-hidden="true"><span><i style="background:var(--brand)"></i>Vence algo</span><span><i style="background:var(--accent)"></i>Terminás de pagar algo</span><span><i style="outline:2px solid var(--brand);outline-offset:-2px"></i>Hoy</span></div></div>
+  ${notes.length ? `<div class="card"><h2>Buenas noticias de este mes</h2><ul class="imp-l">${notes.join("")}</ul></div>` : ""}
   <div class="card"><h2>Qué vence este mes</h2>
     ${dated.map(row).join("")}
-    ${undated.length ? `<p class="muted" style="margin:${dated.length ? "12px" : "0"} 0 4px">Sin día de vencimiento cargado</p>${undated.map(row).join("")}<p class="muted" style="margin-top:8px">Ponele el día de vencimiento a cada deuda y cuota (tocá el ítem en Deudas o Cuotas) para verlos en el calendario.</p>` : ""}
+    ${undated.length ? `<p class="muted" style="margin:${dated.length ? "12px" : "0"} 0 4px">Sin día de vencimiento cargado</p>${undated.map(row).join("")}<p class="muted" style="margin-top:8px">Para verlas en el calendario, ponele el día de vencimiento a cada una: en la pestaña Deudas, tocá «Editar».</p>` : ""}
   </div>
-  ${keys.length ? `<div class="card"><h2>Fechas clave de tu plan</h2><div class="klist">${keys.map(e => `<button data-action="cal-go" data-m="${e.m}"><b>${esc(monthLabel(e.m, true))}</b> · ${e.type === "cuota" ? "termina " : "se salda "}${esc(e.name)}</button>`).join("")}</div></div>` : ""}
-  ${items.length || dated.length || undated.length ? `<div class="card"><h2>Recibí avisos en tu celular</h2><p class="muted">La app no manda avisos por sí sola: tus datos son tuyos y no salen de este dispositivo. Bajá el archivo y abrilo: tu calendario (Google, iPhone) te avisa un día antes de cada vencimiento.</p><button class="btn" data-action="cal-ics">Agregar al calendario del celular</button><p class="muted" style="margin:8px 0 0">Si cambiás días o cuotas, volvé a bajarlo y borrá el anterior.</p></div>` : ""}
+  ${keys.length ? `<div class="card"><h2>Fechas clave de tu plan</h2><div class="klist">${keys.map(e => `<button data-action="cal-go" data-m="${e.m}"><b>${esc(monthLabel(e.m, true))}</b> · terminás ${e.type === "cuota" ? "las cuotas de" : "de pagar"} ${esc(e.name)}</button>`).join("")}</div></div>` : ""}
+  ${items.length ? `<div class="card"><h2>Recibí avisos en tu celular</h2><p class="muted">Fecha Libre no manda avisos: tus datos no salen de este celular. Pero tu calendario sí te puede avisar. Tocá el botón, se descarga un archivo: abrilo y elegí tu calendario (Google Calendar o el Calendario del iPhone). Te avisa un día antes de cada vencimiento.</p><button class="btn" data-action="cal-ics">Agregar las fechas a mi calendario</button><p class="muted" style="margin:8px 0 0">Si después cambiás algo, borrá en tu calendario los avisos viejos de Fecha Libre y volvé a bajar el archivo, así no te quedan repetidos.</p></div>` : ""}
   <p class="foot">Las fechas son estimaciones del plan.</p>`;
 }
 
 function vEmpty(){
   return `<div class="card empty">
-    <div class="big">¿En qué mes te sacás las deudas de encima?</div>
-    <p class="muted">Cargá tus tarjetas, préstamos y compras en cuotas. Fecha Libre arma tu plan mes a mes, te muestra tu fecha libre y cuánto la podés adelantar.</p>
-    <button class="btn" data-action="pdf">Subí el resumen de la tarjeta (PDF)</button>
-    <button class="btn alt" data-action="add-cuota">Cargá una compra en cuotas</button>
-    <button class="btn alt" data-action="add-deuda">Cargá una deuda con interés</button>
-    <button class="btn ghost" data-action="demo">Mirá un ejemplo</button>
+    <h1 class="big">¿En qué mes te sacás las deudas de encima?</h1>
+    <p class="muted">Subí el resumen de tu tarjeta y te decimos en qué mes terminás de pagar todo, y cómo adelantarlo.</p>
+    <button class="btn" data-action="pdf">Subí el resumen de tu tarjeta (PDF)</button>
+    <button class="btn alt" data-action="manual">Prefiero cargar a mano</button>
+    <button class="link" data-action="demo" style="margin-top:6px">Ver un ejemplo primero</button>
   </div>
-  <p class="foot">Tus datos son tuyos: quedan en este dispositivo. No te pedimos el home banking ni tus claves.</p>`;
+  <p class="foot">Tus datos son tuyos: quedan en este celular. No te pedimos el home banking ni tus claves.</p>`;
+}
+// ¿Ya debería haber pagado el mes del plan? Pasó el último vencimiento del mes (o el 15, si no hay días cargados).
+function pagoPendiente(P){
+  if (P.status !== "ok" || S.demo || monthKey() !== ym(0)) return false;
+  const days = calItems(0, P.sim).map(i => i.day).filter(Boolean);
+  return new Date().getDate() >= (days.length ? Math.max(...days) : 15);
+}
+const isPhone = () => /iPhone|iPad|iPod|Android/.test(navigator.userAgent);
+function installCard(){
+  try { if (localStorage.getItem(KEY + ".tip")) return ""; } catch(e){ return ""; }
+  if (!isPhone() || navigator.standalone || matchMedia("(display-mode: standalone)").matches) return "";
+  return `<div class="card"><h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque cuando tengas que pagar el mes que viene.</p>
+    <div class="row"><button class="btn alt" data-action="install-help">Ver cómo</button><button class="btn ghost" data-action="install-dismiss" style="margin-top:0">Ahora no</button></div></div>`;
+}
+let ordenOpen = false, calcOpen = false;
+function ordenBlock(){
+  const a = simulate("avalancha"), b = simulate("bola"), bola = S.strategy === "bola";
+  const same = a.months === b.months && Math.abs(b.interest - a.interest) < 1000;
+  const opt = (v, t, s, sim) => `<button data-action="strategy" data-v="${v}" aria-pressed="${S.strategy === v}"><b>${t}</b><span class="muted">${s}<br>Terminás en ${esc(fechaTxt(sim))}</span></button>`;
+  return `<p style="margin:16px 0 0">Orden de pago: <b>${bola ? "primero la más chica" : "primero la más cara"}</b>. ${bola ? "Te sacás deudas de encima antes." : "Así pagás menos intereses en total."}</p>
+    <details class="q"${ordenOpen ? " open" : ""}><summary>Cambiar el orden</summary>
+      <div class="seg" role="group" aria-label="¿Qué deuda pagás primero?" style="margin:0 0 8px">
+        ${opt("avalancha", "Primero la más cara", "Pagás menos intereses", a)}
+        ${opt("bola", "Primero la más chica", "Te sacás deudas antes", b)}
+      </div>
+      <p class="muted" style="margin:0 0 6px">${same ? "Con tus deudas, los dos órdenes dan casi lo mismo." : `Intereses en total: primero la más cara, ${fmt(a.interest)}; primero la más chica, ${fmt(b.interest)}.`}</p>
+    </details>`;
 }
 function vInicio(){
   const P = plan();
   if (P.status === "vacio") return vEmpty();
+  const need = minimoNecesario(), hasD = activeDeudas().length > 0, short = P.status === "presupuesto" && S.budget > 0;
   const paid = S.history.reduce((a, h) => a + h.paid, 0), pend = totalPendiente();
   const pct = paid + pend > 0 ? Math.round(paid / (paid + pend) * 100) : 0;
-  let hero, compare = "";
+  let hero, after = "";
   if (P.status === "presupuesto") {
-    hero = `<div class="card hero"><div class="label">Tu fecha libre</div><div class="big">Falta un dato</div>
-      <div class="sub">Definí cuánto podés destinar por mes. Mínimo para cubrir cuotas y pagos mínimos: <b>${fmt(P.need)}</b>.</div></div>`;
+    hero = short
+      ? `<div class="card hero"><div class="label">Tu fecha libre</div><h1 class="big" style="font-size:30px">Te faltan ${fmt(need - S.budget)} por mes</h1>
+        <div class="sub">Con ${fmt(S.budget)} no llegás a cubrir lo mínimo (${fmt(need)}). No es el final: abajo tenés qué hacer.</div></div>`
+      : `<div class="card hero"><div class="label">Tu fecha libre</div><h1 class="big">Falta un paso</h1>
+        <div class="sub">Contanos cuánto podés pagar por mes y te decimos en qué mes terminás de pagar todo.</div></div>`;
   } else {
     const sim = P.sim;
-    hero = `<div class="card hero"><div class="label">Fecha libre estimada</div>
+    hero = `<div class="card hero"><div class="label">${hasD ? `Pagando ${fmt(S.budget)} por mes, terminás en` : "Terminás de pagar todo en"}</div>
       <h1 class="big">${esc(fechaTxt(sim))}</h1>
-      <div class="sub">${sim.done ? `En ${sim.months} ${sim.months === 1 ? "mes" : "meses"}` : "Con este presupuesto no se termina"} · intereses estimados ${fmt(sim.interest)}</div></div>`;
-    if (activeDeudas().length) {
-      const mins = simulate(S.strategy, true);
-      const ahorro = mins.interest - sim.interest;
-      compare = `<div class="card"><h2>Tu plan vs. pagar solo el mínimo</h2>
+      <div class="sub">${sim.done ? `En ${sim.months} ${sim.months === 1 ? "mes" : "meses"}${hasD ? ` · vas a pagar unos ${fmt(sim.interest)} de intereses en total` : ""}` : "Con este monto los intereses crecen más rápido de lo que pagás. Subí lo que pagás por mes o hablá con el banco."}</div></div>
+      <button class="btn" data-tab-go="plan" style="margin-bottom:14px">Ver qué pago este mes</button>
+      ${pagoPendiente(P) ? `<div class="card"><h2>¿Ya pagaste lo de ${esc(monthLabel(0, true))}?</h2><p class="muted">Marcalo y actualizamos lo que te falta.</p><button class="btn alt" data-action="mark-month">Sí, ya lo pagué</button></div>` : ""}
+      ${S.demo ? "" : installCard()}`;
+    if (hasD) {
+      const mins = simulate(S.strategy, true), ahorro = mins.interest - sim.interest;
+      after = `<div class="card"><h2>Tu plan vs. pagar solo el mínimo</h2>
         <div class="stats">
           <div class="stat"><b>${esc(fechaTxt(sim))}</b><span>Con tu plan</span></div>
-          <div class="stat" style="background:var(--warn)"><b>${mins.done ? esc(monthLabel(mins.months - 1, true)) : "Con el mínimo no se termina"}</b><span>Solo el mínimo</span></div>
+          <div class="stat" style="background:var(--warn)"><b>${mins.done ? esc(monthLabel(mins.months - 1, true)) : "No terminás"}</b><span>Pagando solo el mínimo</span></div>
         </div>
         <p class="muted" style="margin-top:10px">${mins.done
           ? (mins.months - sim.months > 0
-            ? `Con el plan salís <b>${mins.months - sim.months} ${mins.months - sim.months === 1 ? "mes" : "meses"} antes</b> y te ahorrás cerca de <b>${fmt(Math.max(0, ahorro))}</b> en intereses.`
-            : `Con tu presupuesto actual salís en el mismo mes que pagando el mínimo. Sumá un extra para adelantar.`)
-          : `Pagando solo el mínimo, los intereses le ganan al pago: la deuda no baja. Con el plan sí se termina.`}</p></div>`;
+            ? `Con el plan terminás <b>${mins.months - sim.months} ${mins.months - sim.months === 1 ? "mes" : "meses"} antes</b> y te ahorrás unos <b>${fmt(Math.max(0, ahorro))}</b> de intereses.`
+            : `Con lo que pagás hoy terminás en el mismo mes que pagando el mínimo. Sumá un extra para adelantar.`)
+          : `Pagando solo el mínimo, los intereses le ganan al pago y la deuda no baja. Con el plan sí terminás.`} El plan también usa la plata que te queda libre cuando terminan tus cuotas.</p>
+        ${help("intereses", "¿Qué son los intereses estimados?")}</div>
+      ${acelerador(sim)}`;
     }
   }
-  const a = simulate("avalancha"), b = simulate("bola");
-  const okBudget = P.status === "ok";
-  const demoBan = S.demo ? `<div class="alert"><b>Datos de ejemplo. No son los tuyos.</b> <button class="btn sm ghost" data-action="demo-clear" style="margin-top:8px">Borrar y cargar los míos</button></div>` : "";
-  return `${demoBan}${hero}
-  <div class="card">
-    <label for="income" style="margin-top:0">Sueldo neto por mes (lo que cobrás en mano)</label>
-    <input id="income" inputmode="decimal" type="number" min="0" step="any" value="${S.income || ""}" placeholder="Opcional" data-change="income">
-    <label for="gastos">Gastos de vida por mes (alquiler, comida, servicios, transporte; sin deudas ni cuotas)</label>
-    <input id="gastos" inputmode="decimal" type="number" min="0" step="any" value="${S.gastos || ""}" placeholder="Ej: 0" data-change="gastos">
-    ${S.income ? `<p class="muted" style="margin:6px 0 12px">Te quedan <b>${fmt(Math.max(0, S.income - (S.gastos || 0)))}</b> por mes para deudas y cuotas. Lo usamos como presupuesto (podés cambiarlo abajo).${S.income > 0 && minimoNecesario() / S.income > 0.4 ? ` Ojo: solo el mínimo ya es el <b>${Math.round(minimoNecesario() / S.income * 100)}%</b> de tu sueldo.` : ""}</p>` : ""}
-    <label for="budget">¿Cuánto podés destinar por mes a deudas y cuotas?</label>
-    <input id="budget" inputmode="decimal" type="number" min="0" step="any" value="${S.budget || ""}" placeholder="Ej: ${fmt(Math.ceil(minimoNecesario()))}" data-change="budget">
-    <p class="muted" style="margin-top:6px">Mínimo este mes: ${fmt(minimoNecesario())} (cuotas ${fmt(fijoMes())} + pagos mínimos).</p>
-    ${activeDeudas().length ? `<div class="seg" role="group" aria-label="Estrategia">
-      <button data-action="strategy" data-v="avalancha" aria-pressed="${S.strategy === "avalancha"}"><b>Avalancha</b><span class="muted">Menos intereses${okBudget ? " · " + esc(fechaTxt(a)) : ""}</span></button>
-      <button data-action="strategy" data-v="bola" aria-pressed="${S.strategy === "bola"}"><b>Bola de nieve</b><span class="muted">Victorias rápidas${okBudget ? " · " + esc(fechaTxt(b)) : ""}</span></button>
-    </div>` : ""}
-  </div>
-  ${compare}
-  ${P.status === "ok" ? acelerador(P.sim) : ""}
-  <div class="card"><div class="between"><h2 style="margin:0">Tu avance</h2><span class="pill">${pct}%</span></div>
-    <div class="bar" style="margin:12px 0" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
+  const sobra = Math.max(0, S.income - (S.gastos || 0));
+  const budgetCard = hasD ? `<div class="card">
+    <label for="budget" style="margin-top:0;font-size:16px;font-weight:600;color:var(--ink)">¿Cuánto podés pagar por mes, en total, entre deudas y cuotas?</label>
+    <input id="budget" type="text" inputmode="decimal" autocomplete="off" data-money data-change="budget" value="${fmtIn(S.budget)}" placeholder="Ej: ${fmtIn(Math.ceil(need))}" aria-describedby="budget-echo budget-help">
+    <p class="echo" id="budget-echo"></p>
+    <p class="muted" id="budget-help" style="margin:6px 0 0">Para no atrasarte necesitás al menos <b>${fmt(need)}</b> por mes: tus cuotas (${fmt(fijoMes())}) más el pago mínimo de cada deuda.</p>
+    <details class="q"${S.income || calcOpen ? " open" : ""}><summary>No sé cuánto: calcularlo con mi sueldo</summary>
+      <div class="box">
+      <label for="income" style="margin-top:0">Lo que cobrás por mes, en mano</label>
+      <input id="income" type="text" inputmode="decimal" autocomplete="off" data-money data-change="income" value="${fmtIn(S.income)}" placeholder="Ej: 1.200.000" aria-describedby="income-echo">
+      <p class="echo" id="income-echo"></p>
+      <label for="gastos">Tus gastos fijos por mes: alquiler, comida, servicios, transporte (sin contar deudas ni cuotas)</label>
+      <input id="gastos" type="text" inputmode="decimal" autocomplete="off" data-money data-change="gastos" value="${fmtIn(S.gastos)}" placeholder="Ej: 600.000" aria-describedby="gastos-echo">
+      <p class="echo" id="gastos-echo"></p>
+      ${S.income ? `<p style="margin:10px 0 0">Te quedan <b>${fmt(sobra)}</b> por mes para deudas y cuotas.${need / S.income > 0.4 ? ` Ojo: lo mínimo ya es el <b>${Math.round(need / S.income * 100)} %</b> de lo que cobrás.` : ""}</p>
+        ${sobra > 0 && Math.round(sobra) !== Math.round(S.budget) ? `<button class="btn sm" data-action="use-sobra" style="margin-top:8px">Usar ${fmt(sobra)} por mes</button>` : ""}` : ""}
+      </div>
+    </details>
+    ${P.status === "ok" && activeDeudas().length > 1 ? ordenBlock() : ""}
+  </div>` : "";
+  const noAlcanza = short ? `<div class="card"><h2>Si no te alcanza</h2>${tipsNoAlcanza("en la pestaña Plan")}<button class="btn alt" data-action="go-guiones" style="margin-top:12px">Ver qué decirle al banco</button></div>` : "";
+  const avance = S.history.length ? `<div class="card"><div class="between"><h2 style="margin:0">Tu avance</h2><span class="pill">${pct} %</span></div>
+    <div class="bar" style="margin:12px 0" role="progressbar" aria-label="Cuánto llevás pagado" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
     <div class="stats">
       <div class="stat"><b>${fmt(pend)}</b><span>Te falta pagar</span></div>
       <div class="stat"><b>${fmt(paid)}</b><span>Ya pagaste con el plan</span></div>
-      <div class="stat"><b>${activeCuotas().reduce((x, c) => x + c.left, 0)}</b><span>Cuotas pendientes</span></div>
-      <div class="stat"><b>${fmt(fijoMes())}</b><span>Comprometido en cuotas este mes</span></div>
-    </div></div>
-  <button class="btn" data-tab-go="plan">Ver mi paso a paso de este mes</button>
-  <p class="foot">Herramienta de organización. No es asesoramiento financiero. Las cifras son estimaciones con los datos que cargaste.</p>`;
+    </div></div>` : "";
+  return `${hero}${budgetCard}${P.status === "ok" ? after : noAlcanza}${avance}
+  <p class="foot">Herramienta de organización. No es asesoramiento financiero. Las cifras son estimaciones con los datos que cargaste.<br><button class="link" data-action="glosario">¿Alguna palabra no se entiende? Mirá el glosario</button></p>`;
 }
 
 function vDeudas(){
   const ds = S.deudas, cs = S.cuotas;
   return `<div class="card">
-    <button class="btn" data-action="pdf">Subí el resumen de la tarjeta (PDF)</button>
-    <div class="row" style="margin-top:10px">
-      <button class="btn alt" data-action="add-cuota">Cuotas</button>
-      <button class="btn alt" data-action="add-deuda" style="margin-top:0">Deuda</button>
-    </div>
-    <p class="muted" style="margin-top:10px">El PDF se lee en tu celular: no se sube a ningún servidor.</p>
+    <h1 class="ttl">Tus deudas y cuotas</h1>
+    <button class="btn" data-action="pdf">Subí el resumen de tu tarjeta (PDF)</button>
+    <button class="btn alt" data-action="manual">Cargar a mano</button>
+    <p class="muted" style="margin-top:10px">El PDF se lee en tu celular: no sale de acá.</p>
+    <details class="q"><summary>¿Qué diferencia hay entre una deuda que crece y una cuota?</summary><div class="box">${glosList(["crece", "cuota"])}</div></details>
   </div>
-  <div class="card"><h2>Deudas con interés <span class="muted">(saldo de tarjeta, descubierto, préstamos)</span></h2>
+  <div class="card"><h2>Deudas que crecen <span class="muted">(tarjeta sin pagar completa, descubierto)</span></h2>
     ${ds.length ? ds.map(d => `<div class="item">
-      <div><div class="t">${esc(d.name)} ${d.balance <= 0 ? '<span class="pill">Saldada ✓</span>' : ""}</div>
-      <div class="muted">TNA ${d.rate || 0}% · mínimo ${fmt(d.min)}</div></div>
+      <div><div class="t">${esc(d.name)} ${d.balance <= 0 ? '<span class="pill">Pagada ✓</span>' : ""}</div>
+      <div class="muted">${d.rateUnknown ? "Interés: no lo cargaste" : "Interés anual " + fmtPct(d.rate)} · pago mínimo ${fmt(d.min)}${d.minEst ? " (estimado)" : ""}</div></div>
       <div class="r"><div class="t">${fmt(d.balance)}</div>
-      <button class="btn sm ghost" data-action="edit-deuda" data-id="${esc(d.id)}">Editar</button></div></div>`).join("")
-      : `<p class="muted">Sin deudas con interés cargadas.</p>`}
+      <button class="btn sm ghost" data-action="edit-deuda" data-id="${esc(d.id)}" aria-label="Editar ${esc(d.name)}">Editar</button></div></div>`).join("")
+      : `<p class="muted">No cargaste deudas que crecen.</p>`}
   </div>
-  <div class="card"><h2>Compras en cuotas</h2>
+  <div class="card"><h2>Cuotas fijas <span class="muted">(compras en cuotas y préstamos)</span></h2>
     ${cs.length ? cs.map(c => `<div class="item">
       <div><div class="t">${esc(c.desc)} ${c.left <= 0 ? '<span class="pill">Terminada ✓</span>' : ""} ${c.si ? '<span class="pill">Sin interés</span>' : ""}</div>
-      <div class="muted">${esc(c.card || "Sin tarjeta")} · ${c.left} ${c.left === 1 ? "cuota restante" : "cuotas restantes"}${c.total ? " de " + c.total : ""}</div></div>
-      <div class="r"><div class="t">${fmt(c.amount)}<span class="muted">/mes</span></div>
-      <button class="btn sm ghost" data-action="edit-cuota" data-id="${esc(c.id)}">Editar</button></div></div>`).join("")
-      : `<p class="muted">Sin cuotas cargadas.</p>`}
+      <div class="muted">${esc(c.card || "Sin tarjeta")} · ${c.left <= 0 ? "pagada" : (c.left === 1 ? "te falta 1" : "te faltan " + c.left) + (c.total ? " de " + c.total : "")}</div></div>
+      <div class="r"><div class="t">${fmt(c.amount)}<span class="muted"> por mes</span></div>
+      <button class="btn sm ghost" data-action="edit-cuota" data-id="${esc(c.id)}" aria-label="Editar ${esc(c.desc)}">Editar</button></div></div>`).join("")
+      : `<p class="muted">No cargaste cuotas.</p>`}
   </div>`;
 }
 
 function vCuotas(){
   const cs = activeCuotas();
-  if (!cs.length) return `<div class="card empty"><div class="big">Sin cuotas pendientes</div>
-    <p class="muted">Subí tu resumen o cargá tus compras en cuotas para ver cuánto tenés comprometido cada mes.</p>
-    <button class="btn" data-action="pdf">Subí el resumen (PDF)</button>
-    <button class="btn alt" data-action="add-cuota">Cargalo a mano</button></div>`;
+  if (!cs.length) return `<div class="card empty"><h1 class="big">No tenés cuotas pendientes</h1>
+    <p class="muted">Subí tu resumen o cargá tus compras en cuotas para ver cuánto tenés que pagar cada mes.</p>
+    <button class="btn" data-action="pdf">Subí el resumen de tu tarjeta (PDF)</button>
+    <button class="btn alt" data-action="add-cuota">Cargar una compra en cuotas</button></div>`;
   const totalCuotas = cs.reduce((a, c) => a + c.left, 0), totalMonto = cs.reduce((a, c) => a + c.amount * c.left, 0);
   const lastM = Math.max(...cs.map(c => c.left)) - 1;
   const months = Array.from({length:12}, (_, m) => cs.filter(c => c.left > m).reduce((a, c) => a + c.amount, 0));
@@ -474,135 +591,195 @@ function vCuotas(){
   const libera = {};
   cs.forEach(c => { libera[c.left] = (libera[c.left] || 0) + c.amount; });
   const libs = Object.keys(libera).map(Number).sort((a, b) => a - b).slice(0, 6);
-  return `<div class="card hero"><div class="label">Conteo de cuotas</div>
-    <div class="big">${totalCuotas} cuotas</div>
-    <div class="sub">pendientes por ${fmt(totalMonto)} · la última se paga en ${esc(monthLabel(lastM, true))}</div></div>
+  return `<div class="card hero"><div class="label">Tus cuotas</div>
+    <h1 class="big">${totalCuotas} cuotas</h1>
+    <div class="sub">te falta pagar ${fmt(totalMonto)} en total · la última es en ${esc(monthLabel(lastM, true))}</div></div>
   <div class="card"><h2>Por tarjeta</h2>
     ${Object.entries(byCard).map(([k, g]) => `<div class="item"><div><div class="t">${esc(k)}</div>
-      <div class="muted">${g.items} ${g.items === 1 ? "compra" : "compras"} · ${g.left} cuotas · termina ${esc(monthLabel(g.fin))}</div></div>
-      <div class="r"><div class="t">${fmt(g.mes)}<span class="muted">/mes</span></div><div class="muted">${fmt(g.monto)} total</div></div></div>`).join("")}
+      <div class="muted">${g.items} ${g.items === 1 ? "compra" : "compras"} · ${g.left} cuotas · la última en ${esc(monthLabel(g.fin))}</div></div>
+      <div class="r"><div class="t">${fmt(g.mes)}<span class="muted"> por mes</span></div><div class="muted">${fmt(g.monto)} en total</div></div></div>`).join("")}
   </div>
-  <div class="card"><h2>Comprometido en los próximos 12 meses</h2>
+  <div class="card"><h2>Lo que ya tenés que pagar en cuotas, mes a mes</h2>
     <div class="cal" aria-hidden="true">${months.map(v => `<div style="height:${Math.round(v / max * 100)}%" title="${fmt(v)}"></div>`).join("")}</div>
     <div class="cal-l" aria-hidden="true">${months.map((_, i) => `<span>${esc(monthLabel(i).split(" ")[0].replace(".", ""))}</span>`).join("")}</div>
     <p class="sr">${months.map((v, i) => monthLabel(i) + ": " + fmt(v)).join(", ")}</p>
     <p class="muted" style="margin-top:8px">Este mes: <b>${fmt(months[0])}</b> · dentro de 6 meses: <b>${fmt(months[6])}</b></p>
   </div>
   <div class="card"><h2>Efecto Cuota Liberada</h2>
-    <p class="muted">Cada vez que termina una cuota, esa plata queda libre. En tu plan va directo a la próxima deuda, y así salís más rápido.</p>
-    <ul class="timeline">${libs.map(l => `<li><b>${esc(monthLabel(l, true))}</b>: se liberan ${fmt(libera[l])} por mes</li>`).join("")}</ul>
+    <p class="muted">Cada vez que terminás una cuota, esa plata te queda libre. En tu plan va directo a tu próxima deuda, y así terminás antes.</p>
+    <ul class="timeline">${libs.map(l => `<li><b>${esc(monthLabel(l - 1, true))}</b>: terminan cuotas por ${fmt(libera[l])} por mes. Desde el mes siguiente esa plata te queda libre.</li>`).join("")}</ul>
   </div>`;
 }
 
 function vPlan(){
   const P = plan();
   if (P.status === "vacio") return vEmpty();
-  if (P.status === "presupuesto") return `<div class="card"><div class="alert">Para armar tu paso a paso necesitás un presupuesto mensual de al menos <b>${fmt(P.need)}</b> (cuotas + pagos mínimos).</div>
-    <button class="btn" data-tab-go="inicio">Definir mi presupuesto</button>
-    ${tipsNoAlcanza()}</div>${vExtras()}`;
+  if (P.status === "presupuesto") {
+    const short = S.budget > 0;
+    return `<div class="card"><h1 class="ttl">Tu paso a paso</h1><div class="alert">${short
+      ? `Con ${fmt(S.budget)} por mes no llegás a lo mínimo (${fmt(P.need)}). Te faltan <b>${fmt(P.need - S.budget)}</b> por mes.`
+      : `Para armar tu paso a paso, contanos cuánto podés pagar por mes. Necesitás al menos <b>${fmt(P.need)}</b>.`}</div>
+    <button class="btn" data-action="focus-budget">${short ? "Cambiar cuánto puedo pagar" : "Poner cuánto puedo pagar"}</button>
+    ${short ? `<h2 style="margin-top:18px">Si no te alcanza</h2>${tipsNoAlcanza("abajo")}` : ""}</div>${vExtras()}`;
+  }
   const sim = P.sim, f = sim.first, mk = monthKey();
   const target = S.deudas.find(d => d.id === f.target);
   const rows = [];
-  activeCuotas().forEach(c => rows.push({id:c.id, t:`Cuota de ${c.desc}`, s:`${c.card || "Sin tarjeta"} · te quedan ${c.left}`, v:c.amount}));
-  activeDeudas().forEach(d => { const v = f.pay[d.id] || 0; const extra = d.id === f.target;
-    rows.push({id:d.id, t:`${extra ? "→ " : ""}${d.name}`, s: extra ? `Mínimo + todo el extra. Es tu deuda objetivo.` : `Pagá el mínimo`, v}); });
+  activeCuotas().forEach(c => rows.push({id:c.id, t:c.desc, s:`Cuota · ${c.card || "Sin tarjeta"} · ${c.left === 1 ? "es la última" : "te faltan " + c.left}`, v:c.amount}));
+  activeDeudas().forEach(d => { const v = f.pay[d.id] || 0, pri = d.id === f.target;
+    rows.push({id:d.id, t:d.name, s: pri ? "Pagá el mínimo más todo lo que te sobra" : "Pagá el mínimo", v, pri}); });
   const total = rows.reduce((a, r) => a + r.v, 0);
   const sobrante = Math.max(0, (S.budget || 0) - total);
-  const hitos = sim.events.slice(0, 10);
-  return `<div class="card hero"><div class="label">Paso a paso · ${esc(monthLabel(0, true))}</div>
-    <div class="big">${fmt(total)}</div><div class="sub">es lo que pagás este mes${target ? ` · el extra va a <b>${esc(target.name)}</b>` : ""}</div></div>
-  <div class="card"><h2>1. Pagos de este mes</h2>
+  const hitos = sim.events.slice(0, 10), last = S.history[S.history.length - 1];
+  return `<div class="card hero"><div class="label">Lo que pagás en ${esc(monthLabel(0, true))}</div>
+    <h1 class="big">${fmt(total)}</h1><div class="sub">${target ? `Lo que te sobra va a <b>${esc(target.name)}</b>, tu deuda prioridad.` : "Tildá cada pago a medida que lo hacés."}</div></div>
+  <div class="card"><h2>Pagos de este mes</h2>
     ${rows.map(r => { const k = mk + ":" + r.id, on = !!S.checks[k];
       return `<label class="check ${on ? "done" : ""}"><input type="checkbox" data-check="${esc(k)}" ${on ? "checked" : ""}>
-      <span style="flex:1"><b>${esc(r.t)}</b><br><span class="muted">${esc(r.s)}</span></span><b>${fmt(r.v)}</b></label>`; }).join("")}
-    ${sobrante > 0.009 ? `<p class="muted">Te sobran ${fmt(sobrante)}: guardalos como fondo para imprevistos.</p>` : ""}
-    <button class="btn" data-action="mark-month" style="margin-top:10px">Ya pagué este mes → actualizar saldos</button>
-    ${S.undo ? `<button class="btn sm" data-action="undo-month" style="margin-top:8px;background:transparent;color:var(--brand);border:1px solid var(--brand)">Deshacer el último «mes pagado»</button>` : ""}
-    <p class="muted" style="margin-top:6px">Descuenta una cuota a cada compra y actualiza los saldos con intereses. Cuando llegue el resumen nuevo, corregí los saldos si cambiaron.</p>
+      <span style="flex:1"><b>${esc(r.t)}</b>${r.pri ? ' <span class="pill">Prioridad</span>' : ""}<br><span class="muted">${esc(r.s)}</span></span><b>${fmt(r.v)}</b></label>`; }).join("")}
+    ${sobrante > 0.009 ? `<p class="muted">Te sobran ${fmt(sobrante)}: guardalos para imprevistos.</p>` : ""}
+    <button class="btn" data-action="mark-month" style="margin-top:10px">Ya pagué este mes</button>
+    ${S.undo && last ? `<button class="btn ghost" data-action="undo-month">Deshacer: no pagué ${esc(fmtMes(last.mes))}</button>` : ""}
+    <p class="muted" style="margin-top:8px">Cuando lo marcás, te restamos una cuota de cada compra y recalculamos lo que debés. Cuando te llegue el resumen nuevo, revisá que los números coincidan.</p>
   </div>
-  <div class="card"><h2>2. Tus próximos hitos</h2>
+  <div class="card"><h2>Lo que viene</h2>
     <ul class="timeline">${hitos.map(e => `<li><b>${esc(monthLabel(e.m, true))}</b>: ${e.type === "cuota"
-      ? `terminás la cuota de ${esc(e.name)} → se liberan ${fmt(e.amt)}/mes`
-      : `saldás <b>${esc(e.name)}</b>`}</li>`).join("")}
-      <li><b>${esc(fechaTxt(sim))}</b>: ¡libre de deudas!</li></ul>
+      ? `terminás de pagar ${esc(e.name)}. Te quedan libres ${fmt(e.amt)} por mes`
+      : `terminás de pagar <b>${esc(e.name)}</b>`}</li>`).join("")}
+      ${sim.done ? `<li><b>${esc(fechaTxt(sim))}</b>: ¡libre de deudas!</li>` : ""}</ul>
+    ${help("liberada", "¿Qué pasa con la plata que queda libre?")}
   </div>${vExtras()}
   <p class="foot">Herramienta de organización. No es asesoramiento financiero.</p>`;
 }
-function tipsNoAlcanza(){
-  return `<h3 style="margin-top:14px">Si no te alcanza</h3><ul class="muted" style="padding-left:18px;margin:0">
-    <li>Pedile al banco refinanciar el saldo en cuotas fijas (usá los guiones de abajo).</li>
+function tipsNoAlcanza(where){
+  return `<ul class="muted" style="padding-left:18px;margin:0">
+    <li>Pedile al banco que te pase lo que debés a cuotas fijas (eso es refinanciar). Tenés qué decirle ${where}.</li>
     <li>Revisá suscripciones y gastos que podés pausar este mes.</li>
-    <li>No sumes compras nuevas en cuotas (ni «3 y 6 cuotas sin interés») hasta que el plan cierre.</li></ul>`;
+    <li>No sumes compras nuevas en cuotas (ni «3 y 6 sin interés») hasta que el plan cierre.</li>
+    <li>Si ya te atrasaste, llamá antes de que crezca: usá «Si ya estás atrasado».</li></ul>`;
 }
 const SIETE = [
-  "Sacá la tarjeta de la billetera, de Mercado Libre y de las apps de compra (desvinculala).",
+  "Sacá la tarjeta de la billetera, de Mercado Libre y de las apps de compra.",
   "Anotá todas tus cuotas en Fecha Libre: que no quede ninguna afuera.",
   "Elegí tu fecha de pago y ponete una alarma 3 días antes del vencimiento.",
   "Cancelá o pausá una suscripción que no usaste este mes.",
-  "Llamá al banco y pedí la tasa y las opciones de refinanciación (guion 1).",
-  "Definí tu presupuesto mensual para deudas y no lo toques.",
-  "Revisá tu plan: mirá cuándo se libera tu próxima cuota."
+  "Llamá al banco y preguntá cuánto interés te cobran y si te pueden pasar la deuda a cuotas fijas («Pedir información» en «Qué decirle al banco»).",
+  "Decidí cuánto vas a pagar por mes de deudas y no lo toques.",
+  "Revisá tu plan: mirá cuándo te queda libre tu próxima cuota."
 ];
 function vExtras(){
-  return `<div class="card"><h2>3. Plan de 7 días para frenar la deuda nueva</h2>
+  const done = SIETE.every((_, i) => S.checks["7d:" + i]);
+  return `<div class="card"><details${S.history.length || done ? "" : " open"} style="border:0"><summary><h2 style="display:inline;margin:0">Plan de 7 días para no sumar deudas nuevas</h2></summary>
     ${SIETE.map((t, i) => { const k = "7d:" + i, on = !!S.checks[k];
       return `<label class="check ${on ? "done" : ""}"><input type="checkbox" data-check="${esc(k)}" ${on ? "checked" : ""}><span><b>Día ${i + 1}.</b> ${esc(t)}</span></label>`; }).join("")}
-  </div>
-  <div class="card"><h2>4. Guiones para hablar con el banco</h2>
-    <details><summary>Guion 1 · Pedir información y refinanciación</summary><p>«Hola, soy titular de la tarjeta terminada en ____. Quiero ordenar mis pagos. ¿Me pueden decir la TNA y el CFT que me cobran sobre el saldo financiado, y qué opciones de refinanciación en cuotas fijas tienen hoy? ¿Cuál sería la cuota mensual y el costo total de cada una?» Anotá todo: monto, cantidad de cuotas, TNA, CFT y costo total.</p></details>
-    <details><summary>Guion 2 · Pedir una tasa más baja</summary><p>«Pago todos los meses y quiero seguir siendo cliente, pero con esta tasa no me cierra. ¿Qué pueden hacer para bajarla o pasar el saldo a un plan de pagos? Si hoy no tienen opción, ¿con qué área puedo hablar?» Si te ofrecen algo, pedilo por escrito antes de aceptar.</p></details>
-    <details><summary>Guion 3 · Si ya estás atrasado</summary><p>«Me atrasé con el pago y quiero regularizarlo. Puedo pagar ____ por mes. ¿Qué plan de pagos me ofrecen con ese monto, y me confirman que con ese acuerdo no se suman cargos nuevos?» No prometas más de lo que entra en tu presupuesto de Fecha Libre.</p></details>
+  </details></div>
+  <div class="card" id="guiones"><h2>Qué decirle al banco</h2>
+    <details><summary>Pedir información y refinanciación</summary><p>«Hola, soy titular de la tarjeta terminada en ____. Quiero ordenar mis pagos. ¿Me pueden decir la TNA y el CFT que me cobran sobre el saldo financiado, y qué opciones de refinanciación en cuotas fijas tienen hoy? ¿Cuál sería la cuota mensual y el costo total de cada una?» Anotá todo: monto, cantidad de cuotas, TNA, CFT y costo total.</p></details>
+    <details><summary>Pedir una tasa más baja</summary><p>«Pago todos los meses y quiero seguir siendo cliente, pero con esta tasa no me cierra. ¿Qué pueden hacer para bajarla o pasar el saldo a un plan de pagos? Si hoy no tienen opción, ¿con qué área puedo hablar?» Si te ofrecen algo, pedilo por escrito antes de aceptar.</p></details>
+    <details id="guion3"><summary>Si ya estás atrasado</summary><p>«Me atrasé con el pago y quiero regularizarlo. Puedo pagar ____ por mes. ¿Qué plan de pagos me ofrecen con ese monto, y me confirman que con ese acuerdo no se suman cargos nuevos?» No prometas más de lo que pusiste en Fecha Libre que podés pagar por mes.</p></details>
+    <details class="q"><summary>¿Qué significan TNA, CFT y refinanciar?</summary><div class="box">${glosList(["tna", "cft", "tem", "refi"])}<button class="link" data-action="glosario" style="padding:0">Ver todas las palabras</button></div></details>
   </div>`;
 }
 
 /* ---------- Formularios ---------- */
 const dlg = document.getElementById("dlg"), dlgBody = document.getElementById("dlgBody");
-function openDlg(html){ dlgBody.innerHTML = html; if (!dlg.open) dlg.showModal(); const f = dlgBody.querySelector("input,button"); if (f) f.focus(); }
-// Confirmaciones dentro del <dialog> (en vez de confirm()). «back» reabre la pantalla anterior si cancelan.
+// El foco va al título (no al primer campo: en el celular el teclado taparía el formulario), salvo [autofocus].
+function openDlg(html){
+  dlgBody.innerHTML = html;
+  const h = dlgBody.querySelector("h2");
+  if (h) { h.id = "dlgTitle"; h.tabIndex = -1; dlg.setAttribute("aria-labelledby", "dlgTitle"); } else dlg.removeAttribute("aria-labelledby");
+  if (!dlg.open) dlg.showModal();
+  const f = dlgBody.querySelector("[autofocus]") || h || dlgBody.querySelector("button");
+  if (f) f.focus();
+}
+// Confirmaciones dentro del <dialog> (en vez de confirm()). «back» reabre la pantalla anterior si cancelan; «safe» = acción buena, no de borrar.
 let onConfirm = null, backFn = null, passCb = null, pdfCancelled = false;
-function confirmDlg(title, text, okLabel, ok, back){
+function confirmDlg(title, text, okLabel, ok, back, safe){
   onConfirm = ok; backFn = back || null;
-  openDlg(`<h2>${title}</h2><p class="muted">${text}</p><div style="margin-top:14px"><button class="btn ghost" type="button" data-action="confirm-no">Cancelar</button><button class="btn danger" type="button" data-action="confirm-ok">${okLabel}</button></div>`);
+  openDlg(`<h2>${title}</h2><p class="muted">${text}</p><div style="margin-top:14px"><button class="btn ${safe ? "" : "danger"}" type="button" data-action="confirm-ok">${okLabel}</button><button class="btn ghost" type="button" data-action="confirm-no">Cancelar</button></div>`);
 }
 // Cerrar el diálogo con la contraseña pendiente cancela la lectura del PDF.
 dlg.addEventListener("close", () => { document.getElementById("view").focus({preventScroll:true}); if (passCb) { pdfCancelled = true; passCb.task.destroy(); passCb = null; } });
+const moneyInput = (id, name, value, extra) => `<input id="${id}" name="${name}" type="text" inputmode="decimal" autocomplete="off" data-money value="${value}" aria-describedby="${id}-echo" ${extra || ""}><p class="echo" id="${id}-echo"></p>`;
+function chooser(){
+  openDlg(`<h2>¿Qué querés cargar?</h2><p class="muted">Elegí la que se parece a lo tuyo.</p>
+    <button class="opt" data-action="add-cuota"><b>Una compra en cuotas o un préstamo</b><span>Pagás lo mismo cada mes hasta que termina. Ej: un celular en 12 cuotas.</span></button>
+    <button class="opt" data-action="add-deuda"><b>Una deuda que crece</b><span>Lo que quedó sin pagar de la tarjeta, o el descubierto. Si no la pagás completa, suma intereses.</span></button>
+    <button class="btn ghost" data-action="close">Cancelar</button>`);
+}
 function formDeuda(d){
-  d = d || {name:"", balance:"", rate:"", min:""};
-  openDlg(`<form id="fDeuda" data-id="${esc(d.id || "")}"><h2>${d.id ? "Editar" : "Nueva"} deuda con interés</h2>
-    <p class="muted">Saldo de tarjeta que no pagás completo, descubierto, préstamo con saldo.</p>
-    <label for="dn">Nombre</label><input id="dn" name="name" required maxlength="40" value="${esc(d.name)}" placeholder="Ej: Visa Galicia">
-    <label for="db">Saldo que debés hoy</label><input id="db" name="balance" type="number" step="any" min="0" inputmode="decimal" required value="${d.balance}">
-    <label for="dr">Tasa anual (TNA %) <span class="muted">· figura en tu resumen</span></label><input id="dr" name="rate" type="number" step="any" min="0" inputmode="decimal" value="${d.rate}" placeholder="Ej: 120">
-    <label for="dm">Pago mínimo mensual</label><input id="dm" name="min" type="number" step="any" min="0" inputmode="decimal" value="${d.min}" placeholder="Si lo dejás vacío usamos el 5% del saldo">
-    <label for="dd">Día de vencimiento <span class="muted">· opcional, para el calendario</span></label><input id="dd" name="due" type="number" min="1" max="31" step="1" inputmode="numeric" value="${d.due || ''}" placeholder="Ej: 10">
+  d = d || {name:"", balance:0, rate:0, min:0};
+  openDlg(`<form id="fDeuda" data-id="${esc(d.id || "")}" novalidate><h2>${d.id ? "Editar deuda" : "Nueva deuda que crece"}</h2>
+    <p class="muted">Lo que quedó sin pagar de la tarjeta, o el descubierto. Si no la pagás completa, suma intereses.</p>
+    <label for="dn">¿Cómo la llamás?</label><input id="dn" name="name" maxlength="40" value="${esc(d.name)}" placeholder="Ej: Visa Galicia">
+    <label for="db">¿Cuánto debés hoy?</label>${moneyInput("db", "balance", fmtIn(d.balance), 'placeholder="Ej: 350.000"')}
+    <label for="dr">Interés anual, en % <span class="muted">· en tu resumen dice «TNA»</span></label>
+    <input id="dr" name="rate" type="text" inputmode="decimal" autocomplete="off" value="${d.rateUnknown ? "" : fmtIn(d.rate)}" placeholder="Ej: 120">
+    ${help("tna", "¿Dónde lo encuentro?")}
+    <p class="muted" style="margin:0">Si no lo sabés, dejalo vacío: el plan va a quedar más optimista de lo real.</p>
+    <label for="dm">Pago mínimo por mes</label>${moneyInput("dm", "min", d.minEst ? "" : fmtIn(d.min), `placeholder="${d.minEst ? "Estimado: " + fmtIn(Math.round(d.min)) : "Si no lo sabés, dejalo vacío"}"`)}
+    <p class="muted" style="margin:6px 0 0">Si lo dejás vacío, usamos el 5 % de lo que debés como estimado.</p>
+    <label for="dd">Día del mes en que vence <span class="muted">· opcional, para el calendario</span></label><input id="dd" name="due" type="number" min="1" max="31" step="1" inputmode="numeric" value="${d.due || ""}" placeholder="Ej: 10">
+    <p class="err" role="alert"></p>
     <div style="margin-top:16px"><button class="btn" type="submit">Guardar</button>
     ${d.id ? `<button class="btn danger" type="button" data-action="del-deuda" data-id="${esc(d.id)}">Eliminar</button>` : ""}
     <button class="btn ghost" type="button" data-action="close">Cancelar</button></div></form>`);
 }
 function formCuota(c){
-  c = c || {desc:"", card:lastCard(), amount:"", left:"", total:""};
-  openDlg(`<form id="fCuota" data-id="${esc(c.id || "")}"><h2>${c.id ? "Editar" : "Nueva"} compra en cuotas</h2>
-    <label for="cd">¿Qué compraste?</label><input id="cd" name="desc" required maxlength="40" value="${esc(c.desc)}" placeholder="Ej: Celular">
-    <label for="cc">Tarjeta o entidad</label><input id="cc" name="card" maxlength="30" value="${esc(c.card)}" placeholder="Ej: Visa Galicia">
-    <label for="ca">Monto de cada cuota</label><input id="ca" name="amount" type="number" step="any" min="0" inputmode="decimal" required value="${c.amount}">
-    <div class="row"><div><label for="cl">Cuotas que faltan</label><input id="cl" name="left" type="number" min="1" max="120" step="1" inputmode="numeric" required value="${c.left}"></div>
-    <div><label for="ct">De un total de</label><input id="ct" name="total" type="number" min="1" max="120" step="1" inputmode="numeric" value="${c.total}"></div></div>
-    <label for="cdue">Día de vencimiento <span class="muted">· opcional, para el calendario</span></label><input id="cdue" name="due" type="number" min="1" max="31" step="1" inputmode="numeric" value="${c.due || ''}" placeholder="Ej: 10">
-    <label class="check" style="border:0;padding:8px 0 0"><input type="checkbox" name="si" ${c.si ? "checked" : ""}><span>Es en cuotas sin interés</span></label>
-    <p class="muted" style="margin-top:6px">Si tu resumen dice «cuota 3/12», faltan 10 (incluida la de este mes).</p>
-    <div style="margin-top:12px"><button class="btn" type="submit">Guardar</button>
+  c = c || {desc:"", card:"", amount:0, left:"", total:""};
+  const total = c.total || c.left || "", cur = c.id ? Math.max(1, (c.total || c.left) - c.left + 1) : "";
+  const cards = [...new Set(S.cuotas.map(x => x.card).concat(S.deudas.map(x => x.name)).filter(Boolean))];
+  openDlg(`<form id="fCuota" data-id="${esc(c.id || "")}" novalidate><h2>${c.id ? "Editar cuota" : "Nueva compra en cuotas"}</h2>
+    <p class="muted">También sirve para un préstamo con cuota fija.</p>
+    <label for="cd">¿Qué compraste?</label><input id="cd" name="desc" maxlength="40" value="${esc(c.desc)}" placeholder="Ej: Celular">
+    <label for="cc">¿Con qué tarjeta o banco?</label><input id="cc" name="card" maxlength="30" value="${esc(c.card)}" placeholder="Ej: Visa Galicia" list="cardList"><datalist id="cardList">${cards.map(x => `<option value="${esc(x)}">`).join("")}</datalist>
+    <label for="ca">¿Cuánto pagás por mes de esta cuota?</label>${moneyInput("ca", "amount", fmtIn(c.amount), 'placeholder="Ej: 45.000"')}
+    <div class="row"><div><label for="ccur">Vas por la cuota</label><input id="ccur" name="cur" type="number" min="1" max="120" step="1" inputmode="numeric" value="${cur}" placeholder="Ej: 3"></div>
+    <div><label for="ct">de un total de</label><input id="ct" name="total" type="number" min="1" max="120" step="1" inputmode="numeric" value="${total}" placeholder="Ej: 12"></div></div>
+    <p class="muted" style="margin:6px 0 0">Mirá tu resumen: si dice «cuota 3/12», poné 3 y 12.</p>
+    <label for="cdue">Día del mes en que vence <span class="muted">· opcional, para el calendario</span></label><input id="cdue" name="due" type="number" min="1" max="31" step="1" inputmode="numeric" value="${c.due || ""}" placeholder="Ej: 10">
+    <p class="err" role="alert"></p>
+    <div style="margin-top:16px"><button class="btn" type="submit">Guardar</button>
     ${c.id ? `<button class="btn danger" type="button" data-action="del-cuota" data-id="${esc(c.id)}">Eliminar</button>` : ""}
     <button class="btn ghost" type="button" data-action="close">Cancelar</button></div></form>`);
 }
-const lastCard = () => (S.cuotas[S.cuotas.length - 1] || {}).card || "";
 function settings(){
-  openDlg(`<h2>Ajustes</h2>
-    <label for="cur">Moneda</label><select id="cur" data-change="currency">${Object.keys(LOCALES).map(c => `<option ${c === S.currency ? "selected" : ""}>${c}</option>`).join("")}</select>
-    <p class="muted" style="margin-top:12px">Todo se guarda solo en este dispositivo y navegador. Si borrás los datos del navegador o cambiás de celular, se pierden.</p>
-    <button class="btn alt" data-action="export">Descargá una copia de mis datos</button>
-    <button class="btn alt" data-action="import">Restaurá una copia</button>
+  openDlg(`<h2>Ajustes y ayuda</h2>
+    <p class="muted">Tus datos viven solo en este celular. Si borrás el historial del navegador o cambiás de celular, se pierden. Guardate una copia en tu mail o mandátela por WhatsApp.</p>
+    <h3>Tu copia</h3>
+    <button class="btn alt" data-action="export">Descargar una copia de mis datos</button>
+    <button class="btn alt" data-action="import">Recuperar mis datos desde una copia</button>
+    <h3>Ayuda</h3>
+    <button class="btn alt" data-action="glosario" data-back="1">Palabras de tu resumen (glosario)</button>
+    <button class="btn alt" data-action="install-help" data-back="1">Cómo agregar la app al inicio del celular</button>
+    <h3>Borrar</h3>
     <button class="btn danger" data-action="wipe">Borrar todos mis datos</button>
     <button class="btn ghost" data-action="close">Cerrar</button>`);
+}
+function glosario(back){
+  openDlg(`<h2>Palabras de tu resumen</h2><p class="muted">Lo que vas a leer en el resumen de la tarjeta y lo que te pueden decir en el banco, en simple.</p>
+    ${glosList(Object.keys(GLOS))}
+    <button class="btn" data-action="${back ? "settings" : "close"}" style="margin-top:16px">${back ? "Volver" : "Cerrar"}</button>`);
+}
+function installHelp(back){
+  try { localStorage.setItem(KEY + ".tip", "1"); } catch(e){}
+  if (tab === "inicio") render();
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua), and = /Android/.test(ua);
+  const pre = "Si la abriste desde Instagram o Facebook, primero tocá los tres puntitos y elegí «Abrir en el navegador».";
+  const iosS = [pre, "En Safari, tocá los <b>tres puntitos</b> de abajo a la derecha.", "Tocá <b>Compartir</b>.", "Tocá <b>Ver más</b> y elegí <b>Agregar a inicio</b>. (Si ves el cuadrado con la flecha hacia arriba, tocalo y buscá <b>Agregar a pantalla de inicio</b>.)", "Tocá <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."];
+  const andS = [pre, "En Chrome, tocá los <b>tres puntitos</b> de arriba a la derecha.", "Elegí <b>Agregar a pantalla principal</b> (o «Instalar app»).", "Confirmá con <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."];
+  const ol = s => `<ol style="margin:8px 0 14px 20px;padding:0;display:grid;gap:8px">${s.map(x => `<li>${x}</li>`).join("")}</ol>`;
+  openDlg(`<h2>Agregá Fecha Libre al inicio de tu celular</h2><p class="muted">Así la abrís con un toque y tus datos se mantienen en este celular.</p>
+    ${ios ? ol(iosS) : and ? ol(andS) : `<h3>iPhone</h3>${ol(iosS)}<h3>Android</h3>${ol(andS)}`}
+    <button class="btn" data-action="${back ? "settings" : "close"}">${back ? "Volver" : "Entendido"}</button>`);
+}
+function afterImport(n, debt){
+  openDlg(`<h2>Listo: sumamos ${n ? `${n} ${n === 1 ? "compra" : "compras"}` : ""}${n && debt ? " y " : ""}${debt ? "una deuda" : ""} a tu plan</h2>
+    <p class="muted">¿Tenés otra tarjeta, un préstamo o un descubierto?</p>
+    <button class="btn" data-action="next-step">No, ver mi fecha libre</button>
+    <button class="btn alt" data-action="pdf">Subir otro resumen (PDF)</button>
+    <button class="btn alt" data-action="manual">Cargar otra a mano</button>
+    <p class="muted" style="margin-top:12px">Tip: en Ajustes podés guardarte una copia de tus datos por si cambiás de celular.</p>`);
 }
 
 /* ---------- Lectura del resumen PDF (en el dispositivo) ---------- */
@@ -613,7 +790,7 @@ function loadPdfJs(){
     const s = document.createElement("script");
     s.src = "vendor/pdf.min.js";
     s.onload = () => { pdfjs = window.pdfjsLib; pdfjs.GlobalWorkerOptions.workerSrc = "vendor/pdf.worker.min.js"; ok(pdfjs); };
-    s.onerror = () => fail(new Error("No se pudo cargar el lector de PDF. Revisá tu conexión."));
+    s.onerror = () => fail(new Error("lector de PDF"));
     document.head.appendChild(s);
   });
 }
@@ -624,7 +801,7 @@ async function pdfLines(data){
     passCb = {update, task};
     openDlg(`<form id="fPass"><h2>${reason === 2 ? "Contraseña incorrecta" : "Tu PDF tiene contraseña"}</h2>
       <p class="muted">Muchos bancos usan tu DNI. La contraseña se usa solo acá, en tu dispositivo.</p>
-      <label for="pw">Contraseña</label><input id="pw" name="pw" type="password" autocomplete="off" required>
+      <label for="pw">Contraseña</label><input id="pw" name="pw" type="password" autocomplete="off" required autofocus>
       <div style="margin-top:14px"><button class="btn" type="submit">Abrir</button><button class="btn ghost" type="button" data-action="close">Cancelar</button></div></form>`);
   };
   const doc = await task.promise, lines = [];
@@ -711,7 +888,7 @@ function parseStatement(lines){
       const after = line.slice(m.index + m[0].length).match(AMT) || [];
       const amount = Math.abs(parseAmount(after.length ? after[after.length - 1] : (amts[amts.length - 1] || "0")));
       if (!amount) continue;
-      const desc = line.slice(0, m.index).replace(/^\s*\d{1,2}[-\/.](?:\d{1,2}|[A-Za-zÁ-ú]{3})(?:[-\/.]\d{2,4})?\s*/, "").replace(/^[\d\s*]+/, "").replace(AMT, "").replace(/[*_]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) || (/FINANC/i.test(m[0]) ? "Financiación consumo" : "Compra en cuotas");
+      const desc = line.slice(0, m.index).replace(/^\s*\d{1,2}[-\/.](?:\d{1,2}|[A-Za-zÁ-ú]{3})(?:[-\/.]\d{2,4})?\s*/, "").replace(/^[\d\s*]+/, "").replace(AMT, "").replace(/[*_]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) || (/FINANC/i.test(m[0]) ? "Plan de pagos del banco" : "Compra en cuotas");
       const key = desc + "|" + cur + "/" + tot + "|" + amount;
       if (seen.has(key)) break;
       seen.add(key);
@@ -723,194 +900,223 @@ function parseStatement(lines){
 }
 async function handlePdf(file){
   if (!file) return;
-  const err = (t, p) => openDlg(`<h2>${t}</h2><p class="muted">${p}</p><button class="btn" data-action="add-cuota">Cargalo a mano</button><button class="btn ghost" data-action="close">Cerrar</button>`);
+  const err = (t, p) => openDlg(`<h2>${t}</h2><p class="muted">${p}</p><button class="btn" data-action="manual">Cargar a mano</button><button class="btn ghost" data-action="close">Cerrar</button>`);
   if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) return err("Ese archivo no es un PDF", "Elegí el resumen en PDF que te manda tu banco.");
-  if (file.size > 20e6) return err("El PDF es muy pesado", "Pasa los 20 MB. Descargá el resumen directo desde el home banking.");
-  openDlg(`<h2>Leyendo tu resumen…</h2><p class="muted">Se procesa en tu celular. Nada se sube.</p>`);
+  if (file.size > 20e6) return err("El archivo es demasiado grande", "Descargá el resumen desde la app o la web de tu banco y probá de nuevo.");
+  openDlg(`<h2>Leyendo tu resumen…</h2><p class="muted">Se lee en tu celular. Nada sale de acá.</p>`);
   pdfCancelled = false;
   try {
     const lines = await pdfLines(new Uint8Array(await file.arrayBuffer()));
-    if (!lines.length) return err("Parece una foto o un escaneo", "El PDF no tiene texto que podamos leer. Cargá las cuotas a mano.");
+    if (!lines.length) return err("Parece una foto o un escaneo", "No podemos leer este PDF. Descargá el resumen desde la app de tu banco (no le saques foto) o cargá tus cuotas a mano.");
     const r = parseStatement(lines);
-    if (!r.cuotas.length && !r.saldo) return err("No parece un resumen de tarjeta", "No encontramos cuotas ni saldo. Probá con el PDF del resumen o cargalo a mano.");
-    reviewImport(r, lines.length);
+    if (!r.cuotas.length && !r.saldo) return err("No parece un resumen de tarjeta", "No encontramos cuotas ni lo que debés. Probá con el PDF del resumen de la tarjeta o cargalo a mano.");
+    reviewImport(r);
   } catch(e) {
     if (pdfCancelled) return;
     const n = e && e.name, m = e && e.message || "";
-    if (n === "InvalidPDFException") err("Ese archivo no es un PDF válido", "Está dañado o no es un resumen. Descargalo de nuevo desde tu banco.");
-    else if (/lector de PDF/.test(m)) err("No pudimos cargar el lector", esc(m));
-    else err("No pudimos abrir el archivo", "Probá de nuevo o cargá las cuotas a mano.");
+    if (n === "InvalidPDFException") err("No pudimos abrir ese PDF", "Está dañado o no es un resumen. Descargalo de nuevo desde tu banco.");
+    else if (/lector de PDF/.test(m)) err("No pudimos abrir el resumen", "Revisá que tengas internet y probá de nuevo.");
+    else err("No pudimos abrir el archivo", "Probá de nuevo o cargá tus cuotas a mano.");
   }
 }
 let pending = null;
-function reviewImport(r, nLines){
+function reviewImport(r){
   pending = r;
   const sumCuotas = r.cuotas.reduce((a, c) => a + c.amount, 0);
   const resto = Math.max(0, r2(r.saldo - sumCuotas));
-  const fd = d => d.toLocaleDateString("es-AR", {day:"2-digit", month:"2-digit", year:"2-digit"}).replace(/\//g, "-");
+  const fd = d => d.toLocaleDateString("es-AR", {day:"numeric", month:"long"});
   const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-  const leido = [r.saldo && `saldo ${fmt(r.saldo)}`, r.minimo && `mínimo ${fmt(r.minimo)}`, r.tna && `TNA ${r.tna}%`, r.cierre && `cierre ${fd(r.cierre)}`, r.venc && `vence ${fd(r.venc)}`].filter(Boolean).join(" · ");
-  const faltan = [!r.saldo && "saldo", !r.minimo && "pago mínimo", !r.tna && "tasa (TNA)", !r.venc && "vencimiento"].filter(Boolean);
-  const avisos = [];
-  if (r.venc && r.venc < hoy) avisos.push(`Este resumen venció el ${fd(r.venc)}. Si ya lo pagaste, bajá 1 en «Faltan» de cada compra o cargá el resumen siguiente.`);
-  if (r.saldoUsd) avisos.push(`Tu resumen tiene U$S ${r.saldoUsd.toLocaleString("es-AR", {minimumFractionDigits:2})} en dólares: no los incluimos acá.`);
+  const leido = [r.saldo && `debés ${fmt(r.saldo)}`, r.minimo && `pago mínimo ${fmt(r.minimo)}`, r.tna && `interés anual ${fmtPct(r.tna)}`, r.cierre && `cerró el ${fd(r.cierre)}`, r.venc && `vence el ${fd(r.venc)}`].filter(Boolean).join(" · ");
+  const faltan = [!r.saldo && "cuánto debés", !r.minimo && "el pago mínimo", !r.tna && "el interés anual", !r.venc && "la fecha de vencimiento"].filter(Boolean);
+  const avisos = [], oks = [];
+  if (r.venc && r.venc < hoy) avisos.push(`Este resumen ya venció (el ${fd(r.venc)}).<label class="check" style="border:0;padding:8px 0 0"><input type="checkbox" name="yaPague"><span>Ya lo pagué: descontá una cuota de cada compra</span></label>`);
+  if (r.saldoUsd) avisos.push(`Tu resumen también tiene U$S ${r.saldoUsd.toLocaleString("es-AR", {minimumFractionDigits:2})} en dólares. No los sumamos al plan.`);
   if (r.totalConsumos && r.cuotas.length) {
     const dif = r2(r.totalConsumos - sumCuotas);
-    if (Math.abs(dif) < 0.5) avisos.push(`✓ Las cuotas suman ${fmt(sumCuotas)}, igual al total de consumos del resumen.`);
-    else if (dif > 0) avisos.push(`Los consumos del resumen suman ${fmt(r.totalConsumos)} y las cuotas leídas ${fmt(sumCuotas)}. Los ${fmt(dif)} de diferencia pueden ser compras en un pago o una cuota que no pudimos leer.`);
-    else avisos.push(`Las cuotas leídas (${fmt(sumCuotas)}) superan los consumos del resumen (${fmt(r.totalConsumos)}). Revisá los montos.`);
+    if (Math.abs(dif) < 0.5) oks.push(`Las cuotas que encontramos suman ${fmt(sumCuotas)}, lo mismo que dice tu resumen. Está todo.`);
+    else if (dif > 0) avisos.push(`Según tu resumen, este mes se te cobran ${fmt(r.totalConsumos)} de compras, y las cuotas que encontramos suman ${fmt(sumCuotas)}. La diferencia (${fmt(dif)}) pueden ser compras en un pago o alguna cuota que no pudimos leer.`);
+    else avisos.push(`Las cuotas que encontramos (${fmt(sumCuotas)}) suman más que las compras de tu resumen (${fmt(r.totalConsumos)}). Revisá los montos.`);
   }
-  if (faltan.length) avisos.push(`No pudimos leer: ${faltan.join(", ")}. Completalo en Deudas o a mano.`);
-  openDlg(`<form id="fImport"><h2>${r.cuotas.length ? `Encontramos ${r.cuotas.length} ${r.cuotas.length === 1 ? "compra" : "compras"} en cuotas` : "No encontramos cuotas"}</h2>
-    <p class="muted">${r.cuotas.length ? "Revisá y corregí antes de guardar. Destildá lo que no sea tuyo." : `Leímos ${nLines} líneas pero ninguna tenía el formato «cuota 3/12». Podés cargarlas a mano.`}</p>
+  if (faltan.length) avisos.push(`No pudimos leer ${faltan.join(", ")}. Podés completarlo después en Deudas.`);
+  const n = r.cuotas.length;
+  openDlg(`<form id="fImport" novalidate><h2>${n ? `Encontramos ${n} ${n === 1 ? "compra" : "compras"} en cuotas` : "No encontramos compras en cuotas"}</h2>
+    <p class="muted">${n ? "Revisá antes de guardar. Sacale el tilde a lo que no corresponda." : "Podés cargarlas a mano después."}</p>
     ${leido ? `<p class="muted">Esto leímos de tu resumen: ${leido}. ¿Coincide?</p>` : ""}
+    <details class="q"><summary>¿Qué significa cada cosa?</summary><div class="box">${glosList(["saldo", "minimo", "tna", "cierre", "venc"])}</div></details>
+    ${oks.map(a => `<div class="note-ok">${a}</div>`).join("")}
     ${avisos.map(a => `<div class="alert" style="margin-top:8px">${a}</div>`).join("")}
-    <div class="row"><div><label for="icard">Tarjeta</label><input id="icard" name="card" value="${esc(r.card)}" maxlength="30"></div>
-    <div style="flex:.6"><label for="icur">Moneda</label><select id="icur" name="currency">${Object.keys(LOCALES).map(c => `<option ${c === (S.currency || "ARS") ? "selected" : ""}>${c}</option>`).join("")}</select></div></div>
+    <label for="icard">Tarjeta</label><input id="icard" name="card" value="${esc(r.card)}" maxlength="30">
     ${r.cuotas.map((c, i) => `<div class="check" style="margin-top:8px"><input type="checkbox" name="on${i}" checked aria-label="Incluir ${esc(c.desc)}">
-      <div style="flex:1"><input name="d${i}" value="${esc(c.desc)}" maxlength="40" aria-label="Descripción">
-      <div class="row" style="margin-top:6px"><div><span class="muted">Cuota</span><input name="a${i}" type="number" step="any" min="0" value="${c.amount}" aria-label="Monto de la cuota"></div>
-      <div><span class="muted">Faltan (era ${c.cur}/${c.tot})</span><input name="l${i}" type="number" min="1" max="120" value="${c.left}" aria-label="Cuotas que faltan"></div></div>
-      <label class="check" style="border:0;padding:6px 0 0"><input type="checkbox" name="s${i}" ${c.si ? "checked" : ""}><span>Sin interés${c.si ? " <span class=\"muted\">(lo detectamos en tu resumen)</span>" : ""}</span></label></div></div>`).join("")}
+      <div style="flex:1"><input name="d${i}" value="${esc(c.desc)}" maxlength="40" aria-label="Qué compraste (compra ${i + 1})">
+      <div class="row" style="margin-top:6px"><div><span class="muted">Por mes</span><input name="a${i}" type="text" inputmode="decimal" autocomplete="off" value="${fmtIn(c.amount)}" aria-label="Cuánto pagás por mes de ${esc(c.desc)}"></div>
+      <div><span class="muted">Vas por la ${c.cur} de ${c.tot} · te faltan</span><input name="l${i}" type="number" min="1" max="120" value="${c.left}" aria-label="Cuotas que te faltan de ${esc(c.desc)}"></div></div>
+      ${c.si ? `<p class="muted" style="margin:6px 0 0">Sin interés (lo dice tu resumen)</p>` : ""}</div></div>`).join("")}
     ${r.saldo ? `<div class="alert" style="margin-top:12px"><label class="check" style="border:0;padding:0"><input type="checkbox" name="addSaldo" ${resto > 0 ? "checked" : ""}>
-      <span>Agregar el resto del saldo como deuda (comisiones, impuestos e intereses): <b>${fmt(resto)}</b>${r.tna ? ` · TNA ${r.tna}%` : ""} · mínimo ${fmt(minResto(r, sumCuotas, resto))}</span></label>
-      <p class="muted" style="margin:6px 0 0">Saldo del resumen ${fmt(r.saldo)} menos las cuotas de este mes ${fmt(sumCuotas)}. Podés corregirlo después en Deudas.</p></div>` : ""}
-    <div style="margin-top:14px">${r.cuotas.length || r.saldo ? `<button class="btn" type="submit">Guardar en mi plan</button>` : ""}
-    <button class="btn alt" type="button" data-action="add-cuota">Cargalo a mano</button>
+      <span>Además de las cuotas, debés <b>${fmt(resto)}</b> (intereses, impuestos y comisiones). Sumarlo como una deuda que crece.</span></label>
+      <p class="muted" style="margin:6px 0 0">${r.tna ? `Interés anual ${fmtPct(r.tna)} · ` : ""}pago mínimo ${fmt(minResto(r, sumCuotas, resto))}${r.minimo > sumCuotas ? "" : " (estimado)"}. Es lo que debés en total (${fmt(r.saldo)}) menos las cuotas de este mes (${fmt(sumCuotas)}). Lo podés corregir después en Deudas.</p></div>` : ""}
+    <div style="margin-top:14px">${n || r.saldo ? `<button class="btn" type="submit">Guardar en mi plan</button>` : `<button class="btn" type="button" data-action="manual">Cargar a mano</button>`}
     <button class="btn ghost" type="button" data-action="close">Cancelar</button></div></form>`);
 }
-// El pago mínimo del resumen suele incluir las cuotas del mes; si no las cubre, se usa el 5% del resto.
+// El pago mínimo del resumen suele incluir las cuotas del mes; si no las cubre, se usa el 5 % del resto (estimado).
 const minResto = (r, sumCuotas, resto) => r.minimo > sumCuotas ? r2(r.minimo - sumCuotas) : r2(resto * 0.05);
 function saveImport(form){
-  const fd = new FormData(form), r = pending, card = (fd.get("card") || "").trim() || r.card;
-  if (LOCALES[fd.get("currency")]) S.currency = fd.get("currency");
-  let sumCuotas = 0;
+  const fd = new FormData(form), r = pending, card = (fd.get("card") || "").trim() || r.card, paid = !!fd.get("yaPague");
+  let sumCuotas = 0, n = 0, debt = false;
   r.cuotas.forEach((c, i) => {
     if (!fd.get("on" + i)) return;
-    const amount = num(fd.get("a" + i)), left = Math.round(num(fd.get("l" + i)));
-    if (!amount || !left) return;
+    const amount = num(fd.get("a" + i)), left = Math.round(num(fd.get("l" + i))) - (paid ? 1 : 0);
+    if (!amount) return;
     sumCuotas += amount;
-    S.cuotas.push({id:uid(), desc:(fd.get("d" + i) || "").trim() || c.desc, card, amount, left, total:c.tot, si:!!fd.get("s" + i), due:r.venc ? r.venc.getDate() : 0});
+    if (left < 1) return;
+    S.cuotas.push({id:uid(), desc:(fd.get("d" + i) || "").trim() || c.desc, card, amount, left, total:c.tot, si:c.si, due:r.venc ? r.venc.getDate() : 0});
+    n++;
   });
   if (fd.get("addSaldo")) {
     const bal = Math.max(0, r2(r.saldo - sumCuotas));
-    if (bal > 0) S.deudas.push({id:uid(), name:"Saldo " + card, balance:bal, rate:r.tna || 0, min:minResto(r, sumCuotas, bal), due:r.venc ? r.venc.getDate() : 0});
+    if (bal > 0) { S.deudas.push({id:uid(), name:"Tarjeta " + card, balance:bal, rate:r.tna || 0, rateUnknown:!r.tna, min:minResto(r, sumCuotas, bal), minEst:!(r.minimo > sumCuotas), due:r.venc ? r.venc.getDate() : 0}); debt = true; }
   }
-  pending = null; save(); dlg.close(); tab = "cuotas"; render();
+  pending = null; save(); tab = "inicio"; render();
+  afterImport(n, debt);
 }
 
 /* ---------- Acciones ---------- */
 function demo(){
   S = Object.assign(blank(), {currency:S.currency, budget:800000, strategy:"avalancha",
-    deudas:[{id:uid(), due:10, name:"Saldo Visa", balance:3000000, rate:120, min:300000}, {id:uid(), due:28, name:"Descubierto cuenta", balance:800000, rate:90, min:80000}],
+    deudas:[{id:uid(), due:10, name:"Tarjeta Visa", balance:3000000, rate:120, min:300000}, {id:uid(), due:28, name:"Descubierto de la cuenta", balance:800000, rate:90, min:80000}],
     cuotas:[{id:uid(), due:10, desc:"Celular", card:"Visa", amount:65000, left:7, total:12, si:true}, {id:uid(), due:15, desc:"Heladera", card:"Mastercard", amount:48000, left:10, total:18},
       {id:uid(), due:10, desc:"Zapatillas", card:"Visa", amount:30000, left:2, total:3, si:true}, {id:uid(), due:15, desc:"Pasajes", card:"Mastercard", amount:80000, left:3, total:6, si:true},
       {id:uid(), due:5, desc:"Préstamo personal", card:"Banco", amount:150000, left:10, total:24}]});
-  S.demo = true; save(); render();
+  S.demo = true; save(); render(); window.scrollTo(0, 0);
 }
+function clearDemo(){ S = Object.assign(blank(), {currency:S.currency}); save(); }
 function markMonth(){
   const P = plan();
   if (P.status !== "ok" || !P.sim.first) return;
-  confirmDlg("¿Marcar el mes como pagado?", `¿Pagaste lo de ${monthLabel(0, true)}? Vamos a descontar una cuota a cada compra y actualizar tus saldos. Si te equivocás, lo podés deshacer desde esta pantalla.`, "Sí, lo pagué", () => {
+  const mesTxt = monthLabel(0, true);
+  confirmDlg(`¿Ya pagaste lo de ${esc(mesTxt)}?`, `Te restamos una cuota de cada compra y recalculamos lo que debés. Si te equivocás, lo podés deshacer.`, "Sí, ya lo pagué", () => {
     const f = P.sim.first, mes = monthKey();
     S.undo = JSON.stringify({deudas:S.deudas, cuotas:S.cuotas, history:S.history, checks:S.checks});
     S.deudas.forEach(d => { if (d.id in f.balances) d.balance = f.balances[d.id]; });
     S.cuotas.forEach(c => { if (c.left > 0) c.left--; });
     S.history.push({d:new Date().toISOString().slice(0, 10), mes, paid:r2(Object.values(f.pay).reduce((a, b) => a + b, 0))});
     save(); render(); window.scrollTo(0, 0);
-  });
+    const Q = plan();
+    toast(`¡Bien! Marcaste ${esc(mesTxt)} como pagado.${Q.status === "ok" && Q.sim.done ? ` Te ${Q.sim.months === 1 ? "falta 1 mes" : "faltan " + Q.sim.months + " meses"}.` : ""}`, "undo-month", "Deshacer");
+  }, null, true);
 }
 function undoMonth(){
   let u; try { u = JSON.parse(S.undo); } catch(e){ return; }
   if (!u || typeof u !== "object") return;
+  const last = S.history[S.history.length - 1];
   S = sane(Object.assign(S, {deudas:u.deudas, cuotas:u.cuotas, history:u.history, checks:u.checks, undo:""}));
   save(); render();
+  toast(`Listo: ${esc(fmtMes(last && last.mes))} quedó sin pagar.`);
 }
 function exportData(){
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], {type:"application/json"}));
-  a.download = "fecha-libre-ar-" + new Date().toISOString().slice(0, 10) + ".json";
+  a.download = "fecha-libre-copia-" + new Date().toISOString().slice(0, 10) + ".json";
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
-document.addEventListener("click", e => {
-  const t = e.target.closest("[data-tab],[data-tab-go],[data-action]");
-  if (!t) return;
-  if (t.dataset.tab || t.dataset.tabGo) { tab = t.dataset.tab || t.dataset.tabGo; if (dlg.open) dlg.close(); render(); window.scrollTo(0, 0); return; }
+function goGuiones(){
+  tab = "plan"; if (dlg.open) dlg.close(); render();
+  const g = document.getElementById("guion3");
+  if (g) { g.open = true; g.scrollIntoView({block:"start"}); g.querySelector("summary").focus({preventScroll:true}); }
+}
+// Acciones que cargan datos propios: si estás mirando el ejemplo, primero se borra (con tu OK).
+const LOADERS = new Set(["pdf", "manual", "add-cuota", "add-deuda"]);
+function run(action, t){
   const id = t.dataset.id;
-  switch (t.dataset.action) {
+  switch (action) {
     case "confirm-ok": { const fn = onConfirm; onConfirm = backFn = null; dlg.close(); if (fn) fn(); break; }
     case "confirm-no": { const b = backFn; onConfirm = backFn = null; if (b) b(); else dlg.close(); break; }
-    case "demo-clear": confirmDlg("¿Borrar el ejemplo?", "Se borran los datos de ejemplo y empezás con los tuyos.", "Borrar ejemplo", () => { S = Object.assign(blank(), {currency:S.currency}); save(); render(); }); break;
-    case "cal-ics": descargarIcs(); break;
+    case "demo-clear": clearDemo(); render(); toast("Listo, borramos el ejemplo. Ahora cargá lo tuyo."); break;
+    case "cal-ics": descargarIcs(); toast("Se descargó el archivo. Abrilo para sumar las fechas a tu calendario."); break;
     case "cal-prev": calM--; render(); break;
     case "cal-next": calM++; render(); break;
     case "cal-go": calM = +t.dataset.m; render(); window.scrollTo(0, 0); break;
     case "pdf": document.getElementById("pdfInput").click(); break;
+    case "manual": chooser(); break;
     case "add-deuda": formDeuda(); break;
     case "add-cuota": formCuota(); break;
     case "edit-deuda": formDeuda(S.deudas.find(d => d.id === id)); break;
     case "edit-cuota": formCuota(S.cuotas.find(c => c.id === id)); break;
-    case "del-deuda": confirmDlg("¿Eliminar esta deuda?", "Se saca de tu plan.", "Eliminar", () => { S.deudas = S.deudas.filter(d => d.id !== id); save(); render(); }, () => formDeuda(S.deudas.find(d => d.id === id))); break;
-    case "del-cuota": confirmDlg("¿Eliminar esta compra?", "Se saca de tu plan.", "Eliminar", () => { S.cuotas = S.cuotas.filter(c => c.id !== id); save(); render(); }, () => formCuota(S.cuotas.find(c => c.id === id))); break;
-    case "strategy": S.strategy = t.dataset.v; save(); render(); break;
+    case "del-deuda": confirmDlg("¿Eliminar esta deuda?", "Se saca de tu plan.", "Eliminar", () => { S.deudas = S.deudas.filter(d => d.id !== id); save(); render(); toast("La sacamos de tu plan."); }, () => formDeuda(S.deudas.find(d => d.id === id))); break;
+    case "del-cuota": confirmDlg("¿Eliminar esta compra?", "Se saca de tu plan.", "Eliminar", () => { S.cuotas = S.cuotas.filter(c => c.id !== id); save(); render(); toast("La sacamos de tu plan."); }, () => formCuota(S.cuotas.find(c => c.id === id))); break;
+    case "strategy": S.strategy = t.dataset.v; ordenOpen = true; save(); render(); toast(S.strategy === "bola" ? "Ahora pagás primero la más chica." : "Ahora pagás primero la más cara."); break;
+    case "use-sobra": S.budget = Math.max(0, S.income - (S.gastos || 0)); save(); render(); toast(`Listo: vas a pagar ${fmt(S.budget)} por mes.`); break;
+    case "focus-budget": focusBudget(); break;
+    case "go-guiones": goGuiones(); break;
+    case "next-step": { dlg.close(); tab = "inicio"; const P = plan(); if (P.status === "presupuesto" && !S.budget) focusBudget(); else { render(); window.scrollTo(0, 0); } break; }
     case "demo": demo(); break;
     case "mark-month": markMonth(); break;
     case "undo-month": undoMonth(); break;
     case "settings": settings(); break;
-    case "export": exportData(); break;
+    case "glosario": glosario(!!t.dataset.back); break;
+    case "install-help": installHelp(!!t.dataset.back); break;
+    case "install-dismiss": try { localStorage.setItem(KEY + ".tip", "1"); } catch(e){} render(); toast("Cuando quieras, está en Ajustes."); break;
+    case "export": exportData(); toast("Copia descargada. Guardala en tu mail o mandátela por WhatsApp."); break;
     case "import": document.getElementById("jsonInput").click(); break;
-    case "wipe": confirmDlg("¿Borrar todos tus datos?", "Se borran todas tus deudas, cuotas y avances de este dispositivo. No se puede deshacer.", "Borrar todo", () => { const c = S.currency; S = blank(); S.currency = c; save(); tab = "inicio"; render(); }, settings); break;
+    case "wipe": confirmDlg("¿Borrar todos tus datos?", "Se borran todas tus deudas, cuotas y avances de este celular. No se puede deshacer.", "Borrar todo", () => { const c = S.currency; S = blank(); S.currency = c; save(); tab = "inicio"; render(); toast("Borramos todos tus datos."); }, settings); break;
     case "close": dlg.close(); break;
   }
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-tab],[data-tab-go],[data-action]");
+  if (!t) return;
+  if (t.closest("#toast")) document.getElementById("toast").innerHTML = "";
+  if (t.dataset.tab || t.dataset.tabGo) { tab = t.dataset.tab || t.dataset.tabGo; if (dlg.open) dlg.close(); render(); window.scrollTo(0, 0); return; }
+  const action = t.dataset.action;
+  if (S.demo && LOADERS.has(action))
+    return confirmDlg("¿Empezamos con lo tuyo?", "Borramos el ejemplo para que cargues tus deudas y cuotas.", "Sí, borrar el ejemplo", () => { clearDemo(); render(); run(action, t); }, null, true);
+  run(action, t);
+});
+// Mientras escribís un monto, te mostramos cómo lo entendimos («= $ 200.000»).
+document.addEventListener("input", e => {
+  const t = e.target; if (!t.hasAttribute || !t.hasAttribute("data-money")) return;
+  const out = document.getElementById(t.id + "-echo"); if (!out) return;
+  const v = t.value.trim();
+  out.textContent = !v ? "" : num(v) ? "= " + fmt(num(v)) : "No entendimos el número. Escribilo así: 200.000";
 });
 document.addEventListener("change", e => {
   const t = e.target;
   if (t.dataset.check) { S.checks[t.dataset.check] = t.checked; save(); t.closest(".check").classList.toggle("done", t.checked); return; }
-  if (t.dataset.change === "budget") { S.budget = num(t.value); save(); render(); }
-  if (t.dataset.change === "income" || t.dataset.change === "gastos") { S[t.dataset.change] = num(t.value); if (S.income > 0) S.budget = Math.max(0, S.income - (S.gastos || 0)); save(); render(); }
-  if (t.dataset.change === "currency") { S.currency = t.value; save(); render(); }
+  // setTimeout: si tocaste otro campo, el foco ya pasó ahí y render() lo conserva.
+  if (t.dataset.change === "budget") { S.budget = num(t.value); save(); setTimeout(render); }
+  if (t.dataset.change === "income" || t.dataset.change === "gastos") { S[t.dataset.change] = num(t.value); calcOpen = true; save(); setTimeout(render); }
   if (t.id === "pdfInput") { handlePdf(t.files[0]); t.value = ""; }
   if (t.id === "jsonInput" && t.files[0]) {
     t.files[0].text().then(txt => {
       const d = JSON.parse(txt);
       if (!Array.isArray(d.deudas) || !Array.isArray(d.cuotas)) throw new Error("formato");
-      confirmDlg("¿Restaurar la copia?", "Esto reemplaza los datos actuales por los de la copia.", "Restaurar", () => { S = sane(Object.assign(blank(), d)); save(); tab = "inicio"; render(); }, settings);
-    }).catch(() => openDlg(`<h2>Archivo no válido</h2><p class="muted">Ese archivo no es una copia de Fecha Libre.</p><button class="btn" type="button" data-action="close">Entendido</button>`)).finally(() => { t.value = ""; });
+      confirmDlg("¿Recuperar tus datos desde la copia?", "Esto reemplaza lo que tenés ahora por lo de la copia.", "Recuperar", () => { S = sane(Object.assign(blank(), d)); save(); tab = "inicio"; render(); toast("Listo, recuperamos tus datos."); }, settings, true);
+    }).catch(() => openDlg(`<h2>Ese archivo no sirve</h2><p class="muted">No es una copia de Fecha Libre. Buscá el archivo que empieza con «fecha-libre».</p><button class="btn" type="button" data-action="close">Entendido</button>`)).finally(() => { t.value = ""; });
   }
 });
+const formErr = (f, msg) => { const p = f.querySelector(".err"); if (p) p.textContent = msg; };
 document.addEventListener("submit", e => {
   e.preventDefault();
   const f = e.target, fd = new FormData(f), id = f.dataset.id;
   if (f.id === "fDeuda") {
-    const balance = num(fd.get("balance"));
-    const d = {name:(fd.get("name") || "").trim() || "Deuda", balance, rate:num(fd.get("rate")), min:num(fd.get("min")) || r2(balance * 0.05), due:Math.min(31, Math.round(num(fd.get("due"))))};
+    const balance = num(fd.get("balance")), rateRaw = (fd.get("rate") || "").trim(), minRaw = num(fd.get("min"));
+    if (!balance) return formErr(f, "Poné cuánto debés hoy. Por ejemplo: 350.000");
+    const d = {name:(fd.get("name") || "").trim() || "Deuda", balance, rate:num(rateRaw), rateUnknown:!rateRaw, min:minRaw || r2(balance * 0.05), minEst:!minRaw, due:Math.min(31, Math.round(num(fd.get("due"))))};
     if (id) Object.assign(S.deudas.find(x => x.id === id), d); else S.deudas.push(Object.assign({id:uid()}, d));
   } else if (f.id === "fCuota") {
-    const c = {desc:(fd.get("desc") || "").trim() || "Compra", card:(fd.get("card") || "").trim(), amount:num(fd.get("amount")), left:Math.round(num(fd.get("left"))), total:Math.round(num(fd.get("total"))) || "", si:!!fd.get("si"), due:Math.min(31, Math.round(num(fd.get("due"))))};
-    if (!c.amount || !c.left) return;
-    if (id) Object.assign(S.cuotas.find(x => x.id === id), c); else S.cuotas.push(Object.assign({id:uid()}, c));
-  } else if (f.id === "fPass") { const p = passCb; passCb = null; if (p) { openDlg("<p>Leyendo tu resumen…</p>"); p.update(fd.get("pw")); } return; }
+    const amount = num(fd.get("amount")), cur = Math.round(num(fd.get("cur"))), total = Math.round(num(fd.get("total")));
+    if (!amount) return formErr(f, "Poné cuánto pagás por mes de esta cuota. Por ejemplo: 45.000");
+    if (!cur || !total) return formErr(f, "Completá en qué cuota vas y de cuántas. Si tu resumen dice «cuota 3/12», poné 3 y 12.");
+    if (cur > total) return formErr(f, `La cuota en la que vas (${cur}) no puede ser mayor que el total (${total}).`);
+    const old = id ? S.cuotas.find(x => x.id === id) : null;
+    const c = {desc:(fd.get("desc") || "").trim() || "Compra", card:(fd.get("card") || "").trim(), amount, left:total - cur + 1, total, si:old ? old.si : false, due:Math.min(31, Math.round(num(fd.get("due"))))};
+    if (old) Object.assign(old, c); else S.cuotas.push(Object.assign({id:uid()}, c));
+  } else if (f.id === "fPass") { const p = passCb; passCb = null; if (p) { openDlg("<h2>Leyendo tu resumen…</h2>"); p.update(fd.get("pw")); } return; }
   else if (f.id === "fImport") { saveImport(f); return; }
   else return;
   save(); dlg.close(); render();
+  toast(id ? "Cambios guardados." : "Listo, lo sumamos a tu plan.");
 });
 render();
-
-/* Aviso de instalación: una sola vez, solo en celular y fuera de la app instalada */
-(function installTip(){
-  const TIP = KEY + ".tip";
-  try {
-    if (localStorage.getItem(TIP)) return;
-    const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua), and = /Android/.test(ua);
-    if (!ios && !and) return;
-    if (navigator.standalone || matchMedia("(display-mode: standalone)").matches) return;
-    localStorage.setItem(TIP, "1");
-    const steps = ios
-      ? ["Abrí esta página en <b>Safari</b> (no en el navegador de Instagram o Facebook).", "Tocá los <b>tres puntitos</b> de abajo a la derecha.", "Tocá <b>Compartir</b>.", "Tocá <b>Ver más</b> y elegí <b>Agregar a inicio</b>. (Si ves el cuadrado con la flecha hacia arriba en la barra, tocalo y buscá <b>Agregar a pantalla de inicio</b>.)", "Tocá <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."]
-      : ["Abrí esta página en <b>Chrome</b> (no en el navegador de Instagram o Facebook).", "Tocá los <b>tres puntitos</b> de arriba a la derecha.", "Elegí <b>Agregar a pantalla principal</b> (o «Instalar app»).", "Confirmá con <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."];
-    openDlg(`<h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque y tus datos se mantienen en este dispositivo.</p><ol style="margin:12px 0 14px 20px;display:grid;gap:8px">${steps.map(s => `<li>${s}</li>`).join("")}</ol><button class="btn" data-action="close">Entendido</button>`);
-  } catch(e){}
-})();
 </script>
 </body>
 </html>
