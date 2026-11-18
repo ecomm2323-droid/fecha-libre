@@ -153,6 +153,8 @@ const KEY = "fechalibre.ar.v1";
 const blank = () => ({currency:"ARS", budget:0, income:0, gastos:0, strategy:"avalancha", deudas:[], cuotas:[], history:[], checks:{}});
 let S = load();
 let tab = "inicio";
+let calM = 0;
+try { const u = JSON.parse(localStorage.getItem(KEY + ".ui")); if (["inicio","deudas","cuotas","calendario","plan"].includes(u.tab)) tab = u.tab; if (u.calM > 0 && u.calM < 600) calM = u.calM | 0; } catch(e){}
 /* Sanea el estado (copia importada o localStorage): fuerza tipos y ids seguros */
 function sane(s){
   const n = v => Number.isFinite(+v) && v !== "" && v !== null ? +v : 0, str = (v, m) => String(v ?? "").slice(0, m);
@@ -166,6 +168,7 @@ function sane(s){
   s.history = (Array.isArray(s.history) ? s.history : []).filter(obj).map(h => ({d:str(h.d, 10), mes:str(h.mes, 7), paid:n(h.paid)}));
   const ck = {}; if (obj(s.checks)) for (const k in s.checks) ck[k] = !!s.checks[k]; s.checks = ck;
   s.demo = !!s.demo;
+  s.undo = typeof s.undo === "string" && s.undo.length < 200000 ? s.undo : "";
   return s;
 }
 function load(){ try { return sane(Object.assign(blank(), JSON.parse(localStorage.getItem(KEY)) || {})); } catch(e){ return blank(); } }
@@ -243,6 +246,7 @@ function plan(){
 /* ---------- Render ---------- */
 const view = document.getElementById("view");
 function render(){
+  try { localStorage.setItem(KEY + ".ui", JSON.stringify({tab, calM})); } catch(e){}
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"));
   view.innerHTML = ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan})[tab]();
 }
@@ -268,7 +272,6 @@ function acelerador(sim){
 
 
 /* ---------- Calendario: vencimientos y fechas importantes del plan ---------- */
-let calM = 0;
 function calItems(m, sim){
   const clear = {};
   if (sim) sim.events.forEach(e => { if (e.type === "deuda") clear[e.id] = e.m; });
@@ -329,7 +332,7 @@ function vCalendario(){
   for (let d = 1; d <= dim; d++) {
     const cls = ["d", pay.has(d) ? "has" : "", imp.has(d) ? "imp" : "", d === today ? "today" : ""].filter(Boolean).join(" ");
     const lab = items.filter(i => i.day === d).map(i => i.t).join(", ");
-    cells += `<div class="${cls}"${lab ? ` aria-label="Día ${d}: ${esc(lab)}"` : ""}>${d}</div>`;
+    cells += `<div class="${cls}"${lab ? ` role="img" tabindex="0" aria-label="Día ${d}: ${esc(lab)}"` : ""}>${d}</div>`;
   }
   const notes = items.filter(i => i.imp).map(i => {
     const when = i.day ? `El ${i.day}: ` : "";
@@ -514,6 +517,7 @@ function vPlan(){
       <span style="flex:1"><b>${esc(r.t)}</b><br><span class="muted">${esc(r.s)}</span></span><b>${fmt(r.v)}</b></label>`; }).join("")}
     ${sobrante > 0.009 ? `<p class="muted">Te sobran ${fmt(sobrante)}: guardalos como fondo para imprevistos.</p>` : ""}
     <button class="btn" data-action="mark-month" style="margin-top:10px">Ya pagué este mes → actualizar saldos</button>
+    ${S.undo ? `<button class="btn sm" data-action="undo-month" style="margin-top:8px;background:transparent;color:var(--brand);border:1px solid var(--brand)">Deshacer el último «mes pagado»</button>` : ""}
     <p class="muted" style="margin-top:6px">Descuenta una cuota a cada compra y actualiza los saldos con intereses. Cuando llegue el resumen nuevo, corregí los saldos si cambiaron.</p>
   </div>
   <div class="card"><h2>2. Tus próximos hitos</h2>
@@ -807,13 +811,20 @@ function demo(){
 function markMonth(){
   const P = plan();
   if (P.status !== "ok" || !P.sim.first) return;
-  confirmDlg("¿Marcar el mes como pagado?", `¿Pagaste lo de ${monthLabel(0, true)}? Vamos a descontar una cuota a cada compra y actualizar tus saldos. No se puede deshacer: si te equivocás, corregí los valores a mano en Deudas.`, "Sí, lo pagué", () => {
+  confirmDlg("¿Marcar el mes como pagado?", `¿Pagaste lo de ${monthLabel(0, true)}? Vamos a descontar una cuota a cada compra y actualizar tus saldos. Si te equivocás, lo podés deshacer desde esta pantalla.`, "Sí, lo pagué", () => {
     const f = P.sim.first, mes = monthKey();
+    S.undo = JSON.stringify({deudas:S.deudas, cuotas:S.cuotas, history:S.history, checks:S.checks});
     S.deudas.forEach(d => { if (d.id in f.balances) d.balance = f.balances[d.id]; });
     S.cuotas.forEach(c => { if (c.left > 0) c.left--; });
     S.history.push({d:new Date().toISOString().slice(0, 10), mes, paid:r2(Object.values(f.pay).reduce((a, b) => a + b, 0))});
     save(); render(); window.scrollTo(0, 0);
   });
+}
+function undoMonth(){
+  let u; try { u = JSON.parse(S.undo); } catch(e){ return; }
+  if (!u || typeof u !== "object") return;
+  S = sane(Object.assign(S, {deudas:u.deudas, cuotas:u.cuotas, history:u.history, checks:u.checks, undo:""}));
+  save(); render();
 }
 function exportData(){
   const a = document.createElement("a");
@@ -844,6 +855,7 @@ document.addEventListener("click", e => {
     case "strategy": S.strategy = t.dataset.v; save(); render(); break;
     case "demo": demo(); break;
     case "mark-month": markMonth(); break;
+    case "undo-month": undoMonth(); break;
     case "settings": settings(); break;
     case "export": exportData(); break;
     case "import": document.getElementById("jsonInput").click(); break;
