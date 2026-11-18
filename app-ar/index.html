@@ -906,7 +906,7 @@ render();
     if (navigator.standalone || matchMedia("(display-mode: standalone)").matches) return;
     localStorage.setItem(TIP, "1");
     const steps = ios
-      ? ["Abrí esta página en <b>Safari</b> (no en el navegador de Instagram o Facebook).", "Tocá el botón <b>Compartir</b> (el cuadrado con la flecha hacia arriba).", "Deslizá y elegí <b>Agregar a pantalla de inicio</b>.", "Tocá <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."]
+      ? ["Abrí esta página en <b>Safari</b> (no en el navegador de Instagram o Facebook).", "Tocá los <b>tres puntitos</b> de abajo a la derecha.", "Tocá <b>Compartir</b>.", "Tocá <b>Ver más</b> y elegí <b>Agregar a inicio</b>. (Si ves el cuadrado con la flecha hacia arriba en la barra, tocalo y buscá <b>Agregar a pantalla de inicio</b>.)", "Tocá <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."]
       : ["Abrí esta página en <b>Chrome</b> (no en el navegador de Instagram o Facebook).", "Tocá los <b>tres puntitos</b> de arriba a la derecha.", "Elegí <b>Agregar a pantalla principal</b> (o «Instalar app»).", "Confirmá con <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."];
     openDlg(`<h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque y tus datos se mantienen en este dispositivo.</p><ol style="margin:12px 0 14px 20px;display:grid;gap:8px">${steps.map(s => `<li>${s}</li>`).join("")}</ol><button class="btn" data-action="close">Entendido</button>`);
   } catch(e){}
