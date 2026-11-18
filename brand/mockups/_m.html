@@ -1,0 +1,18 @@
+<!doctype html><meta charset=utf-8><style>
+*{box-sizing:border-box}
+body{margin:0;width:1600px;height:1000px;background:linear-gradient(135deg,#DCEDE2,#F7F5EF);position:relative;overflow:hidden;font-family:system-ui}
+.phone{position:absolute;width:330px;height:690px;background:#1a1f1d;border-radius:52px;padding:11px;box-shadow:0 40px 80px #245b4855,0 0 0 2px #3a4540 inset}
+.phone .scr{width:100%;height:100%;border-radius:42px;overflow:hidden;background:#fff}
+.phone iframe{width:390px;height:812px;border:0;transform:scale(.8205);transform-origin:0 0}
+.notch{position:absolute;top:10px;left:50%;margin-left:-45px;width:90px;height:24px;background:#1a1f1d;border-radius:14px;z-index:5}
+.lap{position:absolute}
+.lid{width:960px;height:600px;background:#1a1f1d;border-radius:20px 20px 6px 6px;padding:16px 16px 14px;box-shadow:0 0 0 2px #3a4540 inset}
+.lid .scr{width:100%;height:100%;overflow:hidden;background:#fff;border-radius:4px}
+.lid iframe{border:0;width:1280px;height:827px;transform:scale(.725);transform-origin:0 0}
+.base{width:1100px;height:20px;margin-left:-70px;background:linear-gradient(#c9cfcc,#9aa3a0);border-radius:0 0 22px 22px;box-shadow:0 30px 50px #245b4833}
+</style><body>
+<div class=lap style="left:120px;top:150px"><div class=lid><div class=scr><iframe id=a src="/app-ar/index.html"></iframe></div></div><div class=base></div></div>
+<div class=phone style="left:1110px;top:150px"><div class=notch></div><div class=scr><iframe id=b src="/app-ar/index.html"></iframe></div></div>
+<script>
+for(const id of["a","b"])document.getElementById(id).onload=function(){try{this.contentWindow.localStorage.clear();this.contentWindow.demo()}catch(e){document.title=e}};
+</script></body>
