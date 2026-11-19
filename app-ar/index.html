@@ -160,6 +160,17 @@ td input{padding:6px;font-size:14px}
 .klist button:first-of-type{border-top:0}
 .iconbtn .lbl{display:none}
 .cols>div{min-width:0}
+.tabs [hidden]{display:none}
+@media (max-width:1023px){.tabs.six{grid-template-columns:repeat(6,1fr)}.tabs.six button{font-size:11px;padding-left:2px;padding-right:2px}}
+.chips{border:0;padding:0;margin:12px 0 0;min-width:0}
+.chips legend{padding:0;font-size:14px;color:var(--muted);margin-bottom:6px}
+.chip{display:inline-block;position:relative;margin:0 6px 8px 0}
+.chip span{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:99px;background:#fff;color:var(--ink);font-size:15px;cursor:pointer}
+.chip input:checked+span{background:var(--soft);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip input:focus-visible+span{outline:2px solid var(--brand);outline-offset:1px}
+.x{width:44px;height:44px;border:0;border-radius:12px;background:none;color:var(--muted);font-size:22px;line-height:1;cursor:pointer}
+.x:hover{background:var(--bg);color:var(--danger)}
+.item .r:has(>.x){display:flex;align-items:center;gap:2px}
 
 /* Tablet y compu: más ancho y dos columnas. Abajo de 768 queda igual que en el celular. */
 @media (min-width:768px){
@@ -204,6 +215,7 @@ td input{padding:6px;font-size:14px}
   <button data-tab="cuotas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg>Cuotas</button>
   <button data-tab="calendario"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><circle cx="8.5" cy="14.5" r=".9"/><circle cx="12" cy="14.5" r=".9"/><circle cx="15.5" cy="14.5" r=".9"/></svg>Calendario</button>
   <button data-tab="plan"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Plan</button>
+  <button data-tab="ahorro" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-2.4-1.6-2.4 1.6-2.4-1.6-2.4 1.6L6 20.5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Gastos</button>
 </nav>
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -214,11 +226,21 @@ td input{padding:6px;font-size:14px}
 "use strict";
 /* ---------- Estado (solo en este dispositivo) ---------- */
 const KEY = "fechalibre.ar.v1";
-const blank = () => ({currency:"ARS", budget:0, income:0, gastos:0, strategy:"avalancha", deudas:[], cuotas:[], history:[], checks:{}});
+const blank = () => ({currency:"ARS", budget:0, income:0, gastos:0, strategy:"avalancha", deudas:[], cuotas:[], history:[], checks:{}, movs:[]});
+// Modo Ahorro: categorías de gastos del día a día (las deudas y cuotas ya están en el plan).
+const CATS = {super:"Súper", delivery:"Comida afuera", salidas:"Salidas", transporte:"Transporte", subs:"Suscripciones", ropa:"Ropa y compras", otros:"Otros"};
+const isCat = c => Object.prototype.hasOwnProperty.call(CATS, c);
 let S = load();
 let tab = "inicio";
 let calM = 0;
-try { const u = JSON.parse(localStorage.getItem(KEY + ".ui")); if (["inicio","deudas","cuotas","calendario","plan"].includes(u.tab)) tab = u.tab; if (u.calM > 0 && u.calM < 600) calM = u.calM | 0; } catch(e){}
+// shortcut: el Modo Ahorro se activa con el link que recibe quien lo compra; sin login ese link se puede compartir. Con login (Supabase) pasa a la cuenta.
+const ahorroOn = () => { try { return localStorage.getItem(KEY + ".ahorro") === "1"; } catch(e){ return false; } };
+try { const u = JSON.parse(localStorage.getItem(KEY + ".ui")); if (["inicio","deudas","cuotas","calendario","plan"].concat(ahorroOn() ? ["ahorro"] : []).includes(u.tab)) tab = u.tab; if (u.calM > 0 && u.calM < 600) calM = u.calM | 0; } catch(e){}
+let recienActivado = false;
+if (new URLSearchParams(location.search).get("ahorro") === "fl7k2q") {
+  try { localStorage.setItem(KEY + ".ahorro", "1"); recienActivado = true; tab = "ahorro"; } catch(e){}
+  history.replaceState(null, "", location.pathname);
+}
 /* Sanea el estado (copia importada o localStorage): fuerza tipos y ids seguros */
 function sane(s){
   const n = v => Number.isFinite(+v) && v !== "" && v !== null ? +v : 0, str = (v, m) => String(v ?? "").slice(0, m);
@@ -231,6 +253,7 @@ function sane(s){
   s.cuotas = (Array.isArray(s.cuotas) ? s.cuotas : []).filter(obj).map(x => ({id:id(x.id), desc:str(x.desc, 80), card:str(x.card, 60), amount:n(x.amount), left:n(x.left), total:x.total === "" ? "" : n(x.total), si:!!x.si, due:n(x.due)}));
   s.history = (Array.isArray(s.history) ? s.history : []).filter(obj).map(h => ({d:str(h.d, 10), mes:str(h.mes, 7), paid:n(h.paid)}));
   const ck = {}; if (obj(s.checks)) for (const k in s.checks) ck[k] = !!s.checks[k]; s.checks = ck;
+  s.movs = (Array.isArray(s.movs) ? s.movs : []).filter(x => obj(x) && /^\d{4}-\d\d-\d\d$/.test(x.d) && n(x.amt) > 0).map(x => ({id:id(x.id), d:x.d, amt:n(x.amt), cat:isCat(x.cat) ? x.cat : "otros"}));
   s.demo = !!s.demo;
   s.undo = typeof s.undo === "string" && s.undo.length < 200000 ? s.undo : "";
   return s;
@@ -352,7 +375,8 @@ function render(){
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"));
   // Redibujar no debe sacarte del campo donde estabas escribiendo (en el celular cerraría el teclado).
   const ae = document.activeElement, aid = ae && ae.id && view.contains(ae) ? ae.id : "";
-  view.innerHTML = demoBanner() + ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan})[tab]();
+  if (tab === "ahorro" && !ahorroOn()) tab = "inicio";
+  view.innerHTML = demoBanner() + ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan, ahorro:vAhorro})[tab]();
   if (aid) { const el = document.getElementById(aid); if (el) el.focus({preventScroll:true}); }
 }
 const demoBanner = () => S.demo ? `<div class="alert between"><span><b>Estás viendo un ejemplo.</b> Nada de esto es tuyo.</span><button class="btn sm" data-action="demo-clear" style="flex:none">Empezar con lo mío</button></div>` : "";
@@ -368,7 +392,7 @@ function toast(msg, act, label){
   clearTimeout(toastT); toastT = setTimeout(() => { el.innerHTML = ""; }, act ? 9000 : 4500);
 }
 function focusBudget(){
-  tab = "inicio"; if (dlg.open) dlg.close(); render();
+  tab = "inicio"; budgetOpen = true; if (dlg.open) dlg.close(); render();
   const b = document.getElementById("budget");
   if (b) { b.scrollIntoView({block:"center"}); b.focus({preventScroll:true}); }
 }
@@ -508,6 +532,57 @@ function vCalendario(){
   `<p class="foot">Las fechas son estimaciones del plan.</p>`;
 }
 
+/* ---------- Modo Ahorro (extra pago): anotar gastos y ver de dónde sacar plata para salir antes ---------- */
+const isoLocal = d => ymd(d).replace(/(\d{4})(\d\d)(\d\d)/, "$1-$2-$3");
+let movUndo = null, budgetUndo = 0;
+// Las 3 categorías donde más gastaste en 30 días: cuánto adelantás si gastás la mitad y lo sumás al pago.
+function ideasAhorro(){
+  const desde = isoLocal(new Date(Date.now() - 29 * 864e5)), t = {};
+  S.movs.forEach(m => { if (m.d >= desde) t[m.cat] = (t[m.cat] || 0) + m.amt; });
+  const P = plan(), base = P.status === "ok" && P.sim.done && activeDeudas().length ? P.sim : null;
+  return Object.entries(t).filter(([c, v]) => c !== "otros" && v >= 2000).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([cat, total]) => {
+    const half = Math.round(total / 2000) * 1000;
+    let s = null;
+    if (base) { const b0 = S.budget; S.budget = b0 + half; s = simulate(S.strategy, false); S.budget = b0; }
+    return {cat, total, half, s, base};
+  });
+}
+function vAhorro(){
+  const hoy = isoLocal(new Date()), ayer = isoLocal(new Date(Date.now() - 864e5)), mes = hoy.slice(0, 7);
+  const delMes = S.movs.filter(m => m.d.slice(0, 7) === mes).sort((a, b) => b.d.localeCompare(a.d));
+  const tot = delMes.reduce((a, m) => a + m.amt, 0), mesTxt = new Intl.DateTimeFormat("es-AR", {month:"long"}).format(new Date());
+  const last = S.movs.length ? S.movs[S.movs.length - 1].cat : "super", hasD = activeDeudas().length > 0;
+  const form = `<form id="fGasto" class="card" novalidate><h1 class="ttl">Anotá un gasto</h1>
+    <label for="gAmt" style="margin-top:0">¿Cuánto gastaste?</label>
+    <input id="gAmt" name="amt" type="text" inputmode="decimal" autocomplete="off" data-money placeholder="Ej: 15.000" aria-describedby="gAmt-echo">
+    <p class="echo" id="gAmt-echo"></p>
+    <fieldset class="chips"><legend>¿En qué?</legend>${Object.entries(CATS).map(([k, v]) => `<label class="chip"><input type="radio" name="cat" value="${k}" class="sr"${k === last ? " checked" : ""}><span>${v}</span></label>`).join("")}</fieldset>
+    <p class="err" role="alert"></p><button class="btn" style="margin-top:8px">Anotar</button>
+    <p class="muted" style="margin:10px 0 0">Las deudas y cuotas no van acá: ya están en tu plan.</p></form>`;
+  const hero = `<div class="card hero"><div class="label">En ${esc(mesTxt)} gastaste</div><p class="big">${fmt(tot)}</p>
+    <div class="sub">${delMes.length ? `En ${delMes.length} ${delMes.length === 1 ? "gasto anotado" : "gastos anotados"}.` : "Todavía no anotaste nada este mes."}</div></div>`;
+  const ideas = ideasAhorro();
+  const idea = i => {
+    const s = i.s, b = i.base;
+    const res = s && s.done && s.months < b.months ? `salís <b>${b.months - s.months} ${b.months - s.months === 1 ? "mes" : "meses"} antes</b>: en ${esc(fechaTxt(s))}`
+      : s && s.done && b.interest - s.interest >= 1000 ? `te ahorrás unos <b>${fmt(b.interest - s.interest)}</b> de intereses`
+      : `juntás <b>${fmt(i.half)}</b> por mes`;
+    return `<div class="item" style="display:block"><p style="margin:0"><b>${CATS[i.cat]}</b>: ${fmt(i.total)} en 30 días. Si gastás la mitad, ${res}.</p>
+      ${hasD ? `<button class="btn sm alt" data-action="ahorro-sumar" data-v="${i.half}" style="margin-top:8px">Sumar ${fmt(i.half)} a lo que pago por mes</button>` : ""}</div>`;
+  };
+  const hook = `<div class="card"><h2>De dónde sacar plata para salir antes</h2>${ideas.length
+    ? `<p class="muted">Mirando lo que anotaste en los últimos 30 días:</p>${ideas.map(idea).join("")}${hasD ? "" : `<p class="muted" style="margin:10px 0 0">Tus cuotas son fijas: lo que ahorres te queda libre para lo que quieras.</p>`}`
+    : `<p class="muted" style="margin:0">Anotá tus gastos unos días. Acá te mostramos en qué se te va más plata y cuántos meses antes salís si lo recortás.</p>`}</div>`;
+  const byCat = Object.entries(delMes.reduce((a, m) => (a[m.cat] = (a[m.cat] || 0) + m.amt, a), {})).sort((a, b) => b[1] - a[1]);
+  const max = byCat.length ? byCat[0][1] : 1;
+  const cats = byCat.length ? `<div class="card"><h2>En qué se fue</h2>${byCat.map(([c, v]) => `<div class="item" style="display:block"><div class="between"><span class="t">${CATS[c]}</span><span style="white-space:nowrap">${fmt(v)} <span class="muted">· ${Math.round(v / tot * 100)} %</span></span></div>
+    <div class="bar" style="height:8px;margin-top:8px" aria-hidden="true"><i style="width:${v / max * 100}%"></i></div></div>`).join("")}</div>` : "";
+  const dia = d => d === hoy ? "Hoy" : d === ayer ? "Ayer" : "El " + +d.slice(8);
+  const list = delMes.length ? `<div class="card"><h2>Tus gastos de ${esc(mesTxt)}</h2>${delMes.map(m => `<div class="item"><div><div class="t">${CATS[m.cat]}</div><div class="muted">${dia(m.d)}</div></div>
+    <div class="r">${fmt(m.amt)}<button class="x" data-action="del-mov" data-id="${m.id}" aria-label="Borrar ${fmt(m.amt)} de ${CATS[m.cat]}">×</button></div></div>`).join("")}</div>` : "";
+  return cols(form + hero, hook + cats + list);
+}
+
 function vEmpty(){
   return `<div class="card empty">
     <h1 class="big">¿En qué mes te sacás las deudas de encima?</h1>
@@ -530,10 +605,12 @@ const ESTE = isPhone() ? "este celular" : "esta compu", TU = isPhone() ? "tu cel
 function installCard(){
   try { if (localStorage.getItem(KEY + ".tip")) return ""; } catch(e){ return ""; }
   if (!isPhone() || navigator.standalone || matchMedia("(display-mode: standalone)").matches) return "";
-  return `<div class="card"><h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque cuando tengas que pagar el mes que viene.</p>
+  return `<div class="card"><h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque cuando tengas que pagar el mes que viene.${/iPhone|iPad|iPod/.test(navigator.userAgent) ? " <b>Importante en iPhone:</b> si no la agregás al inicio y pasan unos días sin abrirla, Safari puede borrar tus datos." : ""}</p>
     <div class="row"><button class="btn alt" data-action="install-help">Ver cómo</button><button class="btn ghost" data-action="install-dismiss" style="margin-top:0">Ahora no</button></div></div>`;
 }
-let ordenOpen = false, calcOpen = false;
+let ordenOpen = false, calcOpen = false, budgetOpen = false, moreOpen = false;
+// «toggle» no burbujea: se escucha en captura para que «Ver comparación» siga abierta tras un render.
+document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("more")) moreOpen = e.target.open; }, true);
 function ordenBlock(){
   const a = simulate("avalancha"), b = simulate("bola"), bola = S.strategy === "bola";
   const same = a.months === b.months && Math.abs(b.interest - a.interest) < 1000;
@@ -585,7 +662,11 @@ function vInicio(){
     }
   }
   const sobra = Math.max(0, S.income - (S.gastos || 0));
-  const budgetCard = hasD ? `<div class="card">
+  // Con plan armado, el monto queda en una línea («Pagás $X por mes · Cambiar»); sin plan, el campo va abierto.
+  const fold = hasD && P.status === "ok" && S.budget > 0;
+  const bt = fold ? "details" : "div";
+  const budgetCard = hasD ? `<${bt} class="card${fold ? " q" : ""}"${fold && !budgetOpen && !S.income && !calcOpen && !ordenOpen ? "" : fold ? " open" : ""}>
+    ${fold ? `<summary style="text-decoration:none;color:var(--ink);justify-content:space-between;width:100%"><span>Pagás <b>${fmt(S.budget)}</b> por mes</span><span style="color:var(--brand);text-decoration:underline dotted">Cambiar</span></summary>` : ""}
     <label for="budget" style="margin-top:0;font-size:16px;font-weight:600;color:var(--ink)">¿Cuánto podés pagar por mes, en total, entre deudas y cuotas?</label>
     <input id="budget" type="text" inputmode="decimal" autocomplete="off" data-money data-change="budget" value="${fmtIn(S.budget)}" placeholder="Ej: ${fmtIn(Math.ceil(need))}" aria-describedby="budget-echo budget-help">
     <p class="echo" id="budget-echo"></p>
@@ -603,7 +684,7 @@ function vInicio(){
       </div>
     </details>
     ${P.status === "ok" && activeDeudas().length > 1 ? ordenBlock() : ""}
-  </div>` : "";
+  </${bt}>` : "";
   const noAlcanza = short ? `<div class="card"><h2>Si no te alcanza</h2>${tipsNoAlcanza("en la pestaña Plan")}<button class="btn alt" data-action="go-guiones" style="margin-top:12px">Ver qué decirle al banco</button></div>` : "";
   const avance = S.history.length ? `<div class="card"><div class="between"><h2 style="margin:0">Tu avance</h2><span class="pill">${pct} %</span></div>
     <div class="bar" style="margin:12px 0" role="progressbar" aria-label="Cuánto llevás pagado" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
@@ -611,7 +692,8 @@ function vInicio(){
       <div class="stat"><b>${fmt(pend)}</b><span>Te falta pagar</span></div>
       <div class="stat"><b>${fmt(paid)}</b><span>Ya pagaste con el plan</span></div>
     </div></div>` : "";
-  return `${cols(hero + budgetCard, (P.status === "ok" ? after : noAlcanza) + avance)}
+  const detalle = P.status === "ok" && (after || avance) ? `<details class="card q more"${moreOpen ? " open" : ""}><summary style="text-decoration:none;color:var(--ink)">Ver comparación y avance</summary>${after}${avance}</details>` : "";
+  return `${cols(hero + budgetCard, P.status === "ok" ? detalle : noAlcanza + avance)}
   <p class="foot">Herramienta de organización. No es asesoramiento financiero. Las cifras son estimaciones con los datos que cargaste.<br><button class="link" data-action="glosario">¿Alguna palabra no se entiende? Mirá el glosario</button></p>`;
 }
 
@@ -835,7 +917,7 @@ function installHelp(back){
   const iosS = [pre, "En Safari, tocá los <b>tres puntitos</b> de abajo a la derecha.", "Tocá <b>Compartir</b>.", "Tocá <b>Ver más</b> y elegí <b>Agregar a inicio</b>. (Si ves el cuadrado con la flecha hacia arriba, tocalo y buscá <b>Agregar a pantalla de inicio</b>.)", "Tocá <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."];
   const andS = [pre, "En Chrome, tocá los <b>tres puntitos</b> de arriba a la derecha.", "Elegí <b>Agregar a pantalla principal</b> (o «Instalar app»).", "Confirmá con <b>Agregar</b>. Listo: Fecha Libre queda como una app en tu inicio."];
   const ol = s => `<ol style="margin:8px 0 14px 20px;padding:0;display:grid;gap:8px">${s.map(x => `<li>${x}</li>`).join("")}</ol>`;
-  openDlg(`<h2>Agregá Fecha Libre al inicio de tu celular</h2><p class="muted">Así la abrís con un toque y tus datos se mantienen en este celular.</p>
+  openDlg(`<h2>Agregá Fecha Libre al inicio de tu celular</h2><p class="muted">Así la abrís con un toque y tus datos se mantienen en este celular.${ios ? " En iPhone es importante: si la usás solo desde Safari y pasan unos días sin abrirla, Safari puede borrar tus datos." : ""}</p>
     ${ios ? ol(iosS) : and ? ol(andS) : `<h3>iPhone</h3>${ol(iosS)}<h3>Android</h3>${ol(andS)}`}
     <button class="btn" data-action="${back ? "settings" : "close"}">${back ? "Volver" : "Entendido"}</button>`);
 }
@@ -1051,7 +1133,10 @@ function demo(){
     deudas:[{id:uid(), due:10, name:"Tarjeta Visa", balance:3000000, rate:120, min:300000}, {id:uid(), due:28, name:"Descubierto de la cuenta", balance:800000, rate:90, min:80000}],
     cuotas:[{id:uid(), due:10, desc:"Celular", card:"Visa", amount:65000, left:7, total:12, si:true}, {id:uid(), due:15, desc:"Heladera", card:"Mastercard", amount:48000, left:10, total:18},
       {id:uid(), due:10, desc:"Zapatillas", card:"Visa", amount:30000, left:2, total:3, si:true}, {id:uid(), due:15, desc:"Pasajes", card:"Mastercard", amount:80000, left:3, total:6, si:true},
-      {id:uid(), due:5, desc:"Préstamo personal", card:"Banco", amount:150000, left:10, total:24}]});
+      {id:uid(), due:5, desc:"Préstamo personal", card:"Banco", amount:150000, left:10, total:24}],
+    movs:[[0,"super",42000],[1,"delivery",18500],[3,"transporte",12000],[4,"delivery",22000],[6,"salidas",35000],[8,"super",56000],[9,"subs",14999],
+      [11,"delivery",16000],[13,"ropa",48000],[15,"super",38000],[18,"delivery",21000],[20,"salidas",28000],[24,"transporte",15000],[27,"super",47000]]
+      .map(([dd, cat, amt]) => ({id:uid(), d:isoLocal(new Date(Date.now() - dd * 864e5)), cat, amt}))});
   S.demo = true; save(); render(); window.scrollTo(0, 0);
 }
 function clearDemo(){ S = Object.assign(blank(), {currency:S.currency}); save(); }
@@ -1123,7 +1208,15 @@ function run(action, t){
     case "install-dismiss": try { localStorage.setItem(KEY + ".tip", "1"); } catch(e){} render(); toast("Cuando quieras, está en Ajustes."); break;
     case "export": exportData(); toast("Copia descargada. Guardala en tu mail o mandátela por WhatsApp."); break;
     case "import": document.getElementById("jsonInput").click(); break;
-    case "wipe": confirmDlg("¿Borrar todos tus datos?", `Se borran todas tus deudas, cuotas y avances de ${ESTE}. No se puede deshacer.`, "Borrar todo", () => { const c = S.currency; S = blank(); S.currency = c; save(); tab = "inicio"; render(); toast("Borramos todos tus datos."); }, settings); break;
+    case "wipe": confirmDlg("¿Borrar todos tus datos?", `Se borran todas tus deudas, cuotas${ahorroOn() ? ", gastos" : ""} y avances de ${ESTE}. No se puede deshacer.`, "Borrar todo", () => { const c = S.currency; S = blank(); S.currency = c; save(); tab = "inicio"; render(); toast("Borramos todos tus datos."); }, settings); break;
+    case "del-mov": { const m = S.movs.find(x => x.id === id); if (!m) break; movUndo = S.movs.slice(); S.movs = S.movs.filter(x => x.id !== id); save(); render(); toast(`Borramos ${fmt(m.amt)} de ${CATS[m.cat]}.`, "undo-mov", "Deshacer"); break; }
+    case "undo-mov": if (movUndo) { S.movs = movUndo; movUndo = null; save(); render(); toast("Listo, lo dejamos como estaba."); } break;
+    case "ahorro-sumar": {
+      budgetUndo = S.budget; S.budget = r2(S.budget + (+t.dataset.v || 0)); save(); render();
+      const Q = plan();
+      toast(`Ahora pagás ${fmt(S.budget)} por mes.${Q.status === "ok" && Q.sim.done ? ` Terminás en ${esc(fechaTxt(Q.sim))}.` : ""}`, "ahorro-undo", "Deshacer"); break;
+    }
+    case "ahorro-undo": S.budget = budgetUndo; save(); render(); toast(`Volviste a ${fmt(S.budget)} por mes.`); break;
     case "close": dlg.close(); break;
   }
 }
@@ -1148,7 +1241,7 @@ document.addEventListener("change", e => {
   const t = e.target;
   if (t.dataset.check) { S.checks[t.dataset.check] = t.checked; save(); t.closest(".check").classList.toggle("done", t.checked); return; }
   // setTimeout: si tocaste otro campo, el foco ya pasó ahí y render() lo conserva.
-  if (t.dataset.change === "budget") { S.budget = num(t.value); save(); setTimeout(render); }
+  if (t.dataset.change === "budget") { S.budget = num(t.value); budgetOpen = true; save(); setTimeout(render); }
   if (t.dataset.change === "income" || t.dataset.change === "gastos") { S[t.dataset.change] = num(t.value); calcOpen = true; save(); setTimeout(render); }
   if (t.id === "pdfInput") { handlePdf(t.files[0]); t.value = ""; }
   if (t.id === "jsonInput" && t.files[0]) {
@@ -1178,11 +1271,20 @@ document.addEventListener("submit", e => {
     if (old) Object.assign(old, c); else S.cuotas.push(Object.assign({id:uid()}, c));
   } else if (f.id === "fPass") { const p = passCb; passCb = null; if (p) { openDlg("<h2>Leyendo tu resumen…</h2>"); p.update(fd.get("pw")); } return; }
   else if (f.id === "fImport") { saveImport(f); return; }
+  else if (f.id === "fGasto") {
+    const amt = num(fd.get("amt")), cat = fd.get("cat");
+    if (!amt) return formErr(f, "Poné cuánto gastaste. Por ejemplo: 15.000");
+    if (!isCat(cat)) return formErr(f, "Elegí en qué fue el gasto.");
+    movUndo = S.movs.slice(); S.movs.push({id:uid(), d:isoLocal(new Date()), amt, cat}); save(); render();
+    toast(`Anotado: ${fmt(amt)} en ${CATS[cat]}.`, "undo-mov", "Deshacer"); return;
+  }
   else return;
   save(); dlg.close(); render();
   toast(id ? "Cambios guardados." : "Listo, lo sumamos a tu plan.");
 });
+if (ahorroOn()) { const b = document.querySelector('.tabs [data-tab="ahorro"]'); b.hidden = false; b.parentNode.classList.add("six"); }
 render();
+if (recienActivado) toast("¡Modo Ahorro activado! Anotá tu primer gasto.");
 </script>
 </body>
 </html>

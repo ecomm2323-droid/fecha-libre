@@ -51,6 +51,12 @@ document.getElementById("app").onload = async function(){
   const mc = gl.find(e => e.k === "Mastercard"), q = mc && new URL(mc.url).searchParams;
   check("Mastercard: día 15, se repite 10 meses", q && q.get("action") === "TEMPLATE" && q.get("recur") === "RRULE:FREQ=MONTHLY;COUNT=10" && q.get("dates").slice(6, 8) === "15", mc && mc.url);
   check("links sin montos", gl.every(e => !/\d{2}\.\d{3}|\$/.test(decodeURIComponent(e.url))));
+  // 5) Modo Ahorro: ideas con los gastos del ejemplo (súper 183.000 en 30 días → mitad 92.000)
+  const ia = w.ideasAhorro();
+  check("Modo Ahorro: 3 ideas, primero súper con 92.000", ia.length === 3 && ia[0].cat === "super" && ia[0].half === 92000, JSON.stringify(ia.map(i => i.cat + " " + i.half)));
+  check("gastar la mitad en súper adelanta la fecha", ia[0].s && ia[0].s.done && ia[0].s.months < sim.months, ia[0].s && ia[0].s.months + " vs " + sim.months);
+  const sn = w.sane({movs:[{d:"2026-11-01", amt:"5000", cat:"constructor"}, {d:"mal", amt:1, cat:"super"}, {d:"2026-11-02", amt:0, cat:"super"}]});
+  check("gastos raros se limpian al cargar", sn.movs.length === 1 && sn.movs[0].cat === "otros" && sn.movs[0].amt === 5000, JSON.stringify(sn.movs));
   w.localStorage.removeItem("fechalibre.ar.v1");
 };
 </script></body></html>
