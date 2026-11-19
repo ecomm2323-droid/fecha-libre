@@ -45,6 +45,12 @@ document.getElementById("app").onload = async function(){
   check("presupuesto ejemplo alcanza", P.status === "ok");
   const totalMes = Object.values(sim.first.pay).reduce((a, b) => a + b, 0);
   check("pago del mes = presupuesto del ejemplo (800.000)", Math.abs(totalMes - 800000) < 0.01, totalMes.toFixed(2));
+  // 4) Google Calendar: un evento mensual por tarjeta/deuda y día
+  const gl = w.gcalLinks();
+  check("Google Calendar: 4 avisos (Visa unifica saldo y cuotas)", gl.length === 4 && gl.filter(e => /visa/i.test(e.k)).length === 1, JSON.stringify(gl.map(e => e.k + " d" + e.day + " x" + e.n)));
+  const mc = gl.find(e => e.k === "Mastercard"), q = mc && new URL(mc.url).searchParams;
+  check("Mastercard: día 15, se repite 10 meses", q && q.get("action") === "TEMPLATE" && q.get("recur") === "RRULE:FREQ=MONTHLY;COUNT=10" && q.get("dates").slice(6, 8) === "15", mc && mc.url);
+  check("links sin montos", gl.every(e => !/\d{2}\.\d{3}|\$/.test(decodeURIComponent(e.url))));
   w.localStorage.removeItem("fechalibre.ar.v1");
 };
 </script></body></html>

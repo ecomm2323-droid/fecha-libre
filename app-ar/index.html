@@ -63,6 +63,7 @@ p{margin:0 0 10px}
 .btn.danger{background:#fff;color:var(--danger);border:1px solid #efd3c9}
 .btn+.btn{margin-top:10px}
 .btn.sm{display:inline-block;width:auto;padding:12px 14px;min-height:44px;font-size:14px}
+a.btn{text-decoration:none}
 label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
 input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:16px}
 input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
@@ -396,17 +397,40 @@ function calItems(m, sim){
   const clear = {};
   if (sim) sim.events.forEach(e => { if (e.type === "deuda") clear[e.id] = e.m; });
   const out = [];
-  activeCuotas().forEach(c => { if (m < c.left) out.push({day:c.due || 0, t:c.desc, amt:c.amount, imp: m === c.left - 1 ? "cuota" : ""}); });
-  activeDeudas().forEach(d => { const e = clear[d.id]; if (e === undefined || m <= e) out.push({day:d.due || 0, t:d.name, amt:d.min, imp: e === m ? "deuda" : "", min:true}); });
+  // k = qué se paga ese día: las cuotas van dentro del resumen de su tarjeta.
+  activeCuotas().forEach(c => { if (m < c.left) out.push({day:c.due || 0, t:c.desc, k:c.card || c.desc, amt:c.amount, imp: m === c.left - 1 ? "cuota" : ""}); });
+  activeDeudas().forEach(d => { const e = clear[d.id]; if (e === undefined || m <= e) out.push({day:d.due || 0, t:d.name, k:d.name, amt:d.min, imp: e === m ? "deuda" : "", min:true}); });
   return out;
+}
+const ymd = d => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+
+/* ---------- Calendario → Google Calendar: un evento mensual por tarjeta o deuda (un toque y «Guardar») ---------- */
+function gcalLinks(){
+  const P = plan(), sim = P.status === "ok" ? P.sim : null, n = sim && sim.done ? sim.months : 12;
+  const g = new Map();
+  for (let m = 0; m < n; m++) calItems(m, sim).forEach(i => {
+    if (!i.day) return;
+    // Del PDF salen «Tarjeta Visa» (saldo) y «Visa» (cuotas): mismo resumen, un solo aviso con el nombre de la deuda.
+    const id = i.k.replace(/^tarjeta\s+/i, "").toLowerCase() + "|" + i.day, e = g.get(id) || {k:i.k, day:i.day, n:0};
+    if (i.min) e.k = i.k;
+    e.n = m + 1; g.set(id, e);
+  });
+  const key = ym(off()), y = +key.slice(0, 4), mo = +key.slice(5, 7) - 1;
+  return [...g.values()].sort((a, b) => a.day - b.day).map(e => {
+    // shortcut: del 29 al 31 se agenda el 28 (avisa antes, nunca tarde) porque un evento mensual el 31 se saltea los meses cortos.
+    const d = Math.min(e.day, 28), start = new Date(y, mo, d);
+    const q = {action:"TEMPLATE", text:`Pagar ${e.k} · Fecha Libre`, dates:`${ymd(start)}/${ymd(new Date(y, mo, d + 1))}`,
+      details:`Mirá cuánto te toca pagar este mes en Fecha Libre: ${location.origin}${location.pathname}` + (e.day > 28 ? `\nVence el día ${e.day}: lo anotamos el 28 para que no se saltee en los meses cortos.` : "")};
+    if (e.n > 1) q.recur = `RRULE:FREQ=MONTHLY;COUNT=${e.n}`;
+    return {...e, url:"https://calendar.google.com/calendar/render?" + new URLSearchParams(q)};
+  });
 }
 
 /* ---------- Calendario → archivo .ics (el calendario del celular avisa; la app no manda nada) ---------- */
 const icsEsc = s => String(s).replace(/[\\;,]/g, "\\$&").replace(/\n/g, "\\n");
 function descargarIcs(){
   const P = plan(), sim = P.status === "ok" ? P.sim : null, n = sim ? sim.months : 12;
-  const pad = x => String(x).padStart(2, "0"), stamp = new Date().toISOString().replace(/[-:]|\.\d+/g, "");
-  const f = d => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+  const stamp = new Date().toISOString().replace(/[-:]|\.\d+/g, ""), f = ymd;
   const ev = [];
   const add = (key, day, title, desc) => {
     const y = +key.slice(0, 4), mo = +key.slice(5, 7) - 1, dd = Math.min(day, new Date(y, mo + 1, 0).getDate());
@@ -463,7 +487,7 @@ function vCalendario(){
   if (final) notes.push(`<li><b>Tu fecha libre</b> es este mes: ${esc(fechaTxt(sim))}.</li>`);
   const dated = items.filter(i => i.day).sort((a, b) => a.day - b.day), undated = items.filter(i => !i.day);
   const row = i => `<div class="item"><div><div class="t">${i.day ? "Día " + i.day + " · " : ""}${esc(i.t)}${today && i.day && i.day < today ? ' <span class="pill">ya pasó</span>' : ""}</div></div><div class="r">${i.min ? "mínimo " : ""}${fmt(i.amt)}</div></div>`;
-  const keys = sim ? sim.events.slice(0, 8) : [];
+  const keys = sim ? sim.events.slice(0, 8) : [], gl = gcalLinks();
   const chev = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
   return cols(`<div class="card"><div class="cm-h"><button data-action="cal-prev" aria-label="Mes anterior" ${calM <= 0 ? "disabled" : ""}>${chev("M15 5l-7 7 7 7")}</button>
     <h1>${esc(monthLabel(calM, true))}</h1>
@@ -476,7 +500,11 @@ function vCalendario(){
     ${undated.length ? `<p class="muted" style="margin:${dated.length ? "12px" : "0"} 0 4px">Sin día de vencimiento cargado</p>${undated.map(row).join("")}<p class="muted" style="margin-top:8px">Para verlas en el calendario, ponele el día de vencimiento a cada una: en la pestaña Deudas, tocá «Editar».</p>` : ""}
   </div>
   ${keys.length ? `<div class="card"><h2>Fechas clave de tu plan</h2><div class="klist">${keys.map(e => `<button data-action="cal-go" data-m="${e.m}"><b>${esc(monthLabel(e.m, true))}</b> · terminás ${e.type === "cuota" ? "las cuotas de" : "de pagar"} ${esc(e.name)}</button>`).join("")}</div></div>` : ""}
-  ${items.length ? `<div class="card"><h2>Recibí avisos en tu celular</h2><p class="muted">Fecha Libre no manda avisos: tus datos no salen de ${ESTE}. Pero tu calendario sí te puede avisar. Tocá el botón, se descarga un archivo: abrilo y elegí tu calendario (Google Calendar o el Calendario del iPhone). Te avisa un día antes de cada vencimiento.</p><button class="btn" data-action="cal-ics">Agregar las fechas a mi calendario</button><p class="muted" style="margin:8px 0 0">Si después cambiás algo, borrá en tu calendario los avisos viejos de Fecha Libre y volvé a bajar el archivo, así no te quedan repetidos.</p></div>` : ""}`) +
+  ${gl.length ? `<div class="card"><h2>Recibí avisos en tu celular</h2><p class="muted">Fecha Libre no manda avisos ni guarda tus datos fuera de ${ESTE}. Pero tu calendario sí te puede avisar.</p>
+    <h3 style="margin-top:14px">Google Calendar</h3><p class="muted">Tocá «Agregar» en cada una y después «Guardar». Queda todos los meses hasta que terminás de pagarla. A Google le llega el nombre y el día, no los montos.</p>
+    ${gl.map(e => `<div class="item"><div><div class="t">${esc(e.k)}</div><div class="muted">Día ${e.day} · ${e.n === 1 ? "este mes" : e.n + " meses"}</div></div><div class="r"><a class="btn sm alt" href="${esc(e.url)}" target="_blank" rel="noopener" aria-label="Agregar ${esc(e.k)} a Google Calendar (se abre aparte)">Agregar</a></div></div>`).join("")}
+    <h3 style="margin-top:14px">iPhone u otro calendario</h3><p class="muted">Se descarga un archivo con todas las fechas: abrilo y elegí tu calendario. Te avisa un día antes de cada vencimiento.</p><button class="btn alt" data-action="cal-ics">Bajar las fechas en un archivo</button>
+    <p class="muted" style="margin:8px 0 0">Si después cambiás algo, borrá en tu calendario los avisos viejos de Fecha Libre y volvé a agregarlos, así no te quedan repetidos.</p></div>` : ""}`) +
   `<p class="foot">Las fechas son estimaciones del plan.</p>`;
 }
 
