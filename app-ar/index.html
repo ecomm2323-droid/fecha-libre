@@ -604,6 +604,7 @@ const isPhone = () => /iPhone|iPad|iPod|Android/.test(navigator.userAgent);
 const ESTE = isPhone() ? "este celular" : "esta compu", TU = isPhone() ? "tu celular" : "tu compu";
 function installCard(){
   try { if (localStorage.getItem(KEY + ".tip")) return ""; } catch(e){ return ""; }
+  if (!activeCuotas().length && !activeDeudas().length) return ""; // primero el dato, después el aviso
   if (!isPhone() || navigator.standalone || matchMedia("(display-mode: standalone)").matches) return "";
   return `<div class="card"><h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque cuando tengas que pagar el mes que viene.${/iPhone|iPad|iPod/.test(navigator.userAgent) ? " <b>Importante en iPhone:</b> si no la agregás al inicio y pasan unos días sin abrirla, Safari puede borrar tus datos." : ""}</p>
     <div class="row"><button class="btn alt" data-action="install-help">Ver cómo</button><button class="btn ghost" data-action="install-dismiss" style="margin-top:0">Ahora no</button></div></div>`;
@@ -754,7 +755,7 @@ function vCuotas(){
     <p class="muted" style="margin-top:8px">Este mes: <b>${fmt(months[0])}</b> · dentro de 6 meses: <b>${fmt(months[6])}</b></p>
   </div>
   <div class="card"><h2>Efecto Cuota Liberada</h2>
-    <p class="muted">Cada vez que terminás una cuota, esa plata te queda libre. En tu plan va directo a tu próxima deuda, y así terminás antes.</p>
+    <p class="muted">Cada vez que terminás una cuota, esa plata te queda libre. ${activeDeudas().length ? "En tu plan va directo a tu próxima deuda, y así terminás antes." : "Como no tenés deudas que crecen, es plata que vuelve a ser tuya."}</p>
     <ul class="timeline">${libs.map(l => `<li><b>${esc(monthLabel(l - 1, true))}</b>: terminan cuotas por ${fmt(libera[l])} por mes. Desde el mes siguiente esa plata te queda libre.</li>`).join("")}</ul>
   </div>`);
 }
@@ -794,7 +795,7 @@ function vPlan(){
     <ul class="timeline">${hitos.map(e => `<li><b>${esc(monthLabel(e.m, true))}</b>: ${e.type === "cuota"
       ? `terminás de pagar ${esc(e.name)}. Te quedan libres ${fmt(e.amt)} por mes`
       : `terminás de pagar <b>${esc(e.name)}</b>`}</li>`).join("")}
-      ${sim.done ? `<li><b>${esc(fechaTxt(sim))}</b>: ¡libre de deudas!</li>` : ""}</ul>
+      ${sim.done && !(hitos.length && monthLabel(hitos[hitos.length - 1].m, true).toLowerCase() === fechaTxt(sim).toLowerCase()) ? `<li><b>${esc(fechaTxt(sim))}</b>: ¡libre de deudas!</li>` : ""}</ul>
     ${help("liberada", "¿Qué pasa con la plata que queda libre?")}
   </div>${vExtras()}`) +
   `<p class="foot">Herramienta de organización. No es asesoramiento financiero.</p>`;
@@ -1259,7 +1260,7 @@ document.addEventListener("change", e => {
     }).catch(() => openDlg(`<h2>Ese archivo no sirve</h2><p class="muted">No es una copia de Fecha Libre. Buscá el archivo que empieza con «fecha-libre».</p><button class="btn" type="button" data-action="close">Entendido</button>`)).finally(() => { t.value = ""; });
   }
 });
-const formErr = (f, msg) => { const p = f.querySelector(".err"); if (p) p.textContent = msg; };
+const formErr = (f, msg) => { const p = f.querySelector(".err"); if (p) { p.textContent = msg; p.scrollIntoView({block:"nearest"}); } };
 document.addEventListener("submit", e => {
   e.preventDefault();
   const f = e.target, fd = new FormData(f), id = f.dataset.id;
