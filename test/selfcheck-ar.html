@@ -30,6 +30,15 @@ document.getElementById("app").onload = async function(){
   check("México «3 DE 12 MSI» 1250, faltan 10", mx.cuotas.length === 1 && mx.cuotas[0].amount === 1250 && mx.cuotas[0].left === 10);
   check("saldo al corte 18450.3", mx.saldo === 18450.3, mx.saldo);
   check("fecha 10.12.26 no es monto", w.parseStatement(["VENCIMIENTO 10.12.26 C.05/04"]).cuotas.length === 0);
+  // 2a) Resumen estilo Galicia (líneas ficticias): cuota suelta «06/18», seis fechas juntas, TASAS en pesos
+  const gal = w.parseStatement(["100.000,00", "08-Oct-26 16-Oct-26 05-Nov-26 13-Nov-26 10-Dic-26 18-Dic-26", "9,99",
+    "09-05-26 * MERPAGO*TIENDAUNO 06/18 923665 15.000,00", "13-10-26 K PAYU*AR*SUPERMERCADO 002935 5.000,00",
+    "28-10-26 K GOOGLE *Algo USD 1,99 202375 1,99", "3 cuotas de $ 66966,89 (TNA Fija: 80,00%)",
+    "Nominal Anual Efectiva mensual", "En pesos 77,140 % En dólares 20,000 % En pesos 6,340 %",
+    "TARJETA 0000 Total Consumos de PERSONA PRUEBA 90.000,00 9,99", "TOTAL A PAGAR 100.000,00 9,99"]);
+  check("Galicia: 1 cuota «06/18», sin compras sueltas ni USD ni plan", gal.cuotas.length === 1 && gal.cuotas[0].amount === 15000 && gal.cuotas[0].left === 13 && gal.cuotas[0].desc === "MERPAGO TIENDAUNO", JSON.stringify(gal.cuotas));
+  check("Galicia: saldo, TNA en pesos y total consumos", gal.saldo === 100000 && gal.tna === 77.14 && gal.totalConsumos === 90000, gal.saldo + " " + gal.tna + " " + gal.totalConsumos);
+  check("Galicia: vencimiento y cierre de las seis fechas", gal.venc && gal.venc.getUTCDate() === 13 && gal.cierre.getUTCDate() === 5, gal.venc + " " + gal.cierre);
   // 2b) Montos como se escriben en Argentina
   [["200.000", 200000], ["1.500.000", 1500000], ["1.500.000,50", 1500000.5], ["$ 124.596", 124596], ["66,67", 66.67], ["95.5", 95.5], ["120", 120], ["1,250.00", 1250], ["abc", 0], ["", 0]]
     .forEach(([s, v]) => check(`monto «${s}» = ${v}`, w.num(s) === v, w.num(s)));

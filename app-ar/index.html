@@ -980,7 +980,9 @@ const CUOTA_RE = [
   /\b(?:CUOTAS?|CUOT|CTA|C)\s*\.?\s*(\d{1,2})\s*(?:\/|DE)\s*(\d{1,2})\b/i,
   /\b(\d{1,2})\s*DE\s*(\d{1,2})\s*(?:MSI|MESES)\b/i,
   /\bMSI\s*(\d{1,2})\s*(?:\/|DE)\s*(\d{1,2})\b/i,
-  /FINANC(?:\.|IACI[ÓO]N)?\s*(?:DE\s*)?CONSUMO\s*(\d{1,2})\s*-\s*(\d{1,2})/i
+  /FINANC(?:\.|IACI[ÓO]N)?\s*(?:DE\s*)?CONSUMO\s*(\d{1,2})\s*-\s*(\d{1,2})/i,
+  // Galicia: la cuota va sola («06/18») y después el nº de comprobante y el monto.
+  /(?<![\d\/.-])(\d{2})\/(\d{2})(?=\s+\d{4,8}\s+-?\d)/
 ];
 const MES = {ENE:0, FEB:1, MAR:2, ABR:3, MAY:4, JUN:5, JUL:6, AGO:7, SEP:8, SET:8, OCT:9, NOV:10, DIC:11};
 const DATE_RE = /(?<![\d.\/-])(\d{1,2})[-\/. ]([A-Za-zÁ-ú]{3}|\d{1,2})[-\/. ](\d{4}|\d{2})(?![\d])/g;
@@ -1014,17 +1016,22 @@ function parseStatement(lines){
     }
     if (!out.proxCierre && /CIERREANTERIOR.*PROXIMOCIERRE/.test(h) && d.length >= 4) { out.proxCierre = d[2]; out.proxVenc = d[3]; }
     if (!out.tna && /^TNA\$TNAU\$S/.test(h)) { const t = nx.match(/(\d{1,3}(?:[.,]\d{1,3})?)\s*%/); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
-    if (!out.totalConsumos && /^TOTALCONSUMOS/.test(h)) { const own = line.match(AMT); if (own) out.totalConsumos = parseAmount(own[0]); }
+    // Galicia: seis fechas juntas = cierre y vencimiento anteriores, actuales y próximos.
+    const ds = datesIn(line);
+    if (!out.venc && ds.length === 6) { out.cierre = ds[2]; out.venc = ds[3]; out.proxCierre = ds[4]; out.proxVenc = ds[5]; }
+    if (!out.tna && /^NOMINALANUAL/.test(h)) { const t = nx.match(/EN\s*PESOS\s*(\d{1,3}(?:[.,]\d{1,3})?)\s*%/i); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
+    if (!out.totalConsumos && /TOTALCONSUMOS/.test(h)) { const own = line.match(AMT); if (own) out.totalConsumos = parseAmount(own[0]); }
   });
   // «...será de TNA 66,67%, TEM 5,48%...» es la tasa de financiación real (no la de un plan ni la «TNA fija»).
   if (!out.tna) { const t = all.match(/TNA\s*(\d{1,3}(?:[.,]\d{1,3})?)\s*%\s*,?\s*TEM/i); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
+  if (!out.venc) { const d = datesIn((all.match(/FECHA\s*VENCIMIENTO\s*:?\s*(\S+)/i) || [])[1] || ""); if (d[0]) out.venc = d[0]; }
   if (!out.minimo) { const t = all.match(/PAGO\s*M\s*[IÍ]\s*NIMO\s*(?:DE|ES|:)?\s*\$?\s*(\d[\d.,]*\d)/i); if (t) out.minimo = parseAmount(t[1]); }
   const seen = new Set();
   lines.forEach(line => {
     const up = line.toUpperCase();
     const amts = line.match(AMT) || [];
     // Si hay columnas en $ y U$S, la primera cifra es la de pesos.
-    if (!out.saldo && /SALDO ACTUAL|TOTAL A PAGAR|SALDO TOTAL|PAGO TOTAL|SALDO AL CORTE|SALDO DEUDOR/.test(up) && amts.length) out.saldo = parseAmount(amts[0]);
+    if (!out.saldo && /SALDO ACTUAL|TOTAL A PAGAR|SALDO TOTAL|PAGO TOTAL|SALDO AL CORTE|SALDO DEUDOR/.test(up) && amts.length) { out.saldo = parseAmount(amts[0]); if (!out.saldoUsd && amts[1]) out.saldoUsd = parseAmount(amts[1]); }
     if (!out.minimo && /PAGO\s*M\s*[IÍ]\s*NIMO|M\s*[IÍ]\s*NIMO\s*A\s*PAGAR/.test(up) && amts.length) out.minimo = parseAmount(amts[0]);
     if (!out.tna) { const t = up.match(/(?<![(\w])(?:T\.?N\.?A\.?|TASA NOMINAL ANUAL|TASA ANUAL)(?!\s*FIJA)[^\d]{0,30}(\d{1,3}(?:[.,]\d{1,3})?)\s*%?/); if (t) out.tna = parseFloat(t[1].replace(",", ".")); }
     if (/\bUSD\b|U\$S/.test(up)) return;
@@ -1036,7 +1043,7 @@ function parseStatement(lines){
       const after = line.slice(m.index + m[0].length).match(AMT) || [];
       const amount = Math.abs(parseAmount(after.length ? after[after.length - 1] : (amts[amts.length - 1] || "0")));
       if (!amount) continue;
-      const desc = line.slice(0, m.index).replace(/^\s*\d{1,2}[-\/.](?:\d{1,2}|[A-Za-zÁ-ú]{3})(?:[-\/.]\d{2,4})?\s*/, "").replace(/^[\d\s*]+/, "").replace(AMT, "").replace(/[*_]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) || (/FINANC/i.test(m[0]) ? "Plan de pagos del banco" : "Compra en cuotas");
+      const desc = line.slice(0, m.index).replace(/^\s*\d{1,2}[-\/.](?:\d{1,2}|[A-Za-zÁ-ú]{3})(?:[-\/.]\d{2,4})?\s*/, "").replace(/^[\d\s*]+/, "").replace(/^[A-Z]\s+(?=\S{3})/, "").replace(AMT, "").replace(/[*_]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 40) || (/FINANC/i.test(m[0]) ? "Plan de pagos del banco" : "Compra en cuotas");
       const key = desc + "|" + cur + "/" + tot + "|" + amount;
       if (seen.has(key)) break;
       seen.add(key);
