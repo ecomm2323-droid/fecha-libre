@@ -16,7 +16,7 @@
 :root{
   --bg:#F7F5EF; --card:#FFFFFF; --ink:#27352F; --muted:#56635C; --line:#E7E3D8;
   --brand:#245B48; --brand2:#245B48; --accent:#E9A27E; --danger:#B4533B; --ok:#245B48;
-  --soft:#DCEDE2; --warn:#FBEADF; --warnink:#7A4327;
+  --gold:#D97706; --soft:#DCEDE2; --warn:#FBEADF; --warnink:#7A4327;
   --fh:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --fb:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
@@ -35,7 +35,7 @@ main{max-width:560px;margin:0 auto;padding:16px 16px 96px}
 main:focus{outline:none}
 h1{margin:0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-.tabs{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .tabs button{background:none;border:0;padding:9px 4px 11px;font-size:12px;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
 .tabs button svg{width:23px;height:23px}
 .tabs button[aria-current="page"]{color:var(--brand);font-weight:700}
@@ -94,11 +94,6 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);out
 .check:first-of-type{border-top:0}
 .check>input[type=checkbox]{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--brand)}
 .check.done span{text-decoration:line-through;color:var(--muted)}
-.timeline{list-style:none;margin:0;padding:0}
-.timeline li{position:relative;padding:0 0 14px 22px}
-.timeline li:before{content:"";position:absolute;left:5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
-.timeline li:after{content:"";position:absolute;left:9px;top:18px;bottom:0;width:1px;background:var(--line)}
-.timeline li:last-child:after{display:none}
 details{border-top:1px solid var(--line)}
 details:first-of-type{border-top:0}
 summary{cursor:pointer;font-weight:600;padding:11px 0}
@@ -161,7 +156,7 @@ td input{padding:6px;font-size:14px}
 .iconbtn .lbl{display:none}
 .cols>div{min-width:0}
 .tabs [hidden]{display:none}
-@media (max-width:1023px){.tabs.six{grid-template-columns:repeat(6,1fr)}.tabs.six button{font-size:11px;padding-left:2px;padding-right:2px}}
+@media (max-width:1023px){.tabs.five{grid-template-columns:repeat(5,1fr)}.tabs.five button{font-size:11px;padding-left:2px;padding-right:2px}}
 .chips{border:0;padding:0;margin:12px 0 0;min-width:0}
 .chips legend{padding:0;font-size:14px;color:var(--muted);margin-bottom:6px}
 .chip{display:inline-block;position:relative;margin:0 6px 8px 0}
@@ -212,7 +207,6 @@ td input{padding:6px;font-size:14px}
 <nav class="tabs" aria-label="Secciones">
   <button data-tab="inicio"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 10v9h12v-9"/></svg>Inicio</button>
   <button data-tab="deudas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12.5" rx="3"/><path d="M3 10.5h18M7 15h3"/></svg>Deudas</button>
-  <button data-tab="cuotas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg>Cuotas</button>
   <button data-tab="calendario"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><circle cx="8.5" cy="14.5" r=".9"/><circle cx="12" cy="14.5" r=".9"/><circle cx="15.5" cy="14.5" r=".9"/></svg>Calendario</button>
   <button data-tab="plan"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Plan</button>
   <button data-tab="ahorro" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-2.4-1.6-2.4 1.6-2.4-1.6-2.4 1.6L6 20.5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Gastos</button>
@@ -235,7 +229,7 @@ let tab = "inicio";
 let calM = 0;
 // shortcut: el Modo Ahorro se activa con el link que recibe quien lo compra; sin login ese link se puede compartir. Con login (Supabase) pasa a la cuenta.
 const ahorroOn = () => { try { return localStorage.getItem(KEY + ".ahorro") === "1"; } catch(e){ return false; } };
-try { const u = JSON.parse(localStorage.getItem(KEY + ".ui")); if (["inicio","deudas","cuotas","calendario","plan"].concat(ahorroOn() ? ["ahorro"] : []).includes(u.tab)) tab = u.tab; if (u.calM > 0 && u.calM < 600) calM = u.calM | 0; } catch(e){}
+try { const u = JSON.parse(localStorage.getItem(KEY + ".ui")); if (["inicio","deudas","calendario","plan"].concat(ahorroOn() ? ["ahorro"] : []).includes(u.tab)) tab = u.tab; if (u.calM > 0 && u.calM < 600) calM = u.calM | 0; } catch(e){}
 let recienActivado = false;
 if (new URLSearchParams(location.search).get("ahorro") === "fl7k2q") {
   try { localStorage.setItem(KEY + ".ahorro", "1"); recienActivado = true; tab = "ahorro"; } catch(e){}
@@ -297,7 +291,6 @@ const GLOS = {
   orden:["Orden de pago", "Primero la más cara: lo que te sobra va a la deuda con el interés más alto, y pagás menos intereses en total. Primero la más chica: va a la deuda más chica, y te sacás deudas de encima antes."],
   fecha:["Fecha libre", "El mes en que, si seguís el plan, terminás de pagar todo."],
   intereses:["Intereses estimados", "Lo que calculamos que vas a pagar de intereses en total hasta tu fecha libre."],
-  liberada:["Cuota liberada", "Cuando terminás de pagar una cuota, esa plata queda libre. Fecha Libre la manda a tu próxima deuda para que termines antes."]
 };
 // «¿Qué es esto?» desplegable, al lado de la palabra.
 const help = (k, label) => `<details class="q"><summary>${label}</summary><p>${GLOS[k][1]}</p></details>`;
@@ -370,13 +363,17 @@ function plan(){
 
 /* ---------- Render ---------- */
 const view = document.getElementById("view");
+let keepOpen = {}; // pliegues que el próximo render debe dejar abiertos aunque no lo estén
 function render(){
   try { localStorage.setItem(KEY + ".ui", JSON.stringify({tab, calM})); } catch(e){}
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.tab === tab ? "page" : "false"));
   // Redibujar no debe sacarte del campo donde estabas escribiendo (en el celular cerraría el teclado).
   const ae = document.activeElement, aid = ae && ae.id && view.contains(ae) ? ae.id : "";
   if (tab === "ahorro" && !ahorroOn()) tab = "inicio";
-  view.innerHTML = demoBanner() + ({inicio:vInicio, deudas:vDeudas, cuotas:vCuotas, calendario:vCalendario, plan:vPlan, ahorro:vAhorro})[tab]();
+  const open = {}; view.querySelectorAll("details[data-k]").forEach(d => open[d.dataset.k] = d.open);
+  Object.assign(open, keepOpen); keepOpen = {};
+  view.innerHTML = demoBanner() + ({inicio:vInicio, deudas:vDeudas, calendario:vCalendario, plan:vPlan, ahorro:vAhorro})[tab]();
+  view.querySelectorAll("details[data-k]").forEach(d => { if (d.dataset.k in open) d.open = open[d.dataset.k]; });
   if (aid) { const el = document.getElementById(aid); if (el) el.focus({preventScroll:true}); }
 }
 const demoBanner = () => S.demo ? `<div class="alert between"><span><b>Estás viendo un ejemplo.</b> Nada de esto es tuyo.</span><button class="btn sm" data-action="demo-clear" style="flex:none">Empezar con lo mío</button></div>` : "";
@@ -392,22 +389,25 @@ function toast(msg, act, label){
   clearTimeout(toastT); toastT = setTimeout(() => { el.innerHTML = ""; }, act ? 9000 : 4500);
 }
 function focusBudget(){
-  tab = "inicio"; budgetOpen = true; if (dlg.open) dlg.close(); render();
+  tab = "inicio"; keepOpen.budget = true; if (dlg.open) dlg.close(); render();
   const b = document.getElementById("budget");
   if (b) { b.scrollIntoView({block:"center"}); b.focus({preventScroll:true}); }
 }
 
 
+// Simula el plan con un extra mensual sobre el presupuesto; siempre restaura S.budget.
+function conExtra(extra){
+  const b0 = S.budget;
+  try { S.budget = b0 + extra; return simulate(S.strategy, false); } finally { S.budget = b0; }
+}
 /* ---------- Acelerador: cuánto adelantás sumando un extra por mes ---------- */
 function acelerador(sim){
   if (!sim || !sim.done || !activeDeudas().length) return "";
   const base = S.budget;
   const rows = [0.1, 0.25, 0.5].map(p => {
     const extra = Math.ceil(base * p / 1000) * 1000;
-    S.budget = base + extra; const s = simulate(S.strategy, false); S.budget = base;
-    return {extra, s};
+    return {extra, s: conExtra(extra)};
   }).filter((r, i, all) => r.s.done && r.s.months < sim.months && !all.slice(0, i).some(p => p.s.months === r.s.months));
-  S.budget = base;
   if (!rows.length) return "";
   return `<div class="card"><h2>Salí más rápido</h2>
     <p class="muted">Si sumás un extra por mes (aguinaldo, horas extra, una venta, una suscripción menos), adelantás tu fecha libre:</p>
@@ -464,11 +464,11 @@ function descargarIcs(){
   for (let m = 0; m < n; m++) {
     const key = ym(off() + m), items = calItems(m, sim);
     items.filter(i => i.day).forEach(i => add(key, i.day,
-      `${i.imp === "cuota" ? "Última cuota de " : i.imp === "deuda" ? "Terminás de pagar " : i.min ? "Pagá el mínimo de " : "Pagá la cuota de "}${i.t} (${fmt(i.amt)})`,
+      `${i.imp === "cuota" ? "Última cuota de " : i.imp === "deuda" ? "Vence el último pago de " : i.min ? "Pagá el mínimo de " : "Pagá la cuota de "}${i.t} (${fmt(i.amt)})`,
       "Fecha Libre. Las fechas del plan son estimaciones."));
     if (sim && sim.done && m === sim.months - 1) {
       const ds = items.filter(i => i.imp && i.day).map(i => i.day);
-      add(key, ds.length ? Math.max(...ds) : 31, "Tu Fecha Libre", "Según tu plan, este mes terminás de pagar todo. Es una estimación.");
+      add(key, ds.length ? Math.max(...ds) : 31, "Tu Fecha Libre", "Según tu plan, este mes saldás todo. Es una estimación.");
     }
   }
   if (!ev.length) return;
@@ -506,7 +506,7 @@ function vCalendario(){
     const when = i.day ? `El ${i.day} ` : "Este mes ";
     return i.imp === "cuota"
       ? `<li><b>¡Una cuota menos!</b> ${when}pagás la última de ${esc(i.t)}. Desde el mes que viene te quedan libres ${fmt(i.amt)} por mes.</li>`
-      : `<li><b>¡Una deuda menos!</b> ${when}terminás de pagar ${esc(i.t)}.</li>`;
+      : `<li><b>¡Una deuda menos!</b> ${when}vence el último pago de ${esc(i.t)}.</li>`;
   });
   if (final) notes.push(`<li><b>Tu fecha libre</b> es este mes: ${esc(fechaTxt(sim))}.</li>`);
   const dated = items.filter(i => i.day).sort((a, b) => a.day - b.day), undated = items.filter(i => !i.day);
@@ -517,15 +517,15 @@ function vCalendario(){
     <h1>${esc(monthLabel(calM, true))}</h1>
     <button data-action="cal-next" aria-label="Mes siguiente" ${calM >= max ? "disabled" : ""}>${chev("M9 5l7 7-7 7")}</button></div>
     <div class="cg" aria-hidden="true">${cells}</div>
-    <div class="lg" aria-hidden="true"><span><i style="background:var(--brand)"></i>Vence algo</span><span><i style="background:var(--accent)"></i>Terminás de pagar algo</span><span><i style="outline:2px solid var(--brand);outline-offset:-2px"></i>Hoy</span></div></div>`,
+    <div class="lg" aria-hidden="true"><span><i style="background:var(--brand)"></i>Vence algo</span><span><i style="background:var(--accent)"></i>Último pago de algo</span><span><i style="outline:2px solid var(--brand);outline-offset:-2px"></i>Hoy</span></div></div>`,
   `${notes.length ? `<div class="card"><h2>Buenas noticias de este mes</h2><ul class="imp-l">${notes.join("")}</ul></div>` : ""}
   <div class="card"><h2>Qué vence este mes</h2>
     ${dated.map(row).join("")}
     ${undated.length ? `<p class="muted" style="margin:${dated.length ? "12px" : "0"} 0 4px">Sin día de vencimiento cargado</p>${undated.map(row).join("")}<p class="muted" style="margin-top:8px">Para verlas en el calendario, ponele el día de vencimiento a cada una: en la pestaña Deudas, tocá «Editar».</p>` : ""}
   </div>
-  ${keys.length ? `<div class="card"><h2>Fechas clave de tu plan</h2><div class="klist">${keys.map(e => `<button data-action="cal-go" data-m="${e.m}"><b>${esc(monthLabel(e.m, true))}</b> · terminás ${e.type === "cuota" ? "las cuotas de" : "de pagar"} ${esc(e.name)}</button>`).join("")}</div></div>` : ""}
+  ${keys.length ? `<div class="card"><h2>Fechas clave de tu plan</h2><div class="klist">${keys.map(e => `<button data-action="cal-go" data-m="${e.m}"><b>${esc(monthLabel(e.m, true))}</b> · ${e.type === "cuota" ? "terminás las cuotas de" : "saldás"} ${esc(e.name)}</button>`).join("")}</div></div>` : ""}
   ${gl.length ? `<div class="card"><h2>Recibí avisos en tu celular</h2><p class="muted">Fecha Libre no manda avisos ni guarda tus datos fuera de ${ESTE}. Pero tu calendario sí te puede avisar.</p>
-    <h3 style="margin-top:14px">Google Calendar</h3><p class="muted">Tocá «Agregar» en cada una y después «Guardar». Queda todos los meses hasta que terminás de pagarla. A Google le llega el nombre y el día, no los montos.</p>
+    <h3 style="margin-top:14px">Google Calendar</h3><p class="muted">Tocá «Agregar» en cada una y después «Guardar». Queda todos los meses hasta que la saldás. A Google le llega el nombre y el día, no los montos.</p>
     ${gl.map(e => `<div class="item"><div><div class="t">${esc(e.k)}</div><div class="muted">Día ${e.day} · ${e.n === 1 ? "este mes" : e.n + " meses"}</div></div><div class="r"><a class="btn sm alt" href="${esc(e.url)}" target="_blank" rel="noopener" aria-label="Agregar ${esc(e.k)} a Google Calendar (se abre aparte)">Agregar</a></div></div>`).join("")}
     <h3 style="margin-top:14px">iPhone u otro calendario</h3><p class="muted">Se descarga un archivo con todas las fechas: abrilo y elegí tu calendario. Te avisa un día antes de cada vencimiento.</p><button class="btn alt" data-action="cal-ics">Bajar las fechas en un archivo</button>
     <p class="muted" style="margin:8px 0 0">Si después cambiás algo, borrá en tu calendario los avisos viejos de Fecha Libre y volvé a agregarlos, así no te quedan repetidos.</p></div>` : ""}`) +
@@ -542,9 +542,7 @@ function ideasAhorro(){
   const P = plan(), base = P.status === "ok" && P.sim.done && activeDeudas().length ? P.sim : null;
   return Object.entries(t).filter(([c, v]) => c !== "otros" && v >= 2000).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([cat, total]) => {
     const half = Math.round(total / 2000) * 1000;
-    let s = null;
-    if (base) { const b0 = S.budget; S.budget = b0 + half; s = simulate(S.strategy, false); S.budget = b0; }
-    return {cat, total, half, s, base};
+    return {cat, total, half, s: base ? conExtra(half) : null, base};
   });
 }
 function vAhorro(){
@@ -609,15 +607,12 @@ function installCard(){
   return `<div class="card"><h2>Guardá Fecha Libre en tu celular</h2><p class="muted">Así la abrís con un toque cuando tengas que pagar el mes que viene.${/iPhone|iPad|iPod/.test(navigator.userAgent) ? " <b>Importante en iPhone:</b> si no la agregás al inicio y pasan unos días sin abrirla, Safari puede borrar tus datos." : ""}</p>
     <div class="row"><button class="btn alt" data-action="install-help">Ver cómo</button><button class="btn ghost" data-action="install-dismiss" style="margin-top:0">Ahora no</button></div></div>`;
 }
-let ordenOpen = false, calcOpen = false, budgetOpen = false, moreOpen = false;
-// «toggle» no burbujea: se escucha en captura para que «Ver comparación» siga abierta tras un render.
-document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("more")) moreOpen = e.target.open; }, true);
 function ordenBlock(){
   const a = simulate("avalancha"), b = simulate("bola"), bola = S.strategy === "bola";
   const same = a.months === b.months && Math.abs(b.interest - a.interest) < 1000;
   const opt = (v, t, s, sim) => `<button data-action="strategy" data-v="${v}" aria-pressed="${S.strategy === v}"><b>${t}</b><span class="muted">${s}<br>Terminás en ${esc(fechaTxt(sim))}</span></button>`;
   return `<p style="margin:16px 0 0">Orden de pago: <b>${bola ? "primero la más chica" : "primero la más cara"}</b>. ${bola ? "Te sacás deudas de encima antes." : "Así pagás menos intereses en total."}</p>
-    <details class="q"${ordenOpen ? " open" : ""}><summary>Cambiar el orden</summary>
+    <details class="q" data-k="orden"><summary>Cambiar el orden</summary>
       <div class="seg" role="group" aria-label="¿Qué deuda pagás primero?" style="margin:0 0 8px">
         ${opt("avalancha", "Primero la más cara", "Pagás menos intereses", a)}
         ${opt("bola", "Primero la más chica", "Te sacás deudas antes", b)}
@@ -666,13 +661,13 @@ function vInicio(){
   // Con plan armado, el monto queda en una línea («Pagás $X por mes · Cambiar»); sin plan, el campo va abierto.
   const fold = hasD && P.status === "ok" && S.budget > 0;
   const bt = fold ? "details" : "div";
-  const budgetCard = hasD ? `<${bt} class="card${fold ? " q" : ""}"${fold && !budgetOpen && !S.income && !calcOpen && !ordenOpen ? "" : fold ? " open" : ""}>
+  const budgetCard = hasD ? `<${bt} class="card${fold ? " q" : ""}"${fold ? ` data-k="budget"${S.income ? " open" : ""}` : ""}>
     ${fold ? `<summary style="text-decoration:none;color:var(--ink);justify-content:space-between;width:100%"><span>Pagás <b>${fmt(S.budget)}</b> por mes</span><span style="color:var(--brand);text-decoration:underline dotted">Cambiar</span></summary>` : ""}
     <label for="budget" style="margin-top:0;font-size:16px;font-weight:600;color:var(--ink)">¿Cuánto podés pagar por mes, en total, entre deudas y cuotas?</label>
     <input id="budget" type="text" inputmode="decimal" autocomplete="off" data-money data-change="budget" value="${fmtIn(S.budget)}" placeholder="Ej: ${fmtIn(Math.ceil(need))}" aria-describedby="budget-echo budget-help">
     <p class="echo" id="budget-echo"></p>
     <p class="muted" id="budget-help" style="margin:6px 0 0">Para no atrasarte necesitás al menos <b>${fmt(need)}</b> por mes: tus cuotas (${fmt(fijoMes())}) más el pago mínimo de cada deuda.</p>
-    <details class="q"${S.income || calcOpen ? " open" : ""}><summary>No sé cuánto: calcularlo con mi sueldo</summary>
+    <details class="q" data-k="calc"${S.income ? " open" : ""}><summary>No sé cuánto: calcularlo con mi sueldo</summary>
       <div class="box">
       <label for="income" style="margin-top:0">Lo que cobrás por mes, en mano</label>
       <input id="income" type="text" inputmode="decimal" autocomplete="off" data-money data-change="income" value="${fmtIn(S.income)}" placeholder="Ej: 1.200.000" aria-describedby="income-echo">
@@ -693,71 +688,74 @@ function vInicio(){
       <div class="stat"><b>${fmt(pend)}</b><span>Te falta pagar</span></div>
       <div class="stat"><b>${fmt(paid)}</b><span>Ya pagaste con el plan</span></div>
     </div></div>` : "";
-  const detalle = P.status === "ok" && (after || avance) ? `<details class="card q more"${moreOpen ? " open" : ""}><summary style="text-decoration:none;color:var(--ink)">Ver comparación y avance</summary>${after}${avance}</details>` : "";
-  return `${cols(hero + budgetCard, P.status === "ok" ? detalle : noAlcanza + avance)}
+  const detalle = P.status === "ok" && (after || avance) ? `<details class="card q" data-k="more"><summary style="text-decoration:none;color:var(--ink)">Ver comparación y avance</summary>${after}${avance}</details>` : "";
+  // Cuotas que estoy pagando, agrupadas por tarjeta.
+  const porTarjeta = {};
+  activeCuotas().forEach(c => (porTarjeta[c.card || "Sin tarjeta"] = porTarjeta[c.card || "Sin tarjeta"] || []).push(c));
+  const cuotasCard = Object.keys(porTarjeta).length ? `<div class="card"><h2>Cuotas que estás pagando</h2>${Object.entries(porTarjeta).map(([card, cs]) =>
+    `<div class="between" style="margin-top:10px"><span>${esc(card)} · ${cs.length} ${cs.length === 1 ? "compra" : "compras"}</span><b>${fmt(cs.reduce((a, c) => a + c.amount, 0))} por mes</b></div>`).join("")}
+    <button class="btn alt sm" data-tab-go="deudas" style="margin-top:12px">Ver el detalle</button></div>` : "";
+  return `${cols(hero + cuotasCard, budgetCard + (P.status === "ok" ? detalle : noAlcanza + avance))}
   <p class="foot">Herramienta de organización. No es asesoramiento financiero. Las cifras son estimaciones con los datos que cargaste.<br><button class="link" data-action="glosario">¿Alguna palabra no se entiende? Mirá el glosario</button></p>`;
 }
 
 function vDeudas(){
-  const ds = S.deudas, cs = S.cuotas;
-  return cols(`<div class="card">
+  const ds = S.deudas, cs = activeCuotas();
+  // La que más interés cobra es la que hay que pagar completa primero.
+  const prio = activeDeudas().filter(d => !d.rateUnknown && d.rate > 0).sort((a, b) => b.rate - a.rate)[0];
+  const deudaItem = d => `<div class="item"${prio && d.id === prio.id ? ' style="border-left:4px solid var(--gold);padding-left:10px"' : ""}>
+      <div><div class="t">${esc(d.name)} ${d.balance <= 0 ? '<span class="pill">Pagada ✓</span>' : ""}</div>
+      <div class="muted">${d.rateUnknown ? "Interés: no lo cargaste" : "Interés anual " + fmtPct(d.rate)} · mínimo ${fmt(d.min)}${d.minEst ? " (estimado)" : ""}</div></div>
+      <div class="r"><div class="t">${fmt(d.balance)}</div>
+      <button class="btn sm ghost" data-action="edit-deuda" data-id="${esc(d.id)}" aria-label="Editar ${esc(d.name)}">Editar</button></div></div>`;
+  const porTarjeta = {};
+  cs.forEach(c => (porTarjeta[c.card || "Sin tarjeta"] = porTarjeta[c.card || "Sin tarjeta"] || []).push(c));
+  const prioCard = prio ? `<div class="card" style="border:2px solid var(--gold)"><div class="label">Pagá esta sí o sí</div>
+    <h2>${esc(prio.name)}</h2>
+    <p class="muted">Es la que más interés cobra (${fmtPct(prio.rate)} por año). Si pagás solo el mínimo, la deuda crece. Pagala completa, o lo más que puedas, antes que cualquier otra.</p>
+    <div class="between"><span>Debés</span><b>${fmt(prio.balance)}</b></div></div>` : "";
+  // Estadísticas de cuotas (antes en su propia pestaña).
+  let hero = "", stats = "";
+  if (cs.length) {
+    const totalCuotas = cs.reduce((a, c) => a + c.left, 0), totalMonto = cs.reduce((a, c) => a + c.amount * c.left, 0);
+    const lastM = Math.max(...cs.map(c => c.left)) - 1;
+    const months = Array.from({length:12}, (_, m) => cs.filter(c => c.left > m).reduce((a, c) => a + c.amount, 0));
+    const max = Math.max(...months, 1);
+    const big = cs.reduce((a, c) => c.amount > a.amount ? c : a, cs[0]);
+    const fin3 = cs.filter(c => c.left <= 3).length;
+    const peak = months.indexOf(Math.max(...months));
+    hero = `<div class="card hero"><div class="label">Tus cuotas</div><h1 class="big">${totalCuotas} cuotas</h1>
+      <div class="sub">te falta pagar ${fmt(totalMonto)} en total · la última es en ${esc(monthLabel(lastM, true))}</div></div>`;
+    stats = `<div class="card"><h2>Lo que ya tenés que pagar en cuotas, mes a mes</h2>
+      <div class="cal" aria-hidden="true">${months.map(v => `<div style="height:${Math.round(v / max * 100)}%" title="${fmt(v)}"></div>`).join("")}</div>
+      <div class="cal-l" aria-hidden="true">${months.map((_, i) => `<span>${esc(monthLabel(i).split(" ")[0].replace(".", ""))}</span>`).join("")}</div>
+      <p class="sr">${months.map((v, i) => monthLabel(i) + ": " + fmt(v)).join(", ")}</p>
+      <p class="muted" style="margin-top:8px">Este mes: <b>${fmt(months[0])}</b> · dentro de 6 meses: <b>${fmt(months[6])}</b></p>
+    </div>
+    <div class="card"><h2>En números</h2>
+      <div class="between"><span>Cuota más grande</span><b>${esc(big.desc)} · ${fmt(big.amount)}</b></div>
+      <div class="between"><span>Compras que terminan en 3 meses</span><b>${fin3} de ${cs.length}</b></div>
+      <div class="between"><span>Tu mes más pesado</span><b>${esc(monthLabel(peak))} · ${fmt(months[peak])}</b></div>
+    </div>`;
+  }
+  return cols(`${hero}<div class="card">
     <h1 class="ttl">Tus deudas y cuotas</h1>
     <button class="btn" data-action="pdf">Subí el resumen de tu tarjeta (PDF)</button>
     <button class="btn alt" data-action="manual">Cargar a mano</button>
     <p class="muted" style="margin-top:10px">El PDF se lee en ${TU}: no sale de acá.</p>
-    <details class="q"><summary>¿Qué diferencia hay entre una deuda que crece y una cuota?</summary><div class="box">${glosList(["crece", "cuota"])}</div></details>
-  </div>`,
-  `<div class="card"><h2>Deudas que crecen <span class="muted">(tarjeta sin pagar completa, descubierto)</span></h2>
-    ${ds.length ? ds.map(d => `<div class="item">
-      <div><div class="t">${esc(d.name)} ${d.balance <= 0 ? '<span class="pill">Pagada ✓</span>' : ""}</div>
-      <div class="muted">${d.rateUnknown ? "Interés: no lo cargaste" : "Interés anual " + fmtPct(d.rate)} · pago mínimo ${fmt(d.min)}${d.minEst ? " (estimado)" : ""}</div></div>
-      <div class="r"><div class="t">${fmt(d.balance)}</div>
-      <button class="btn sm ghost" data-action="edit-deuda" data-id="${esc(d.id)}" aria-label="Editar ${esc(d.name)}">Editar</button></div></div>`).join("")
-      : `<p class="muted">No cargaste deudas que crecen.</p>`}
+  </div>${prioCard}`,
+  `<div class="card"><h2>Deudas que crecen</h2>
+    ${ds.length ? ds.map(deudaItem).join("") : `<p class="muted">No cargaste deudas que crecen.</p>`}
   </div>
-  <div class="card"><h2>Cuotas fijas <span class="muted">(compras en cuotas y préstamos)</span></h2>
-    ${cs.length ? cs.map(c => `<div class="item">
-      <div><div class="t">${esc(c.desc)} ${c.left <= 0 ? '<span class="pill">Terminada ✓</span>' : ""} ${c.si ? '<span class="pill">Sin interés</span>' : ""}</div>
-      <div class="muted">${esc(c.card || "Sin tarjeta")} · ${c.left <= 0 ? "pagada" : (c.left === 1 ? "te falta 1" : "te faltan " + c.left) + (c.total ? " de " + c.total : "")}</div></div>
+  <div class="card"><h2>Cuotas por tarjeta</h2>
+    ${cs.length ? Object.entries(porTarjeta).map(([card, list]) =>
+      `<div class="between" style="margin-top:14px"><b>${esc(card)}</b><b>${fmt(list.reduce((a, c) => a + c.amount, 0))} por mes</b></div>${list.map(c => `<div class="item">
+      <div><div class="t">${esc(c.desc)}</div>
+      <div class="muted">${c.total ? "Cuota " + Math.min(c.total, c.total - c.left + 1) + "/" + c.total : "Faltan " + c.left} · te quedan ${fmt(c.amount * c.left)}</div></div>
       <div class="r"><div class="t">${fmt(c.amount)}<span class="muted"> por mes</span></div>
-      <button class="btn sm ghost" data-action="edit-cuota" data-id="${esc(c.id)}" aria-label="Editar ${esc(c.desc)}">Editar</button></div></div>`).join("")
+      <button class="btn sm ghost" data-action="edit-cuota" data-id="${esc(c.id)}" aria-label="Editar ${esc(c.desc)}">Editar</button></div></div>`).join("")}`).join("")
       : `<p class="muted">No cargaste cuotas.</p>`}
-  </div>`, true);
-}
-
-function vCuotas(){
-  const cs = activeCuotas();
-  if (!cs.length) return `<div class="card empty"><h1 class="big">No tenés cuotas pendientes</h1>
-    <p class="muted">Subí tu resumen o cargá tus compras en cuotas para ver cuánto tenés que pagar cada mes.</p>
-    <button class="btn" data-action="pdf">Subí el resumen de tu tarjeta (PDF)</button>
-    <button class="btn alt" data-action="add-cuota">Cargar una compra en cuotas</button></div>`;
-  const totalCuotas = cs.reduce((a, c) => a + c.left, 0), totalMonto = cs.reduce((a, c) => a + c.amount * c.left, 0);
-  const lastM = Math.max(...cs.map(c => c.left)) - 1;
-  const months = Array.from({length:12}, (_, m) => cs.filter(c => c.left > m).reduce((a, c) => a + c.amount, 0));
-  const max = Math.max(...months, 1);
-  const byCard = {};
-  cs.forEach(c => { const k = c.card || "Sin tarjeta"; (byCard[k] ||= {items:0, left:0, mes:0, fin:0, monto:0}); const g = byCard[k]; g.items++; g.left += c.left; g.mes += c.amount; g.monto += c.amount * c.left; g.fin = Math.max(g.fin, c.left - 1); });
-  const libera = {};
-  cs.forEach(c => { libera[c.left] = (libera[c.left] || 0) + c.amount; });
-  const libs = Object.keys(libera).map(Number).sort((a, b) => a - b).slice(0, 6);
-  return cols(`<div class="card hero"><div class="label">Tus cuotas</div>
-    <h1 class="big">${totalCuotas} cuotas</h1>
-    <div class="sub">te falta pagar ${fmt(totalMonto)} en total · la última es en ${esc(monthLabel(lastM, true))}</div></div>
-  <div class="card"><h2>Por tarjeta</h2>
-    ${Object.entries(byCard).map(([k, g]) => `<div class="item"><div><div class="t">${esc(k)}</div>
-      <div class="muted">${g.items} ${g.items === 1 ? "compra" : "compras"} · ${g.left} cuotas · la última en ${esc(monthLabel(g.fin))}</div></div>
-      <div class="r"><div class="t">${fmt(g.mes)}<span class="muted"> por mes</span></div><div class="muted">${fmt(g.monto)} en total</div></div></div>`).join("")}
-  </div>`,
-  `<div class="card"><h2>Lo que ya tenés que pagar en cuotas, mes a mes</h2>
-    <div class="cal" aria-hidden="true">${months.map(v => `<div style="height:${Math.round(v / max * 100)}%" title="${fmt(v)}"></div>`).join("")}</div>
-    <div class="cal-l" aria-hidden="true">${months.map((_, i) => `<span>${esc(monthLabel(i).split(" ")[0].replace(".", ""))}</span>`).join("")}</div>
-    <p class="sr">${months.map((v, i) => monthLabel(i) + ": " + fmt(v)).join(", ")}</p>
-    <p class="muted" style="margin-top:8px">Este mes: <b>${fmt(months[0])}</b> · dentro de 6 meses: <b>${fmt(months[6])}</b></p>
-  </div>
-  <div class="card"><h2>Efecto Cuota Liberada</h2>
-    <p class="muted">Cada vez que terminás una cuota, esa plata te queda libre. ${activeDeudas().length ? "En tu plan va directo a tu próxima deuda, y así terminás antes." : "Como no tenés deudas que crecen, es plata que vuelve a ser tuya."}</p>
-    <ul class="timeline">${libs.map(l => `<li><b>${esc(monthLabel(l - 1, true))}</b>: terminan cuotas por ${fmt(libera[l])} por mes. Desde el mes siguiente esa plata te queda libre.</li>`).join("")}</ul>
-  </div>`);
+  </div>${stats}`, true);
 }
 
 function vPlan(){
@@ -779,7 +777,7 @@ function vPlan(){
     rows.push({id:d.id, t:d.name, s: pri ? "Pagá el mínimo más todo lo que te sobra" : "Pagá el mínimo", v, pri}); });
   const total = rows.reduce((a, r) => a + r.v, 0);
   const sobrante = Math.max(0, (S.budget || 0) - total);
-  const hitos = sim.events.slice(0, 10), last = S.history[S.history.length - 1];
+  const last = S.history[S.history.length - 1];
   return cols(`<div class="card hero"><div class="label">Lo que pagás en ${esc(monthLabel(0, true))}</div>
     <h1 class="big">${fmt(total)}</h1><div class="sub">${target ? `Lo que te sobra va a <b>${esc(target.name)}</b>, tu deuda prioridad.` : "Tildá cada pago a medida que lo hacés."}</div></div>
   <div class="card"><h2>Pagos de este mes</h2>
@@ -790,15 +788,7 @@ function vPlan(){
     <button class="btn" data-action="mark-month" style="margin-top:10px">Ya pagué este mes</button>
     ${S.undo && last ? `<button class="btn ghost" data-action="undo-month">Deshacer: no pagué ${esc(fmtMes(last.mes))}</button>` : ""}
     <p class="muted" style="margin-top:8px">Cuando lo marcás, te restamos una cuota de cada compra y recalculamos lo que debés. Cuando te llegue el resumen nuevo, revisá que los números coincidan.</p>
-  </div>`,
-  `<div class="card"><h2>Lo que viene</h2>
-    <ul class="timeline">${hitos.map(e => `<li><b>${esc(monthLabel(e.m, true))}</b>: ${e.type === "cuota"
-      ? `terminás de pagar ${esc(e.name)}. Te quedan libres ${fmt(e.amt)} por mes`
-      : `terminás de pagar <b>${esc(e.name)}</b>`}</li>`).join("")}
-      ${sim.done && !(hitos.length && monthLabel(hitos[hitos.length - 1].m, true).toLowerCase() === fechaTxt(sim).toLowerCase()) ? `<li><b>${esc(fechaTxt(sim))}</b>: ¡libre de deudas!</li>` : ""}</ul>
-    ${help("liberada", "¿Qué pasa con la plata que queda libre?")}
-  </div>${vExtras()}`) +
-  `<p class="foot">Herramienta de organización. No es asesoramiento financiero.</p>`;
+  </div>`, vExtras());
 }
 function tipsNoAlcanza(where){
   return `<ul class="muted" style="padding-left:18px;margin:0">
@@ -807,22 +797,8 @@ function tipsNoAlcanza(where){
     <li>No sumes compras nuevas en cuotas (ni «3 y 6 sin interés») hasta que el plan cierre.</li>
     <li>Si ya te atrasaste, llamá antes de que crezca: usá «Si ya estás atrasado».</li></ul>`;
 }
-const SIETE = [
-  "Sacá la tarjeta de la billetera, de Mercado Libre y de las apps de compra.",
-  "Anotá todas tus cuotas en Fecha Libre: que no quede ninguna afuera.",
-  "Elegí tu fecha de pago y ponete una alarma 3 días antes del vencimiento.",
-  "Cancelá o pausá una suscripción que no usaste este mes.",
-  "Llamá al banco y preguntá cuánto interés te cobran y si te pueden pasar la deuda a cuotas fijas («Pedir información» en «Qué decirle al banco»).",
-  "Decidí cuánto vas a pagar por mes de deudas y no lo toques.",
-  "Revisá tu plan: mirá cuándo te queda libre tu próxima cuota."
-];
 function vExtras(){
-  const done = SIETE.every((_, i) => S.checks["7d:" + i]);
-  return `<div class="card"><details${S.history.length || done ? "" : " open"} style="border:0"><summary><h2 style="display:inline;margin:0">Plan de 7 días para no sumar deudas nuevas</h2></summary>
-    ${SIETE.map((t, i) => { const k = "7d:" + i, on = !!S.checks[k];
-      return `<label class="check ${on ? "done" : ""}"><input type="checkbox" data-check="${esc(k)}" ${on ? "checked" : ""}><span><b>Día ${i + 1}.</b> ${esc(t)}</span></label>`; }).join("")}
-  </details></div>
-  <div class="card" id="guiones"><h2>Qué decirle al banco</h2>
+  return `<div class="card" id="guiones"><h2>Qué decirle al banco</h2>
     <details><summary>Pedir información y refinanciación</summary><p>«Hola, soy titular de la tarjeta terminada en ____. Quiero ordenar mis pagos. ¿Me pueden decir la TNA y el CFT que me cobran sobre el saldo financiado, y qué opciones de refinanciación en cuotas fijas tienen hoy? ¿Cuál sería la cuota mensual y el costo total de cada una?» Anotá todo: monto, cantidad de cuotas, TNA, CFT y costo total.</p></details>
     <details><summary>Pedir una tasa más baja</summary><p>«Pago todos los meses y quiero seguir siendo cliente, pero con esta tasa no me cierra. ¿Qué pueden hacer para bajarla o pasar el saldo a un plan de pagos? Si hoy no tienen opción, ¿con qué área puedo hablar?» Si te ofrecen algo, pedilo por escrito antes de aceptar.</p></details>
     <details id="guion3"><summary>Si ya estás atrasado</summary><p>«Me atrasé con el pago y quiero regularizarlo. Puedo pagar ____ por mes. ¿Qué plan de pagos me ofrecen con ese monto, y me confirman que con ese acuerdo no se suman cargos nuevos?» No prometas más de lo que pusiste en Fecha Libre que podés pagar por mes.</p></details>
@@ -1202,7 +1178,7 @@ function run(action, t){
     case "edit-cuota": formCuota(S.cuotas.find(c => c.id === id)); break;
     case "del-deuda": confirmDlg("¿Eliminar esta deuda?", "Se saca de tu plan.", "Eliminar", () => { S.deudas = S.deudas.filter(d => d.id !== id); save(); render(); toast("La sacamos de tu plan."); }, () => formDeuda(S.deudas.find(d => d.id === id))); break;
     case "del-cuota": confirmDlg("¿Eliminar esta compra?", "Se saca de tu plan.", "Eliminar", () => { S.cuotas = S.cuotas.filter(c => c.id !== id); save(); render(); toast("La sacamos de tu plan."); }, () => formCuota(S.cuotas.find(c => c.id === id))); break;
-    case "strategy": S.strategy = t.dataset.v; ordenOpen = true; save(); render(); toast(S.strategy === "bola" ? "Ahora pagás primero la más chica." : "Ahora pagás primero la más cara."); break;
+    case "strategy": S.strategy = t.dataset.v; save(); render(); toast(S.strategy === "bola" ? "Ahora pagás primero la más chica." : "Ahora pagás primero la más cara."); break;
     case "use-sobra": S.budget = Math.max(0, S.income - (S.gastos || 0)); save(); render(); toast(`Listo: vas a pagar ${fmt(S.budget)} por mes.`); break;
     case "focus-budget": focusBudget(); break;
     case "go-guiones": goGuiones(); break;
@@ -1249,8 +1225,8 @@ document.addEventListener("change", e => {
   const t = e.target;
   if (t.dataset.check) { S.checks[t.dataset.check] = t.checked; save(); t.closest(".check").classList.toggle("done", t.checked); return; }
   // setTimeout: si tocaste otro campo, el foco ya pasó ahí y render() lo conserva.
-  if (t.dataset.change === "budget") { S.budget = num(t.value); budgetOpen = true; save(); setTimeout(render); }
-  if (t.dataset.change === "income" || t.dataset.change === "gastos") { S[t.dataset.change] = num(t.value); calcOpen = true; save(); setTimeout(render); }
+  if (t.dataset.change === "budget") { S.budget = num(t.value); save(); setTimeout(render); }
+  if (t.dataset.change === "income" || t.dataset.change === "gastos") { S[t.dataset.change] = num(t.value); save(); setTimeout(render); }
   if (t.id === "pdfInput") { handlePdf(t.files[0]); t.value = ""; }
   if (t.id === "jsonInput" && t.files[0]) {
     t.files[0].text().then(txt => {
@@ -1290,7 +1266,7 @@ document.addEventListener("submit", e => {
   save(); dlg.close(); render();
   toast(id ? "Cambios guardados." : "Listo, lo sumamos a tu plan.");
 });
-if (ahorroOn()) { const b = document.querySelector('.tabs [data-tab="ahorro"]'); b.hidden = false; b.parentNode.classList.add("six"); }
+if (ahorroOn()) { const b = document.querySelector('.tabs [data-tab="ahorro"]'); b.hidden = false; b.parentNode.classList.add("five"); }
 render();
 if (recienActivado) toast("¡Modo Ahorro activado! Anotá tu primer gasto.");
 </script>
